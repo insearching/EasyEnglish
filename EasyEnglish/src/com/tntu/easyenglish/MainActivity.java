@@ -1,22 +1,31 @@
 package com.tntu.easyenglish;
 
 import android.os.Bundle;
-import android.app.Activity;
-import android.view.Menu;
+import android.support.v4.app.FragmentActivity;
+import android.view.View;
 
-public class MainActivity extends Activity {
+import com.tntu.easyenglish.fragment.LoginFragment;
 
+public class MainActivity extends FragmentActivity {
+
+	private View fragmentContainer;
+	
+	private String backStackTag = "main";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
+		backStackTag = "login";
+		if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+			getSupportFragmentManager().popBackStackImmediate();
+		}
+		getSupportFragmentManager()
+				.beginTransaction()
+				.replace(R.id.fragmentContainer, new LoginFragment())
+				.addToBackStack(backStackTag)
+				.commit();
+		//fragmentContainer.setVisibility(View.VISIBLE);
+		
 	}
-
 }

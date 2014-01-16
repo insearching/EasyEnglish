@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/loginTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/login"
+        android:textSize="@dimen/default_text_size" />
+    
+    <EditText
+        android:id="@+id/loginEt"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/login_button_height"
+        android:layout_below="@+id/loginTv"
+        android:layout_marginLeft="@dimen/side_margin"
+        android:layout_marginRight="@dimen/side_margin"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/edit_text_bg"
+        android:ems="10"
+        android:hint="@string/username_or_email"
+        android:inputType="textEmailAddress"
+        android:paddingLeft="@dimen/edit_text_padding"
+        android:textSize="@dimen/buttons_text_size" />
+
+    <EditText
+        android:id="@+id/passEt"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/login_button_height"
+        android:layout_below="@+id/loginEt"
+        android:layout_marginLeft="@dimen/side_margin"
+        android:layout_marginRight="@dimen/side_margin"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/edit_text_bg"
+        android:ems="10"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        android:paddingLeft="@dimen/edit_text_padding"
+        android:textSize="@dimen/buttons_text_size" />
+
+    <TextView
+        android:id="@+id/submitTv"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/login_button_height"
+        android:layout_below="@+id/passEt"
+        android:layout_marginLeft="@dimen/side_margin"
+        android:layout_marginRight="@dimen/side_margin"
+        android:layout_marginTop="35dp"
+        android:background="@drawable/login_button_bg"
+        android:gravity="center"
+        android:text="@string/submit"
+        android:textSize="@dimen/buttons_text_size"
+        android:textColor="@color/white"/>
+    
+    <TextView
+        android:id="@+id/loginWithSocialsTv"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/login_button_height"
+        android:layout_below="@+id/submitTv"
+        android:layout_marginLeft="@dimen/side_margin"
+        android:layout_marginRight="@dimen/side_margin"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/login_button_bg"
+        android:gravity="center"
+        android:text="@string/login_using_socials"
+        android:textSize="@dimen/buttons_text_size"
+        android:textColor="@color/white"/>
+
+    <TextView
+        android:id="@+id/notRegisteredTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/loginWithSocialsTv"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:clickable="true"
+        android:text="@string/not_registered_yet"
+        android:textSize="@dimen/default_text_size" />
+
+</RelativeLayout>
