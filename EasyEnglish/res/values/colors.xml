@@ -4,4 +4,6 @@
     <!-- Login -->
     <color name="orange">#ffef6b23</color>
     <color name="dark_orange">#ffc75a1e</color>
+    <color name="edit_text_bg">#ffece486</color>
+    <color name="edit_text_selected_bg">#ffecd385</color>
 </resources>

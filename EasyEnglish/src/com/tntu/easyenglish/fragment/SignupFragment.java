@@ -16,22 +16,15 @@ import android.widget.TextView;
 
 import com.tntu.easyenglish.R;
 
-public class LoginFragment extends Fragment {
+public class SignupFragment extends Fragment {
 
 	private View convertView;
 
-	private RelativeLayout loginLayout;
-	private RelativeLayout loginSocialsLayout;
-	private RelativeLayout signupLayout;
-
+	private EditText emailEt;
 	private EditText loginEt;
 	private EditText passEt;
 	private TextView submitTv;
-	private TextView loginWithSocialsTv;
-	private TextView notRegisteredTv;
 
-	private ImageView facebookIv;
-	private ImageView googleIv;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,46 +36,7 @@ public class LoginFragment extends Fragment {
 	}
 
 	private void initViews() {
-		loginLayout = (RelativeLayout) convertView
-				.findViewById(R.id.loginLayout);
-		loginSocialsLayout = (RelativeLayout) convertView
-				.findViewById(R.id.loginSocialLayout);
-		signupLayout = (RelativeLayout) convertView
-				.findViewById(R.id.signupLayout);
 		
-
-		initLoginViews();
-	}
-
-	
-	private void initLoginViews() {
-		loginEt = (EditText) loginLayout.findViewById(R.id.loginEt);
-		passEt = (EditText) loginLayout.findViewById(R.id.passEt);
-		submitTv = (TextView) loginLayout.findViewById(R.id.submitTv);
-		loginWithSocialsTv = (TextView) loginLayout.findViewById(R.id.loginWithSocialsTv);
-		notRegisteredTv = (TextView) loginLayout.findViewById(R.id.notRegisteredTv);
-		
-		loginWithSocialsTv.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				startAnimation(loginLayout, loginSocialsLayout);
-			}
-		});
-		
-		notRegisteredTv.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				startAnimation(loginLayout, signupLayout);
-			}
-		});
-	}
-	
-	private void initSignupViews() {
-		loginEt = (EditText) loginLayout.findViewById(R.id.loginEt);
-		passEt = (EditText) loginLayout.findViewById(R.id.passEt);
-		submitTv = (TextView) loginLayout.findViewById(R.id.submitTv);
 	}
 
 	private void startAnimation(final View oldView, View newView) {

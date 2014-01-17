@@ -4,5 +4,5 @@
     
     <!-- Login -->
     <dimen name="side_margin">40dp</dimen>
-    <dimen name="login_button_height">100dp</dimen>
+    <dimen name="login_button_height">70dp</dimen>
 </resources>

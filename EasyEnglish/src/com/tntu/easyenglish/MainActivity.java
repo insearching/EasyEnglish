@@ -20,12 +20,20 @@ public class MainActivity extends FragmentActivity {
 		if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
 			getSupportFragmentManager().popBackStackImmediate();
 		}
+		
+		LoginFragment loginFragment = new LoginFragment();
 		getSupportFragmentManager()
 				.beginTransaction()
-				.replace(R.id.fragmentContainer, new LoginFragment())
+				.replace(R.id.fragmentContainer, loginFragment)
 				.addToBackStack(backStackTag)
 				.commit();
 		//fragmentContainer.setVisibility(View.VISIBLE);
 		
+	}
+	
+	@Override
+	public void onBackPressed() {
+		
+		super.onBackPressed();
 	}
 }
