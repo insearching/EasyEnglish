@@ -29,38 +29,16 @@ public class SignupFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		convertView = inflater.inflate(R.layout.login_fragment, null);
+		convertView = inflater.inflate(R.layout.sign_up_fragment, null);
 		initViews();
 
 		return convertView;
 	}
 
 	private void initViews() {
-		
-	}
-
-	private void startAnimation(final View oldView, View newView) {
-		newView.setVisibility(View.VISIBLE);
-		Animation floatOutAnim = AnimationUtils.loadAnimation(getActivity(),
-				R.anim.float_fade_out_anim);
-		Animation floatInAnim = AnimationUtils.loadAnimation(getActivity(),
-				R.anim.float_fade_in_anim);
-
-		oldView.setAnimation(floatOutAnim);
-		newView.setAnimation(floatInAnim);
-		floatOutAnim.setAnimationListener(new AnimationListener() {
-			@Override
-			public void onAnimationStart(Animation animation) {
-			}
-
-			@Override
-			public void onAnimationRepeat(Animation animation) {
-			}
-
-			@Override
-			public void onAnimationEnd(Animation animation) {
-				oldView.setVisibility(View.GONE);
-			}
-		});
+		emailEt = (EditText) convertView.findViewById(R.id.emailEt);
+		loginEt = (EditText) convertView.findViewById(R.id.loginEt);
+		passEt = (EditText) convertView.findViewById(R.id.passEt);
+		submitTv = (TextView) convertView.findViewById(R.id.submitTv);
 	}
 }

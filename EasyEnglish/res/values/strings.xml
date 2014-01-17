@@ -2,6 +2,10 @@
 <resources>
 
     <string name="app_name">EasyEnglish</string>
+    <string name="app_id">591631684250216</string>
+    
+    <!-- Facebook login -->
+    <string name="get_started">To get started, log in using Facebook</string>
     <!-- Login -->
     <string name="sign_up">Sign up</string>
     <string name="not_registered_yet">Not registered yet?</string>
