@@ -1,5 +1,6 @@
 package com.tntu.easyenglish.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 import com.tntu.easyenglish.LoginActivity;
+import com.tntu.easyenglish.MainActivity;
 import com.tntu.easyenglish.R;
 
 public class LoginFragment extends Fragment {
@@ -44,7 +46,6 @@ public class LoginFragment extends Fragment {
 		submitTv.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				
 				Toast.makeText(getActivity(), "Reqire API to login", Toast.LENGTH_LONG).show();
 			}
 		});
@@ -54,7 +55,14 @@ public class LoginFragment extends Fragment {
 				.setUserInfoChangedCallback(new LoginButton.UserInfoChangedCallback() {
 					@Override
 					public void onUserInfoFetched(GraphUser user) {
-						((LoginActivity)getActivity()).setFBUser(user);
+						if(user != null){
+							Intent i = new Intent(getActivity(), MainActivity.class);
+							i.putExtra("name", user.getName());
+							i.putExtra("id", user.getId());
+							startActivity(i);
+							
+							getActivity().finish();
+						}
 					}
 				});
 		

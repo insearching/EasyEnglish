@@ -18,24 +18,26 @@ import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.FacebookDialog;
 import com.tntu.easyenglish.fragment.LoginFragment;
-import com.tntu.easyenglish.fragment.LoginWithSocialsFragment;
 import com.tntu.easyenglish.fragment.SignupFragment;
 
 public class LoginActivity extends FragmentActivity {
 
-
+	private static final String TAG = "EasyEnglish";
 	public static String backStackTag = "main";
 
-	private View fragmentContainer; 
+	private View fragmentContainer;
 	private ProgressBar loadPb;
-	//Facebook authorization
+	// Facebook authorization
 	private UiLifecycleHelper uiHelper;
 
 	private Session.StatusCallback callback = new Session.StatusCallback() {
 		@Override
 		public void call(Session session, SessionState state,
 				Exception exception) {
+			if(state == SessionState.OPENING)
+				setLoginVisible(false);
 			onSessionStateChanged(session, state, exception);
+			Log.d(TAG, state.toString());
 		}
 	};
 
@@ -58,13 +60,14 @@ public class LoginActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		uiHelper = new UiLifecycleHelper(this, callback);
 		uiHelper.onCreate(savedInstanceState);
-		
+
 		setContentView(R.layout.login_activity);
 
-		fragmentContainer = (FrameLayout)findViewById(R.id.fragmentContainer);
-		loadPb = (ProgressBar)findViewById(R.id.loadPb);
-		setLoginVisible(false);
-		
+		fragmentContainer = (FrameLayout) findViewById(R.id.fragmentContainer);
+		loadPb = (ProgressBar) findViewById(R.id.loadPb);
+		loadPb.setVisibility(View.INVISIBLE);
+		setLoginVisible(true);
+
 		backStackTag = "login";
 		if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
 			getSupportFragmentManager().popBackStackImmediate();
@@ -75,18 +78,6 @@ public class LoginActivity extends FragmentActivity {
 				.setCustomAnimations(R.anim.float_left_to_right_in_anim,
 						R.anim.float_left_to_right_out_anim)
 				.replace(R.id.fragmentContainer, new LoginFragment())
-				.addToBackStack(backStackTag).commit();
-
-	}
-
-	public void openLoginWithSocials() {
-		getSupportFragmentManager()
-				.beginTransaction()
-				.setCustomAnimations(R.anim.float_left_to_right_in_anim,
-						R.anim.float_left_to_right_out_anim,
-						R.anim.float_right_to_left_in_anim,
-						R.anim.float_right_to_left_out_anim)
-				.replace(R.id.fragmentContainer, new LoginWithSocialsFragment())
 				.addToBackStack(backStackTag).commit();
 
 	}
@@ -112,32 +103,26 @@ public class LoginActivity extends FragmentActivity {
 					.setPositiveButton(R.string.ok, null).show();
 		}
 	}
-	
-	public void setFBUser(GraphUser user){
-		if(user == null){
-			setLoginVisible(true);
-			return;
-		}
-		
-		Intent i = new Intent(getApplicationContext(), MainActivity.class);
-		i.putExtra("name", user.getName());
-		i.putExtra("id", user.getId());
-		startActivity(i);
-		
-		finish();
-	}
-	
-	private void setLoginVisible(boolean flag){
-		if(flag){
+
+//	public void setFBUser(GraphUser user) {
+//		Intent i = new Intent(getApplicationContext(), MainActivity.class);
+//		i.putExtra("name", user.getName());
+//		i.putExtra("id", user.getId());
+//		startActivity(i);
+//
+//		
+//	}
+
+	public void setLoginVisible(boolean flag) {
+		if (flag) {
 			fragmentContainer.setVisibility(View.VISIBLE);
 			loadPb.setVisibility(View.GONE);
-		}
-		else {
+		} else {
 			fragmentContainer.setVisibility(View.GONE);
 			loadPb.setVisibility(View.VISIBLE);
 		}
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
