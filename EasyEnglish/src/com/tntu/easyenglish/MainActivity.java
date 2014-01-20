@@ -1,113 +1,51 @@
 package com.tntu.easyenglish;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.view.View;
+import android.widget.TextView;
 
 import com.facebook.Session;
-import com.facebook.SessionState;
-import com.facebook.UiLifecycleHelper;
+import com.facebook.widget.ProfilePictureView;
 
 public class MainActivity extends FragmentActivity {
 
-	
-	private static final int SPLASH = 0;
-	private static final int SELECTION = 1;
-	private static final int FRAGMENT_COUNT = SELECTION +1;
+	private TextView nameTv;
+	private ProfilePictureView profilePicture;
 
-	private Fragment[] fragments = new Fragment[FRAGMENT_COUNT];
-	private boolean isResumed = false;
-	private UiLifecycleHelper uiHelper;
-	private Session.StatusCallback callback = 
-	    new Session.StatusCallback() {
-	    @Override
-	    public void call(Session session, 
-	            SessionState state, Exception exception) {
-	        onSessionStateChange(session, state, exception);
-	    }
-	};
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
-	    FragmentManager fm = getSupportFragmentManager();
-	    fragments[SPLASH] = fm.findFragmentById(R.id.splashFragment);
-	    fragments[SELECTION] = fm.findFragmentById(R.id.selectionFragment);
 
-	    FragmentTransaction transaction = fm.beginTransaction();
-	    for(int i = 0; i < fragments.length; i++) {
-	        transaction.hide(fragments[i]);
-	    }
-	    transaction.commit();
-	}
-	
-	@Override
-	public void onResume() {
-	    super.onResume();
-	    isResumed = true;
+		nameTv = (TextView) findViewById(R.id.greetTv);
+		profilePicture = (ProfilePictureView) findViewById(R.id.profilePicture);
+
+		String nameKey = "name";
+		String idKey = "id";
+		Bundle data = getIntent().getExtras();
+		if (data != null) {
+			if (data.containsKey(nameKey))
+				nameTv.setText("Hello " + data.getString(nameKey) + "!");
+			if (data.containsKey(idKey)) {
+				profilePicture.setProfileId(data.getString(idKey));
+			}
+		}
 	}
 
-	@Override
-	public void onPause() {
-	    super.onPause();
-	    isResumed = false;
+	public void onLogout(View v) {
+		// find the active session which can only be facebook in my app
+		Session session = Session.getActiveSession();
+		// run the closeAndClearTokenInformation which does the following
+		// DOCS : Closes the local in-memory Session object and clears any
+		// persistent
+		// cache related to the Session.
+		session.closeAndClearTokenInformation();
+		// return the user to the login screen
+		startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+		// make sure the user can not access the page after he/she is logged out
+		// clear the activity stack
+		finish();
 	}
-	
-	private void onSessionStateChange(Session session, SessionState state, Exception exception) {
-	    // Only make changes if the activity is visible
-	    if (isResumed) {
-	        FragmentManager manager = getSupportFragmentManager();
-	        // Get the number of entries in the back stack
-	        int backStackSize = manager.getBackStackEntryCount();
-	        // Clear the back stack
-	        for (int i = 0; i < backStackSize; i++) {
-	            manager.popBackStack();
-	        }
-	        if (state.isOpened()) {
-	            // If the session state is open:
-	            // Show the authenticated fragment
-	            showFragment(SELECTION, false);
-	        } else if (state.isClosed()) {
-	            // If the session state is closed:
-	            // Show the login fragment
-	            showFragment(SPLASH, false);
-	        }
-	    }
-	}
-	
-	private void showFragment(int fragmentIndex, boolean addToBackStack) {
-	    FragmentManager fm = getSupportFragmentManager();
-	    FragmentTransaction transaction = fm.beginTransaction();
-	    for (int i = 0; i < fragments.length; i++) {
-	        if (i == fragmentIndex) {
-	            transaction.show(fragments[i]);
-	        } else {
-	            transaction.hide(fragments[i]);
-	        }
-	    }
-	    if (addToBackStack) {
-	        transaction.addToBackStack(null);
-	    }
-	    transaction.commit();
-	}
-	
-	@Override
-	protected void onResumeFragments() {
-	    super.onResumeFragments();
-	    Session session = Session.getActiveSession();
-
-	    if (session != null && session.isOpened()) {
-	        // if the session is already open,
-	        // try to show the selection fragment
-	        showFragment(SELECTION, false);
-	    } else {
-	        // otherwise present the splash screen
-	        // and ask the person to login.
-	        showFragment(SPLASH, false);
-	    }
-	}
-
 }

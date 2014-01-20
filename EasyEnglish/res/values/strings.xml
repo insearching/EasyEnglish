@@ -11,9 +11,14 @@
     <string name="not_registered_yet">Not registered yet?</string>
     <string name="login">Log-in</string>
     <string name="login_using_socials">Log-in using socials</string>
+    <string name="login_with_fb">Login with Facebook</string>
+    <string name="login_with_gplus">Login with Google+</string>
     <string name="username_or_email">Username or email</string>
     <string name="password">Password</string>
     <string name="submit">Submit</string>
     <string name="email">Email</string>
     <string name="username">Username</string>
+    <string name="cancelled">Cancelled</string>
+    <string name="permission_not_granted">Unable to perform selected action because permissions were not granted.</string>
+    <string name="ok">OK</string>
 </resources>

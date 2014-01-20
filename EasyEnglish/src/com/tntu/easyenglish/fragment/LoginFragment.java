@@ -10,6 +10,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.model.GraphUser;
+import com.facebook.widget.LoginButton;
 import com.tntu.easyenglish.LoginActivity;
 import com.tntu.easyenglish.R;
 
@@ -21,7 +23,7 @@ public class LoginFragment extends Fragment {
 	private EditText loginEt;
 	private EditText passEt;
 	private TextView submitTv;
-	private TextView loginWithSocialsTv;
+	private LoginButton facebookButt;
 	private TextView notRegisteredTv;
 
 	@Override
@@ -37,11 +39,9 @@ public class LoginFragment extends Fragment {
 		loginEt = (EditText) convertView.findViewById(R.id.loginEt);
 		passEt = (EditText) convertView.findViewById(R.id.passEt);
 		submitTv = (TextView) convertView.findViewById(R.id.submitTv);
-		loginWithSocialsTv = (TextView) convertView.findViewById(R.id.loginWithSocialsTv);
 		notRegisteredTv = (TextView) convertView.findViewById(R.id.notRegisteredTv);
 		
 		submitTv.setOnClickListener(new OnClickListener() {
-			
 			@Override
 			public void onClick(View v) {
 				
@@ -49,12 +49,14 @@ public class LoginFragment extends Fragment {
 			}
 		});
 		
-		loginWithSocialsTv.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				((LoginActivity)getActivity()).openLoginWithSocials();
-			}
-		});
+		facebookButt = (LoginButton) convertView.findViewById(R.id.facebookButt);
+		facebookButt
+				.setUserInfoChangedCallback(new LoginButton.UserInfoChangedCallback() {
+					@Override
+					public void onUserInfoFetched(GraphUser user) {
+						((LoginActivity)getActivity()).setFBUser(user);
+					}
+				});
 		
 		notRegisteredTv.setOnClickListener(new OnClickListener() {
 			@Override

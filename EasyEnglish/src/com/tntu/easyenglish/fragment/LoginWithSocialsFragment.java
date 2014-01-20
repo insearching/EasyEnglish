@@ -4,16 +4,17 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
+import com.facebook.model.GraphUser;
+import com.facebook.widget.LoginButton;
 import com.tntu.easyenglish.LoginActivity;
 import com.tntu.easyenglish.R;
 
 public class LoginWithSocialsFragment extends Fragment {
 
 	private View convertView;
+	private LoginButton facebookButt;
 
 	
 	@Override
@@ -26,12 +27,13 @@ public class LoginWithSocialsFragment extends Fragment {
 	}
 
 	private void initViews() {
-		((ImageView)convertView.findViewById(R.id.facebookIv))
-				.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				((LoginActivity)getActivity()).onFacebookLogin();
-			}
-		});
+		facebookButt = (LoginButton) convertView.findViewById(R.id.facebookButt);
+		facebookButt
+				.setUserInfoChangedCallback(new LoginButton.UserInfoChangedCallback() {
+					@Override
+					public void onUserInfoFetched(GraphUser user) {
+						((LoginActivity)getActivity()).setFBUser(user);
+					}
+				});
 	}
 }
