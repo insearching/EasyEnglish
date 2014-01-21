@@ -1,7 +1,6 @@
 package com.tntu.easyenglish.fragment;
 
 import android.content.Intent;
-import android.content.IntentSender.SendIntentException;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;

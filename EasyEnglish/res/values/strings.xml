@@ -23,4 +23,13 @@
     <string name="cancelled">Cancelled</string>
     <string name="permission_not_granted">Unable to perform selected action because permissions were not granted.</string>
     <string name="ok">OK</string>
+    <string-array name="main_manu">
+        <item >Main</item>
+        <item >Exercises</item>
+        <item >Words and phrases</item>
+        <item >Dictionary</item>
+        <item >Content</item>
+        <item >Sign in / Sign up</item>
+        <item >Sign out</item>
+    </string-array>
 </resources>

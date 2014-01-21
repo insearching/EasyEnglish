@@ -46,6 +46,7 @@ public class LoginActivity extends FragmentActivity implements
 
 	private View fragmentContainer;
 	private ProgressBar loadPb;
+	
 	// Facebook authorization
 	private UiLifecycleHelper uiHelper;
 
