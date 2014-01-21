@@ -8,6 +8,8 @@
     <string name="get_started">To get started, log in using Facebook</string>
     <!-- Login -->
     <string name="sign_up">Sign up</string>
+    <string name="sign_in">Sign in</string>
+    <string name="sign_out">Sign out</string>
     <string name="not_registered_yet">Not registered yet?</string>
     <string name="login">Log-in</string>
     <string name="login_using_socials">Log-in using socials</string>

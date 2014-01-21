@@ -35,17 +35,9 @@ public class MainActivity extends FragmentActivity {
 	}
 
 	public void onLogout(View v) {
-		// find the active session which can only be facebook in my app
 		Session session = Session.getActiveSession();
-		// run the closeAndClearTokenInformation which does the following
-		// DOCS : Closes the local in-memory Session object and clears any
-		// persistent
-		// cache related to the Session.
 		session.closeAndClearTokenInformation();
-		// return the user to the login screen
 		startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-		// make sure the user can not access the page after he/she is logged out
-		// clear the activity stack
 		finish();
 	}
 }

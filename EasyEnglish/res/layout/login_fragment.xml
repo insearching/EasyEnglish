@@ -80,17 +80,15 @@
         facebook:confirm_logout="false"
         facebook:fetch_user_info="true"/>
 
-    <ImageView
-        android:id="@+id/googleIv"
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/googleButt"
         android:layout_width="match_parent"
         android:layout_height="@dimen/login_button_height"
         android:layout_below="@+id/facebookButt"
         android:layout_marginLeft="@dimen/side_margin"
         android:layout_marginRight="@dimen/side_margin"
         android:layout_marginTop="@dimen/login_margin_top"
-        android:clickable="true"
-        android:contentDescription="@string/app_name"
-        android:src="@drawable/sign_in_with_google" />
+        android:contentDescription="@string/app_name"/>
 
     <TextView
         android:id="@+id/notRegisteredTv"
