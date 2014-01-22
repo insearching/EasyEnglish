@@ -57,13 +57,7 @@ public class LoginFragment extends Fragment {
 					@Override
 					public void onUserInfoFetched(GraphUser user) {
 						if (user != null) {
-							Intent i = new Intent(getActivity(),
-									MainActivity.class);
-							i.putExtra(MainActivity.NAME_KEY, user.getName());
-							i.putExtra(MainActivity.ID_KEY, user.getId());
-							startActivity(i);
-
-							getActivity().finish();
+							((MainActivity) getActivity()).onFacebookLoged(user);
 						}
 					}
 				});

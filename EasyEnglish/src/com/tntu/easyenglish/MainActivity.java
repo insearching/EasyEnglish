@@ -29,6 +29,7 @@ import com.facebook.FacebookOperationCanceledException;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
+import com.facebook.model.GraphUser;
 import com.facebook.widget.FacebookDialog;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
@@ -78,9 +79,6 @@ public class MainActivity extends ActionBarActivity implements
 
 	private static final String TAG = "EasyEnglish";
 	private static final String fragment_tag = "login_fragment";
-
-	private View fragmentContainer;
-	private ProgressBar loadPb;
 
 	// Facebook authorization
 	private UiLifecycleHelper uiHelper;
@@ -217,6 +215,19 @@ public class MainActivity extends ActionBarActivity implements
 		}
 	}
 
+	public void onFacebookLoged(GraphUser user) {
+		Bundle args = new Bundle();
+		args.putString(MainActivity.NAME_KEY, user.getName());
+		args.putString(MainActivity.ID_KEY, user.getId());
+		getSupportFragmentManager()
+				.beginTransaction()
+				.setCustomAnimations(R.anim.float_left_to_right_in_anim,
+						R.anim.float_left_to_right_out_anim)
+				.replace(R.id.content_frame,
+						MainFragment.newInstance(args))
+				.addToBackStack(backStackTag).commit();
+	}
+
 	public void onGoogleLogin() {
 		if (!mPlusClient.isConnected()) {
 			if (mConnectionResult == null) {
@@ -295,7 +306,6 @@ public class MainActivity extends ActionBarActivity implements
 	protected void onResume() {
 		super.onResume();
 		uiHelper.onResume();
-
 		AppEventsLogger.activateApp(this);
 
 	}
