@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="5dp"
+    android:layout_height="@dimen/drawer_item_height"
+    android:gravity="center_vertical"
+    android:paddingLeft="20dp"
     android:text="@string/app_name"
-    android:textSize="@dimen/drawer_item_text_size">
+    android:textSize="@dimen/drawer_item_text_size"
+    android:textColor="@color/drawer_list_item_text_color"
+    android:background="@drawable/drawer_list_item_bg">
 
 </TextView>

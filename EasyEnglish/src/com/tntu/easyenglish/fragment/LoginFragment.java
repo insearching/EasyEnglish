@@ -14,7 +14,6 @@ import android.widget.Toast;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 import com.google.android.gms.common.SignInButton;
-import com.tntu.easyenglish.LoginActivity;
 import com.tntu.easyenglish.MainActivity;
 import com.tntu.easyenglish.R;
 
@@ -41,7 +40,7 @@ public class LoginFragment extends Fragment {
 	private void initViews() {
 		loginEt = (EditText) convertView.findViewById(R.id.loginEt);
 		passEt = (EditText) convertView.findViewById(R.id.passEt);
-		
+
 		submitTv = (TextView) convertView.findViewById(R.id.submitTv);
 		submitTv.setOnClickListener(new OnClickListener() {
 			@Override
@@ -60,8 +59,8 @@ public class LoginFragment extends Fragment {
 						if (user != null) {
 							Intent i = new Intent(getActivity(),
 									MainActivity.class);
-							i.putExtra("name", user.getName());
-							i.putExtra("id", user.getId());
+							i.putExtra(MainActivity.NAME_KEY, user.getName());
+							i.putExtra(MainActivity.ID_KEY, user.getId());
 							startActivity(i);
 
 							getActivity().finish();
@@ -73,16 +72,16 @@ public class LoginFragment extends Fragment {
 		googleButt.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				((LoginActivity) getActivity()).onGoogleLogin();
+				((MainActivity) getActivity()).onGoogleLogin();
 			}
 		});
-		
+
 		notRegisteredTv = (TextView) convertView
 				.findViewById(R.id.notRegisteredTv);
 		notRegisteredTv.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				((LoginActivity) getActivity()).openSignup();
+				((MainActivity) getActivity()).openSignup();
 			}
 		});
 	}
