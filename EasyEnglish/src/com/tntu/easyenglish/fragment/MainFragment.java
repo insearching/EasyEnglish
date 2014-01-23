@@ -26,8 +26,8 @@ public class MainFragment extends Fragment {
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
-		outState = getArguments();
 		super.onSaveInstanceState(outState);
+		outState = getArguments();
 	}
 
 	@Override

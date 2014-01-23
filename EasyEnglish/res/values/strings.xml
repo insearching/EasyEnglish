@@ -3,7 +3,7 @@
 
     <string name="app_name">EasyEnglish</string>
     <string name="app_id">591631684250216</string>
-    
+
     <!-- Facebook login -->
     <string name="get_started">To get started, log in using Facebook</string>
     <!-- Login -->
@@ -23,12 +23,24 @@
     <string name="cancelled">Cancelled</string>
     <string name="permission_not_granted">Unable to perform selected action because permissions were not granted.</string>
     <string name="ok">OK</string>
-    <string-array name="main_manu">
-        <item >Profile</item>
-        <item >Exercises</item>
-        <item >Words and phrases</item>
-        <item >Dictionary</item>
-        <item >Content</item>
-        <item >Sign in / Sign up</item>
+
+    <!-- Navigation Drawer -->
+    <string-array name="main_menu_loged">
+        <item>Exercises</item>
+        <item>Words and phrases</item>
+        <item>Dictionary</item>
+        <item>Content</item>
+        <item>About</item>
+        <item>Sign out</item>
+        <item>Profile</item>
     </string-array>
+    <string-array name="main_menu_non_loged">
+        <item>Exercises</item>
+        <item>Words and phrases</item>
+        <item>Dictionary</item>
+        <item>Content</item>
+        <item>About</item>
+        <item>Sign in / Sign up</item>
+    </string-array>
+
 </resources>

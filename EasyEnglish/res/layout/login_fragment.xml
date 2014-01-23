@@ -74,6 +74,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/login_button_height"
         android:layout_below="@+id/submitTv"
+        android:padding="5dp"
         android:layout_marginLeft="@dimen/side_margin"
         android:layout_marginRight="@dimen/side_margin"
         android:layout_marginTop="@dimen/login_margin_top"

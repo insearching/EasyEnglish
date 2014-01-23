@@ -18,12 +18,9 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat.Light" >
         <activity
-            android:name="com.tntu.easyenglish.LoginActivity"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
             android:name="MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

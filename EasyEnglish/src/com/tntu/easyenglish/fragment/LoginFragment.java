@@ -33,7 +33,7 @@ public class LoginFragment extends Fragment {
 			Bundle savedInstanceState) {
 		convertView = inflater.inflate(R.layout.login_fragment, null);
 		initViews();
-
+		
 		return convertView;
 	}
 

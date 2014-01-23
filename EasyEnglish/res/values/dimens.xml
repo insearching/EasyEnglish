@@ -7,13 +7,13 @@
 	<dimen name="buttons_text_size">24sp</dimen>
 	
     <!-- Login -->
-    <dimen name="login_top_margin">50dp</dimen>
+    <dimen name="login_top_margin">40dp</dimen>
     <dimen name="side_margin">20dp</dimen>
-    <dimen name="login_margin_top">15dp</dimen>
+    <dimen name="login_margin_top">10dp</dimen>
     <dimen name="login_button_height">50dp</dimen>
     <dimen name="edit_text_padding">10dp</dimen>
     <!-- Drawer List -->
     <dimen name="drawer_width">240dp</dimen>
-    <dimen name="drawer_item_height">40dp</dimen>
+    <dimen name="drawer_item_height">88dp</dimen>
     <dimen name="drawer_item_text_size">18sp</dimen>
 </resources>
