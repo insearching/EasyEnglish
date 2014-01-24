@@ -56,8 +56,12 @@ public class MainActivity extends ActionBarActivity implements
 	public static final String USER_KEY = "user";
 	public static final String NAME_KEY = "name";
 	public static final String ID_KEY = "id";
+	public static final String AUTH_KEY = "auth_type";
 	public static final String POSITION_KEY = "position";
 
+	public enum AuthType {
+		FACEBOOK, GOOGLE, NATIVE
+	}
 	private boolean isFirstTimeLaunched;
 
 	private static final int EXERCISES = 0;
@@ -282,6 +286,7 @@ public class MainActivity extends ActionBarActivity implements
 		mArgs = new Bundle();
 		mArgs.putString(MainActivity.NAME_KEY, user.getName());
 		mArgs.putString(MainActivity.ID_KEY, user.getId());
+		mArgs.putString(MainActivity.AUTH_KEY, AuthType.FACEBOOK.name());
 
 		mAdapter.setList(new ArrayList<String>(Arrays.asList(getResources()
 				.getStringArray(R.array.main_menu_loged))));
@@ -298,7 +303,6 @@ public class MainActivity extends ActionBarActivity implements
 					mConnectionResult.startResolutionForResult(
 							MainActivity.this, REQUEST_CODE_RESOLVE_ERR);
 				} catch (SendIntentException e) {
-					// Try connecting again.
 					mConnectionResult = null;
 					mPlusClient.connect();
 				}
@@ -328,10 +332,19 @@ public class MainActivity extends ActionBarActivity implements
 		}
 	}
 
-	public void onSignInOut(View v) {
+	public void onSignOut(View v) {
+		//Facebook
 		Session session = Session.getActiveSession();
 		if (session != null)
 			session.closeAndClearTokenInformation();
+		
+		//Google
+		if(mPlusClient.isConnected()){
+			mPlusClient.clearDefaultAccount();
+			mPlusClient.disconnect();
+			mPlusClient.connect();
+		}
+		
 		mAdapter.setList(new ArrayList<String>(Arrays.asList(getResources()
 				.getStringArray(R.array.main_menu_non_loged))));
 		mArgs = null;
@@ -358,17 +371,18 @@ public class MainActivity extends ActionBarActivity implements
 	@Override
 	public void onConnected(Bundle arg0) {
 		mConnectionProgressDialog.dismiss();
-		// LoginFragment fragment = (LoginFragment) getSupportFragmentManager()
-		// .findFragmentByTag(fragment_tag);
-		// fragment.setGooglePlusButtonText(getString(R.string.sign_out));
 		Toast.makeText(this, "User is connected!", Toast.LENGTH_LONG).show();
 		if (mPlusClient.getCurrentPerson() != null) {
+			mArgs = new Bundle();
 			Person currentPerson = mPlusClient.getCurrentPerson();
-			String personName = currentPerson.getDisplayName();
-			Image personPhoto = currentPerson.getImage();
-			String personGooglePlusProfile = currentPerson.getUrl();
-			Log.d(TAG, personName);
-			Log.d(TAG, personGooglePlusProfile);
+			mArgs.putString(NAME_KEY, currentPerson.getDisplayName());
+			mArgs.putString(ID_KEY, currentPerson.getId());
+			mArgs.putString(MainActivity.AUTH_KEY, AuthType.GOOGLE.name());
+			
+			mAdapter.setList(new ArrayList<String>(Arrays.asList(getResources()
+					.getStringArray(R.array.main_menu_loged))));
+			
+			selectItem(PROFILE);
 		}
 	}
 

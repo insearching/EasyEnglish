@@ -2,16 +2,15 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    
-    <com.facebook.widget.ProfilePictureView
-        android:id="@+id/profilePicture"
+    <ImageView
+        android:id="@+id/profileIv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/greetTv"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="40dp"
-        android:gravity="center_horizontal" />
-    
+        android:gravity="center_horizontal"
+        android:src="@drawable/com_facebook_profile_picture_blank_square" />
+
     <TextView
         android:id="@+id/greetTv"
         android:layout_width="wrap_content"
@@ -27,7 +26,7 @@
         android:layout_below="@+id/greetTv"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-        android:text="@string/com_facebook_usersettingsfragment_log_in_button"
-        android:onClick="onSignInOut"/>
+        android:onClick="onSignOut"
+        android:text="@string/com_facebook_usersettingsfragment_log_in_button" />
 
 </RelativeLayout>
