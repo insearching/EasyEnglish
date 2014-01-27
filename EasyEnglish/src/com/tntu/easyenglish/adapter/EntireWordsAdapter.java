@@ -52,6 +52,7 @@ public class EntireWordsAdapter extends BaseAdapter {
 			holder = (ViewHolder)convertView.getTag();
 		}
 		
+		holder.statusIv.setImageResource(R.drawable.status_null);
 		holder.wordTv.setText(data.get(position).getWord() + " — " +  data.get(position).getTranslation());
 		return convertView;
 	}
