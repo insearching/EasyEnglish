@@ -39,7 +39,6 @@ import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.plus.PlusClient;
 import com.google.android.gms.plus.model.people.Person;
-import com.google.android.gms.plus.model.people.Person.Image;
 import com.tntu.easyenglish.adapter.DrawerAdapter;
 import com.tntu.easyenglish.fragment.AboutFragment;
 import com.tntu.easyenglish.fragment.ContentFragment;
@@ -62,7 +61,6 @@ public class MainActivity extends ActionBarActivity implements
 	public enum AuthType {
 		FACEBOOK, GOOGLE, NATIVE
 	}
-	private boolean isFirstTimeLaunched;
 
 	private static final int EXERCISES = 0;
 	private static final int WORDS = 1;
@@ -144,9 +142,6 @@ public class MainActivity extends ActionBarActivity implements
 				mPosition = savedInstanceState.getInt(POSITION_KEY);
 			if (savedInstanceState.containsKey(USER_KEY))
 				mArgs = savedInstanceState.getBundle(USER_KEY);
-			isFirstTimeLaunched = false;
-		} else {
-			isFirstTimeLaunched = true;
 		}
 		selectItem(mPosition);
 
@@ -393,7 +388,7 @@ public class MainActivity extends ActionBarActivity implements
 	private class DrawerItemClickListener implements
 			ListView.OnItemClickListener {
 		@Override
-		public void onItemClick(AdapterView parent, View view, int position,
+		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
 			selectItem(position);
 		}
