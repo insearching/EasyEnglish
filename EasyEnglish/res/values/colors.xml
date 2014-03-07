@@ -3,6 +3,7 @@
     <color name="white">#ffffffff</color>
     <color name="red">#ffff0000</color>
     <color name="black">#ff000000</color>
+    <color name="splash_orange">#ffb5570b</color>
     <!-- Login -->
     <color name="orange">#ffef6b23</color>
     <color name="dark_orange">#ffc75a1e</color>

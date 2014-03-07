@@ -6,36 +6,26 @@
     <ImageView
         android:id="@+id/logoIv"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/login_button_height"
+        android:layout_height="100dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/login_top_margin"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/ic_launcher" />
-
-
-    <TextView
-        android:id="@+id/loginTv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/logoIv"
-        android:layout_centerHorizontal="true"
-        android:text="@string/login"
-        android:textSize="@dimen/default_text_size" />
+        android:src="@drawable/logo" />
     
     <EditText
         android:id="@+id/loginEt"
         android:layout_width="match_parent"
         android:layout_height="@dimen/login_button_height"
-        android:layout_below="@+id/loginTv"
+        android:layout_below="@+id/logoIv"
         android:layout_marginLeft="@dimen/side_margin"
         android:layout_marginRight="@dimen/side_margin"
         android:layout_marginTop="@dimen/login_margin_top"
         android:background="@drawable/edit_text_bg"
-        android:singleLine="true"
         android:ems="10"
         android:hint="@string/username_or_email"
         android:inputType="textEmailAddress"
         android:paddingLeft="@dimen/edit_text_padding"
+        android:singleLine="true"
         android:textSize="@dimen/buttons_text_size" />
 
     <EditText

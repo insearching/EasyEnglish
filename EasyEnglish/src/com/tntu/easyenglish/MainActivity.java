@@ -52,11 +52,13 @@ import com.tntu.easyenglish.fragment.WordsFragment;
 public class MainActivity extends ActionBarActivity implements
 		ConnectionCallbacks, OnConnectionFailedListener {
 
+	public static final String TAG = "EasyEnglish";
 	public static final String USER_KEY = "user";
 	public static final String NAME_KEY = "name";
 	public static final String ID_KEY = "id";
 	public static final String AUTH_KEY = "auth_type";
 	public static final String POSITION_KEY = "position";
+	public static final String API_KEY = "apiKey";
 
 	public enum AuthType {
 		FACEBOOK, GOOGLE, NATIVE
@@ -80,6 +82,7 @@ public class MainActivity extends ActionBarActivity implements
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
 	private Bundle mArgs;
+	private String mApiKey = null;
 
 	// Login
 	// Google+
@@ -89,7 +92,6 @@ public class MainActivity extends ActionBarActivity implements
 	private PlusClient mPlusClient;
 	private ConnectionResult mConnectionResult;
 
-	private static final String TAG = "EasyEnglish";
 	private static final String fragment_tag = "login_fragment";
 
 	// Facebook authorization
@@ -108,16 +110,16 @@ public class MainActivity extends ActionBarActivity implements
 		@Override
 		public void onError(FacebookDialog.PendingCall pendingCall,
 				Exception error, Bundle data) {
-			Log.d("EasyEnglish", String.format("Error: %s", error.toString()));
+			Log.d(TAG, String.format("Error: %s", error.toString()));
 		}
 
 		@Override
 		public void onComplete(FacebookDialog.PendingCall pendingCall,
 				Bundle data) {
-			Log.d("EasyEnglish", "Success!");
+			Log.d(TAG, "Success!");
 		}
 	};
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -137,11 +139,22 @@ public class MainActivity extends ActionBarActivity implements
 
 		initView();
 
-		if (savedInstanceState != null) {
+		if(getIntent().getExtras().containsKey(API_KEY)){
+			mApiKey = getIntent().getExtras().getString(API_KEY);
+			Toast.makeText(this, mApiKey, Toast.LENGTH_LONG).show();
+		}
+		else if (savedInstanceState != null) {
 			if (savedInstanceState.containsKey(POSITION_KEY))
 				mPosition = savedInstanceState.getInt(POSITION_KEY);
 			if (savedInstanceState.containsKey(USER_KEY))
 				mArgs = savedInstanceState.getBundle(USER_KEY);
+			if (savedInstanceState.containsKey(API_KEY))
+				mApiKey = savedInstanceState.getString(API_KEY);
+		}
+		
+		if(mApiKey == null){
+			startActivity(new Intent(this, LoginActivity.class));
+			finish();
 		}
 		selectItem(mPosition);
 
@@ -204,6 +217,7 @@ public class MainActivity extends ActionBarActivity implements
 		uiHelper.onSaveInstanceState(outState);
 		outState.putBundle(USER_KEY, mArgs);
 		outState.putInt(POSITION_KEY, mPosition);
+		outState.putString(API_KEY, mApiKey);
 	}
 
 	@Override
@@ -396,48 +410,48 @@ public class MainActivity extends ActionBarActivity implements
 
 	private void selectItem(int position) {
 		mPosition = position;
-		Fragment f = null;
+		Fragment fragment = null;
 		switch (position) {
 		case EXERCISES:
-			f = new ExercisesFragment();
+			fragment = new ExercisesFragment();
 			break;
 		case WORDS:
-			f = new WordsFragment();
+			fragment = new WordsFragment();
 			break;
 		case DICTIONARY:
-			f = new DictionaryFragment();
+			fragment = new DictionaryFragment();
 			break;
 		case CONTENT:
-			f = new ContentFragment();
+			fragment = new ContentFragment();
 			break;
 		case ABOUT:
-			f = new AboutFragment();
+			fragment = new AboutFragment();
 			break;
 		case SIGN:
 			Session session = Session.getActiveSession();
 			if (session != null)
 				session.closeAndClearTokenInformation();
-			f = new LoginFragment();
+			fragment = new LoginFragment();
 			break;
 		case PROFILE:
-			f = MainFragment.newInstance(mArgs);
+			fragment = MainFragment.newInstance(mArgs);
 			break;
 		default:
-			f = MainFragment.newInstance(mArgs);
+			fragment = MainFragment.newInstance(mArgs);
 		}
-		if (f instanceof LoginFragment) {
+		if (fragment instanceof LoginFragment) {
 			getSupportFragmentManager()
 					.beginTransaction()
 					.setCustomAnimations(R.anim.float_left_to_right_in_anim,
 							R.anim.float_left_to_right_out_anim)
-					.replace(R.id.content_frame, f, fragment_tag)
+					.replace(R.id.content_frame, fragment, fragment_tag)
 					.addToBackStack(backStackTag).commit();
 		} else {
 			getSupportFragmentManager()
 					.beginTransaction()
 					.setCustomAnimations(R.anim.float_left_to_right_in_anim,
 							R.anim.float_left_to_right_out_anim)
-					.replace(R.id.content_frame, f)
+					.replace(R.id.content_frame, fragment)
 					.addToBackStack(backStackTag).commit();
 		}
 		mDrawerList.setItemChecked(position, true);

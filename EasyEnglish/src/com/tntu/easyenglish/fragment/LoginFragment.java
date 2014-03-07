@@ -7,7 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,11 +20,16 @@ import com.facebook.widget.LoginButton;
 import com.google.android.gms.common.SignInButton;
 import com.tntu.easyenglish.MainActivity;
 import com.tntu.easyenglish.R;
+import com.tntu.easyenglish.utils.JSONUtils;
+import com.tntu.easyenglish.utils.RESTClient;
+import com.tntu.easyenglish.utils.RESTClient.JSONCompleteListener;
 
-public class LoginFragment extends Fragment {
+public class LoginFragment extends Fragment implements JSONCompleteListener {
 
+	private RESTClient client;
 	private View convertView;
 
+	private ImageView logoIv;
 	private EditText loginEt;
 	private EditText passEt;
 	private TextView submitTv;
@@ -28,16 +37,25 @@ public class LoginFragment extends Fragment {
 	private TextView notRegisteredTv;
 	private SignInButton googleButt;
 
+	private Animation anim;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		convertView = inflater.inflate(R.layout.login_fragment, null);
+		client = new RESTClient(this);
+
 		initViews();
-		
+
+		anim = AnimationUtils.loadAnimation(getActivity(), R.anim.fly_in_anim);
+		logoIv.setAnimation(anim);
+		logoIv.startAnimation(anim);
+
 		return convertView;
 	}
 
 	private void initViews() {
+		logoIv = (ImageView) convertView.findViewById(R.id.logoIv);
 		loginEt = (EditText) convertView.findViewById(R.id.loginEt);
 		passEt = (EditText) convertView.findViewById(R.id.passEt);
 
@@ -45,8 +63,18 @@ public class LoginFragment extends Fragment {
 		submitTv.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Toast.makeText(getActivity(), "Reqire API to login",
-						Toast.LENGTH_LONG).show();
+				String username = loginEt.getText().toString();
+				String password = passEt.getText().toString();
+
+				if (username.length() != 0 && password.length() != 0) {
+					String requestUrl = "http://easy-english.yzi.me/api/getApiKey?login="
+							+ username + "&password=" + password;
+					client.execute(requestUrl);
+				} else {
+					Toast.makeText(getActivity(),
+							getString(R.string.empty_credentials),
+							Toast.LENGTH_LONG).show();
+				}
 			}
 		});
 
@@ -57,7 +85,8 @@ public class LoginFragment extends Fragment {
 					@Override
 					public void onUserInfoFetched(GraphUser user) {
 						if (user != null) {
-							((MainActivity) getActivity()).onFacebookLoged(user);
+							((MainActivity) getActivity())
+									.onFacebookLoged(user);
 						}
 					}
 				});
@@ -90,5 +119,31 @@ public class LoginFragment extends Fragment {
 				return;
 			}
 		}
+	}
+
+	@Override
+	public void onRemoteCallComplete(String json) {
+
+		String apiKey = null;
+		String status = JSONUtils.getResponseStatus(json);
+		if (status.equals(JSONUtils.SUCCESS_TRUE)) {
+			loginEt.requestFocus();
+			loginEt.setText("");
+			passEt.setText("");
+
+			apiKey = JSONUtils.getValueFromJSON(json, "api_key");
+			Intent intent = new Intent(getActivity(), MainActivity.class);
+			intent.putExtra(MainActivity.API_KEY, apiKey);
+			startActivity(intent);
+			getActivity().finish();
+		} else if (status.equals(JSONUtils.SUCCESS_FALSE)) {
+			loginEt.requestFocus();
+			passEt.setText("");
+			Toast.makeText(getActivity(),
+					getString(R.string.wrong_credentials), Toast.LENGTH_LONG)
+					.show();
+		}
+
+		client = new RESTClient(this);
 	}
 }
