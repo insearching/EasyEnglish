@@ -28,21 +28,13 @@
 
     <!-- Navigation Drawer -->
     <string-array name="main_menu_loged">
+        <item>Profile</item>
         <item>Exercises</item>
         <item>Words and phrases</item>
         <item>Dictionary</item>
         <item>Content</item>
         <item>About</item>
         <item>Sign out</item>
-        <item>Profile</item>
-    </string-array>
-    <string-array name="main_menu_non_loged">
-        <item>Exercises</item>
-        <item>Words and phrases</item>
-        <item>Dictionary</item>
-        <item>Content</item>
-        <item>About</item>
-        <item>Sign in / Sign up</item>
     </string-array>
 
 </resources>

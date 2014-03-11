@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -18,6 +17,7 @@ import android.widget.Toast;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 import com.google.android.gms.common.SignInButton;
+import com.tntu.easyenglish.LoginActivity;
 import com.tntu.easyenglish.MainActivity;
 import com.tntu.easyenglish.R;
 import com.tntu.easyenglish.utils.JSONUtils;
@@ -38,13 +38,13 @@ public class LoginFragment extends Fragment implements JSONCompleteListener {
 	private SignInButton googleButt;
 
 	private Animation anim;
-
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		convertView = inflater.inflate(R.layout.login_fragment, null);
 		client = new RESTClient(this);
-
+		
 		initViews();
 
 		anim = AnimationUtils.loadAnimation(getActivity(), R.anim.fly_in_anim);
@@ -63,6 +63,7 @@ public class LoginFragment extends Fragment implements JSONCompleteListener {
 		submitTv.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				
 				String username = loginEt.getText().toString();
 				String password = passEt.getText().toString();
 
@@ -70,6 +71,8 @@ public class LoginFragment extends Fragment implements JSONCompleteListener {
 					String requestUrl = "http://easy-english.yzi.me/api/getApiKey?login="
 							+ username + "&password=" + password;
 					client.execute(requestUrl);
+					
+					((LoginActivity)getActivity()).onLoginStarted();
 				} else {
 					Toast.makeText(getActivity(),
 							getString(R.string.empty_credentials),
@@ -85,7 +88,7 @@ public class LoginFragment extends Fragment implements JSONCompleteListener {
 					@Override
 					public void onUserInfoFetched(GraphUser user) {
 						if (user != null) {
-							((MainActivity) getActivity())
+							((LoginActivity) getActivity())
 									.onFacebookLoged(user);
 						}
 					}
@@ -95,7 +98,7 @@ public class LoginFragment extends Fragment implements JSONCompleteListener {
 		googleButt.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				((MainActivity) getActivity()).onGoogleLogin();
+				((LoginActivity) getActivity()).onGoogleLogin();
 			}
 		});
 
@@ -104,7 +107,7 @@ public class LoginFragment extends Fragment implements JSONCompleteListener {
 		notRegisteredTv.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				((MainActivity) getActivity()).openSignup();
+				((LoginActivity) getActivity()).openSignup();
 			}
 		});
 	}
@@ -123,7 +126,6 @@ public class LoginFragment extends Fragment implements JSONCompleteListener {
 
 	@Override
 	public void onRemoteCallComplete(String json) {
-
 		String apiKey = null;
 		String status = JSONUtils.getResponseStatus(json);
 		if (status.equals(JSONUtils.SUCCESS_TRUE)) {
@@ -133,7 +135,7 @@ public class LoginFragment extends Fragment implements JSONCompleteListener {
 
 			apiKey = JSONUtils.getValueFromJSON(json, "api_key");
 			Intent intent = new Intent(getActivity(), MainActivity.class);
-			intent.putExtra(MainActivity.API_KEY, apiKey);
+			intent.putExtra(LoginActivity.API_KEY, apiKey);
 			startActivity(intent);
 			getActivity().finish();
 		} else if (status.equals(JSONUtils.SUCCESS_FALSE)) {
@@ -144,6 +146,7 @@ public class LoginFragment extends Fragment implements JSONCompleteListener {
 					.show();
 		}
 
+		((LoginActivity)getActivity()).onLoginCompleted();
 		client = new RESTClient(this);
 	}
 }

@@ -22,6 +22,7 @@
 
     <style name="Theme.Appstyle" parent="@style/Theme.AppCompat.Light">
         <item name="android:actionBarItemBackground">@drawable/selectable_background_appstyle</item>
+        <item name="android:actionBarTabTextStyle">@style/MyActionBarTitleText</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.Appstyle</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Appstyle</item>
         <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.Appstyle</item>
@@ -34,6 +35,13 @@
         <item name="actionMenuTextColor">@color/white</item>
     </style>
 
+        <!-- ActionBar title text -->
+    <style name="MyActionBarTitleText"
+           parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/actionbar_text</item>
+        <!-- The textColor property is backward compatible with the Support Library -->
+    </style>
+    
     <style name="ActionBar.Solid.Appstyle" parent="@style/Widget.AppCompat.Light.ActionBar.Solid">
         <item name="android:background">@drawable/ab_background_textured_appstyle</item>
         <item name="android:backgroundStacked">@drawable/ab_stacked_solid_appstyle</item>
@@ -45,7 +53,7 @@
         <item name="android:background">@drawable/ab_transparent_appstyle</item>
         <item name="android:progressBarStyle">@style/ProgressBar.Appstyle</item>
     </style>
-
+    
     <!-- this style is only referenced in a Light.DarkActionBar based theme -->
     <style name="Theme.Appstyle.Widget" parent="@style/Theme.AppCompat">
         <item name="android:popupMenuStyle">@style/PopupMenu.Appstyle</item>

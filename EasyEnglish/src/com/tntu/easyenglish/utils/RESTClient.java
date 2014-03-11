@@ -13,8 +13,6 @@ import android.util.Log;
 public class RESTClient extends AsyncTask<String, Void, String> {
 
 	private static final String TAG = "EasyEnglish";
-	private static final String SUCCESS_VALUE = "success";
-	
 	private JSONCompleteListener getJSONlistener;
 
 	public RESTClient (JSONCompleteListener listener){

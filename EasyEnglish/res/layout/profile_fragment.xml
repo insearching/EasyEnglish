@@ -2,13 +2,12 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    <ImageView
+    <com.tntu.easyenglish.view.RoundedImageView
         android:id="@+id/profileIv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/greetTv"
         android:layout_centerHorizontal="true"
-        android:gravity="center_horizontal"
         android:src="@drawable/com_facebook_profile_picture_blank_square" />
 
     <TextView
@@ -18,15 +17,5 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:text="@string/app_name" />
-
-    <Button
-        android:id="@+id/logintButt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/greetTv"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:onClick="onSignOut"
-        android:text="@string/com_facebook_usersettingsfragment_log_in_button" />
 
 </RelativeLayout>

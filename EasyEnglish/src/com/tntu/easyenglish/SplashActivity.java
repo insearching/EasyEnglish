@@ -13,7 +13,7 @@ public class SplashActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splash_layout);
 
-		new ShowSplashScreenTask().execute(3000);
+		new ShowSplashScreenTask().execute(1000);
 	}
 	
 	class ShowSplashScreenTask extends AsyncTask<Integer, Void, Void>{
