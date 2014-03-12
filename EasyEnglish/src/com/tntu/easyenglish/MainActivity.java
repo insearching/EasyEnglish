@@ -3,9 +3,7 @@ package com.tntu.easyenglish;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender.SendIntentException;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -19,16 +17,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.facebook.Session;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
 import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
+import com.google.android.gms.common.Scopes;
 import com.google.android.gms.plus.PlusClient;
-import com.google.android.gms.plus.model.people.Person;
-import com.tntu.easyenglish.LoginActivity.AuthType;
 import com.tntu.easyenglish.adapter.DrawerAdapter;
 import com.tntu.easyenglish.fragment.AboutFragment;
 import com.tntu.easyenglish.fragment.ContentFragment;
@@ -62,14 +57,33 @@ public class MainActivity extends ActionBarActivity implements
 	private Bundle mArgs = null;
 	private boolean isLogedOut = false;
 	private PlusClient mPlusClient;
+	private String mApiKey;
+	
+	private ContentFragment contentFragment;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		if (getIntent().getExtras() != null) {
-			mArgs = getIntent().getExtras().getBundle(LoginActivity.ARGS_KEY);
+		if(savedInstanceState != null){
+			if (savedInstanceState.containsKey(LoginActivity.API_KEY))
+				mApiKey = savedInstanceState.getString(LoginActivity.API_KEY);
+			if(savedInstanceState.containsKey(LoginActivity.ARGS_KEY))
+				mArgs = savedInstanceState.getBundle(LoginActivity.ARGS_KEY);
+		}
+		
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			if(extras.containsKey(LoginActivity.API_KEY))
+				mApiKey = extras.getString(LoginActivity.API_KEY);
+			if(extras.containsKey(LoginActivity.ARGS_KEY))
+				mArgs = extras.getBundle(LoginActivity.ARGS_KEY);
+			if(extras.containsKey(LoginActivity.AUTH_KEY)){
+				LoginActivity.AuthType enumType = (LoginActivity.AuthType)extras.getSerializable(LoginActivity.AUTH_KEY);
+				if(enumType == LoginActivity.AuthType.NATIVE)
+					contentFragment = ContentFragment.newInstance(mApiKey);
+			}
 		}
 
 		initView();
@@ -120,6 +134,7 @@ public class MainActivity extends ActionBarActivity implements
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putInt(POSITION_KEY, mPosition);
+		outState.putString(LoginActivity.API_KEY, mApiKey);
 	}
 
 	@Override
@@ -175,7 +190,15 @@ public class MainActivity extends ActionBarActivity implements
 				fragment = new DictionaryFragment();
 				break;
 			case CONTENT:
-				fragment = new ContentFragment();
+//				Bundle extras = getIntent().getExtras();
+//				if(extras != null){
+//					if(extras.containsKey(LoginActivity.AUTH_KEY)){
+//						LoginActivity.AuthType enumType = (LoginActivity.AuthType)extras.getSerializable(LoginActivity.AUTH_KEY);
+//						if(enumType == LoginActivity.AuthType.NATIVE)
+//							fragment = ContentFragment.newInstance(mApiKey);
+//					}
+//				}
+				fragment = contentFragment;
 				break;
 			case ABOUT:
 				fragment = new AboutFragment();
@@ -229,8 +252,6 @@ public class MainActivity extends ActionBarActivity implements
 			session.closeAndClearTokenInformation();
 		}
 	}
-
-
 
 	private void callGooglePlusLogout() {
 		mPlusClient = new PlusClient.Builder(this, this, this)

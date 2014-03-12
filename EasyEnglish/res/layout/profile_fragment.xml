@@ -2,7 +2,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    <com.tntu.easyenglish.view.RoundedImageView
+    <ImageView
         android:id="@+id/profileIv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

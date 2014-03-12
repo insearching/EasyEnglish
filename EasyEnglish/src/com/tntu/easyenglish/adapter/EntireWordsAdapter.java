@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tntu.easyenglish.R;
-import com.tntu.easyenglish.utils.Word;
+import com.tntu.easyenglish.entity.Word;
 
 public class EntireWordsAdapter extends BaseAdapter {
 

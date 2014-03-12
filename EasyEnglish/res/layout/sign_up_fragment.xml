@@ -6,26 +6,17 @@
     <ImageView
         android:id="@+id/logoIv"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/login_button_height"
+        android:layout_height="100dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/login_top_margin"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/ic_launcher" />
-    
-    <TextView
-        android:id="@+id/signupTv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/logoIv"
-        android:text="@string/sign_up"
-        android:textSize="@dimen/default_text_size" />
+        android:src="@drawable/logo" />
 
     <EditText
         android:id="@+id/userNameEt"
         android:layout_width="match_parent"
         android:layout_height="@dimen/login_button_height"
-        android:layout_below="@+id/signupTv"
+        android:layout_below="@+id/logoIv"
         android:layout_marginLeft="@dimen/side_margin"
         android:layout_marginRight="@dimen/side_margin"
         android:layout_marginTop="@dimen/login_margin_top"

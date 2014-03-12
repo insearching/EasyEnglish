@@ -15,8 +15,8 @@ public class RESTClient extends AsyncTask<String, Void, String> {
 	private static final String TAG = "EasyEnglish";
 	private JSONCompleteListener getJSONlistener;
 
-	public RESTClient (JSONCompleteListener listener){
-		this.getJSONlistener = listener;
+	public RESTClient (JSONCompleteListener context){
+		this.getJSONlistener = context;
 	}
 	
 	@Override

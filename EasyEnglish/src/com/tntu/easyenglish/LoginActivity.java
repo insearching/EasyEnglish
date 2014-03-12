@@ -187,22 +187,6 @@ public class LoginActivity extends FragmentActivity implements
 		}
 	}
 
-	public void logOut() {
-		// Facebook
-		Session session = Session.getActiveSession();
-		if (session != null)
-			session.closeAndClearTokenInformation();
-
-		// Google
-		if (mPlusClient != null && mPlusClient.isConnected()) {
-			mPlusClient.clearDefaultAccount();
-			mPlusClient.disconnect();
-			mPlusClient.connect();
-		}
-
-		mArgs = null;
-	}
-
 	public void openSignup() {
 		getSupportFragmentManager()
 				.beginTransaction()

@@ -135,7 +135,12 @@ public class LoginFragment extends Fragment implements JSONCompleteListener {
 
 			apiKey = JSONUtils.getValueFromJSON(json, "api_key");
 			Intent intent = new Intent(getActivity(), MainActivity.class);
-			intent.putExtra(LoginActivity.API_KEY, apiKey);
+			
+			Bundle args = new Bundle();
+			args.putSerializable(LoginActivity.AUTH_KEY, LoginActivity.AuthType.NATIVE);
+			args.putString(LoginActivity.API_KEY, apiKey);
+			intent.putExtras(args);
+			
 			startActivity(intent);
 			getActivity().finish();
 		} else if (status.equals(JSONUtils.SUCCESS_FALSE)) {

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.tntu.easyenglish.R;
 import com.tntu.easyenglish.adapter.EntireWordsAdapter;
-import com.tntu.easyenglish.utils.Word;
+import com.tntu.easyenglish.entity.Word;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

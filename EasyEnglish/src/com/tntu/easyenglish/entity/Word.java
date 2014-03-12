@@ -1,4 +1,4 @@
-package com.tntu.easyenglish.utils;
+package com.tntu.easyenglish.entity;
 
 public class Word {
 	public enum Status {

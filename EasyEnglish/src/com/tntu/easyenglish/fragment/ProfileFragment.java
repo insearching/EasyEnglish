@@ -22,7 +22,6 @@ import android.widget.TextView;
 
 import com.tntu.easyenglish.LoginActivity;
 import com.tntu.easyenglish.R;
-import com.tntu.easyenglish.R.color;
 
 public class ProfileFragment extends Fragment {
 	private View convertView;
@@ -78,6 +77,8 @@ public class ProfileFragment extends Fragment {
 		convertView = inflater.inflate(R.layout.profile_fragment, null);
 		nameTv = (TextView) convertView.findViewById(R.id.greetTv);
 		profileIv = (ImageView) convertView.findViewById(R.id.profileIv);
+		Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(),R.drawable.com_facebook_profile_picture_blank_square);
+		profileIv.setImageBitmap(getRoundedShape(bitmap));
 	}
 
 	class GetProfileImageById extends AsyncTask<String, Void, Bitmap> {
