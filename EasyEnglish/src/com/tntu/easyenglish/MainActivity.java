@@ -3,14 +3,18 @@ package com.tntu.easyenglish;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -58,7 +62,7 @@ public class MainActivity extends ActionBarActivity implements
 	private boolean isLogedOut = false;
 	private PlusClient mPlusClient;
 	private String mApiKey;
-	
+
 	private ContentFragment contentFragment;
 
 	@Override
@@ -66,22 +70,23 @@ public class MainActivity extends ActionBarActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		if(savedInstanceState != null){
+		if (savedInstanceState != null) {
 			if (savedInstanceState.containsKey(LoginActivity.API_KEY))
 				mApiKey = savedInstanceState.getString(LoginActivity.API_KEY);
-			if(savedInstanceState.containsKey(LoginActivity.ARGS_KEY))
+			if (savedInstanceState.containsKey(LoginActivity.ARGS_KEY))
 				mArgs = savedInstanceState.getBundle(LoginActivity.ARGS_KEY);
 		}
-		
+
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			if(extras.containsKey(LoginActivity.API_KEY))
+			if (extras.containsKey(LoginActivity.API_KEY))
 				mApiKey = extras.getString(LoginActivity.API_KEY);
-			if(extras.containsKey(LoginActivity.ARGS_KEY))
+			if (extras.containsKey(LoginActivity.ARGS_KEY))
 				mArgs = extras.getBundle(LoginActivity.ARGS_KEY);
-			if(extras.containsKey(LoginActivity.AUTH_KEY)){
-				LoginActivity.AuthType enumType = (LoginActivity.AuthType)extras.getSerializable(LoginActivity.AUTH_KEY);
-				if(enumType == LoginActivity.AuthType.NATIVE)
+			if (extras.containsKey(LoginActivity.AUTH_KEY)) {
+				LoginActivity.AuthType enumType = (LoginActivity.AuthType) extras
+						.getSerializable(LoginActivity.AUTH_KEY);
+				if (enumType == LoginActivity.AuthType.NATIVE)
 					contentFragment = ContentFragment.newInstance(mApiKey);
 			}
 		}
@@ -141,12 +146,33 @@ public class MainActivity extends ActionBarActivity implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main, menu);
-		return super.onCreateOptionsMenu(menu);
+
+		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+		MenuItem searchItem = menu.findItem(R.id.search);
+
+		SearchView searchView = (SearchView) MenuItemCompat
+				.getActionView(searchItem);
+		searchView.setSearchableInfo(searchManager
+				.getSearchableInfo(getComponentName()));
+
+		return true;
+	}
+
+	@Override
+	protected void onResume() {
+
+		super.onResume();
+
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (mDrawerToggle.onOptionsItemSelected(item)) {
+			return true;
+		}
+		switch (item.getItemId()) {
+		case R.id.search:
+			getSupportActionBar().setIcon(R.drawable.ic_action_logo);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -190,14 +216,15 @@ public class MainActivity extends ActionBarActivity implements
 				fragment = new DictionaryFragment();
 				break;
 			case CONTENT:
-//				Bundle extras = getIntent().getExtras();
-//				if(extras != null){
-//					if(extras.containsKey(LoginActivity.AUTH_KEY)){
-//						LoginActivity.AuthType enumType = (LoginActivity.AuthType)extras.getSerializable(LoginActivity.AUTH_KEY);
-//						if(enumType == LoginActivity.AuthType.NATIVE)
-//							fragment = ContentFragment.newInstance(mApiKey);
-//					}
-//				}
+				// Bundle extras = getIntent().getExtras();
+				// if(extras != null){
+				// if(extras.containsKey(LoginActivity.AUTH_KEY)){
+				// LoginActivity.AuthType enumType =
+				// (LoginActivity.AuthType)extras.getSerializable(LoginActivity.AUTH_KEY);
+				// if(enumType == LoginActivity.AuthType.NATIVE)
+				// fragment = ContentFragment.newInstance(mApiKey);
+				// }
+				// }
 				fragment = contentFragment;
 				break;
 			case ABOUT:
