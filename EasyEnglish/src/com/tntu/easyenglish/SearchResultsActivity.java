@@ -11,6 +11,7 @@ public class SearchResultsActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
 		handleIntent(getIntent());
 	}
 
@@ -20,10 +21,7 @@ public class SearchResultsActivity extends ActionBarActivity {
 	}
 
 	private void handleIntent(Intent intent) {
-
-		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-			String query = intent.getStringExtra(SearchManager.QUERY);
-			Toast.makeText(this, query, Toast.LENGTH_LONG).show();
-		}
+		String query = intent.getStringExtra(SearchManager.QUERY);
+		Toast.makeText(this, query, Toast.LENGTH_LONG).show();
 	}
 }

@@ -28,23 +28,14 @@ import com.google.android.gms.plus.PlusClient;
 import com.google.android.gms.plus.model.people.Person;
 import com.tntu.easyenglish.fragment.LoginFragment;
 import com.tntu.easyenglish.fragment.SignupFragment;
+import com.tntu.easyenglish.utils.KeyUtils;
 
 public class LoginActivity extends FragmentActivity implements
 		ConnectionCallbacks, OnConnectionFailedListener {
 
 	public static final String TAG = "EasyEnglish";
-	public static final String USER_KEY = "user";
-	public static final String NAME_KEY = "name";
-	public static final String ID_KEY = "id";
-	public static final String AUTH_KEY = "auth_type";
-	public static final String API_KEY = "apiKey";
-	public static final String ARGS_KEY = "args";
-	public static final String LOGOUT_KEY = "logout";
-	private static String backStackTag = "login";
 
-	public enum AuthType {
-		FACEBOOK, GOOGLE, NATIVE
-	}
+	private static String backStackTag = "login";
 
 	// Login Google+
 	private static final int REQUEST_CODE_RESOLVE_ERR = 9000;
@@ -65,10 +56,10 @@ public class LoginActivity extends FragmentActivity implements
 		mFragment = new LoginFragment();
 		
 		if (savedInstanceState != null) {
-			if (savedInstanceState.containsKey(USER_KEY))
-				mArgs = savedInstanceState.getBundle(USER_KEY);
-			if (savedInstanceState.containsKey(API_KEY))
-				mApiKey = savedInstanceState.getString(API_KEY);
+			if (savedInstanceState.containsKey(KeyUtils.USER_KEY))
+				mArgs = savedInstanceState.getBundle(KeyUtils.USER_KEY);
+			if (savedInstanceState.containsKey(KeyUtils.API_KEY))
+				mApiKey = savedInstanceState.getString(KeyUtils.API_KEY);
 		}
 
 		uiHelper = new UiLifecycleHelper(this, callback);
@@ -98,8 +89,8 @@ public class LoginActivity extends FragmentActivity implements
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		uiHelper.onSaveInstanceState(outState);
-		outState.putBundle(USER_KEY, mArgs);
-		outState.putString(API_KEY, mApiKey);
+		outState.putBundle(KeyUtils.USER_KEY, mArgs);
+		outState.putString(KeyUtils.API_KEY, mApiKey);
 	}
 
 	private void onSessionStateChanged(Session session, SessionState state,
@@ -140,12 +131,12 @@ public class LoginActivity extends FragmentActivity implements
 
 	public void onFacebookLoged(GraphUser user) {
 		mArgs = new Bundle();
-		mArgs.putString(NAME_KEY, user.getName());
-		mArgs.putString(ID_KEY, user.getId());
-		mArgs.putString(AUTH_KEY, AuthType.FACEBOOK.name());
+		mArgs.putString(KeyUtils.NAME_KEY, user.getName());
+		mArgs.putString(KeyUtils.ID_KEY, user.getId());
+		mArgs.putString(KeyUtils.AUTH_KEY, KeyUtils.AuthType.FACEBOOK.name());
 
 		Intent intent = new Intent(this, MainActivity.class);
-		intent.putExtra(ARGS_KEY, mArgs);
+		intent.putExtra(KeyUtils.ARGS_KEY, mArgs);
 		startActivity(intent);
 		finish();
 	}
@@ -222,12 +213,12 @@ public class LoginActivity extends FragmentActivity implements
 			mArgs = new Bundle();
 
 			Person currentPerson = mPlusClient.getCurrentPerson();
-			mArgs.putString(NAME_KEY, currentPerson.getDisplayName());
-			mArgs.putString(ID_KEY, currentPerson.getId());
-			mArgs.putString(AUTH_KEY, AuthType.GOOGLE.name());
+			mArgs.putString(KeyUtils.NAME_KEY, currentPerson.getDisplayName());
+			mArgs.putString(KeyUtils.ID_KEY, currentPerson.getId());
+			mArgs.putString(KeyUtils.AUTH_KEY, KeyUtils.AuthType.GOOGLE.name());
 
 			Intent intent = new Intent(this, MainActivity.class);
-			intent.putExtra(ARGS_KEY, mArgs);
+			intent.putExtra(KeyUtils.ARGS_KEY, mArgs);
 			startActivity(intent);
 			finish();
 		}

@@ -56,7 +56,7 @@ public class ContentListAdapter extends BaseAdapter {
 		Content content = data.get(position);
 		
 		int level = content.getLevel();
-		int levelIconRes;
+		int levelIconRes = R.drawable.level1;
 		switch (level) {
 		case 1:
 			levelIconRes = R.drawable.level1;
@@ -69,13 +69,9 @@ public class ContentListAdapter extends BaseAdapter {
 		case 3:
 			levelIconRes = R.drawable.level3;
 			break;
-			
-		default:
-			levelIconRes = R.drawable.level1;
-			break;
 		}
 		holder.titleTv.setText(content.getTitle());
-		holder.descrTv.setText(content.getGenre());
+		holder.descrTv.setText(content.getGenre() + " " + content.getType());
 		holder.lvlTv.setImageResource(levelIconRes);
 		holder.dateTv.setText(content.getDate());
 		

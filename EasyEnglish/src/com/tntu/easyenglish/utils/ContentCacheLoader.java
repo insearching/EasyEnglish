@@ -58,4 +58,8 @@ public class ContentCacheLoader {
 
 		return info;
 	}
+	
+	public void deleteFile(String fileName){
+		context.deleteFile(fileName);
+	}
 }

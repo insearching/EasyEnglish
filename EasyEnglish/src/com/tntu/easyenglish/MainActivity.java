@@ -16,7 +16,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -30,11 +29,12 @@ import com.google.android.gms.common.Scopes;
 import com.google.android.gms.plus.PlusClient;
 import com.tntu.easyenglish.adapter.DrawerAdapter;
 import com.tntu.easyenglish.fragment.AboutFragment;
-import com.tntu.easyenglish.fragment.ContentFragment;
+import com.tntu.easyenglish.fragment.ContentListFragment;
 import com.tntu.easyenglish.fragment.DictionaryFragment;
 import com.tntu.easyenglish.fragment.ExercisesFragment;
 import com.tntu.easyenglish.fragment.ProfileFragment;
 import com.tntu.easyenglish.fragment.WordsFragment;
+import com.tntu.easyenglish.utils.KeyUtils;
 
 public class MainActivity extends ActionBarActivity implements
 		ConnectionCallbacks, OnConnectionFailedListener {
@@ -63,7 +63,7 @@ public class MainActivity extends ActionBarActivity implements
 	private PlusClient mPlusClient;
 	private String mApiKey;
 
-	private ContentFragment contentFragment;
+	private ContentListFragment contentFragment;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -71,23 +71,23 @@ public class MainActivity extends ActionBarActivity implements
 		setContentView(R.layout.activity_main);
 
 		if (savedInstanceState != null) {
-			if (savedInstanceState.containsKey(LoginActivity.API_KEY))
-				mApiKey = savedInstanceState.getString(LoginActivity.API_KEY);
-			if (savedInstanceState.containsKey(LoginActivity.ARGS_KEY))
-				mArgs = savedInstanceState.getBundle(LoginActivity.ARGS_KEY);
+			if (savedInstanceState.containsKey(KeyUtils.API_KEY))
+				mApiKey = savedInstanceState.getString(KeyUtils.API_KEY);
+			if (savedInstanceState.containsKey(KeyUtils.ARGS_KEY))
+				mArgs = savedInstanceState.getBundle(KeyUtils.ARGS_KEY);
 		}
 
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			if (extras.containsKey(LoginActivity.API_KEY))
-				mApiKey = extras.getString(LoginActivity.API_KEY);
-			if (extras.containsKey(LoginActivity.ARGS_KEY))
-				mArgs = extras.getBundle(LoginActivity.ARGS_KEY);
-			if (extras.containsKey(LoginActivity.AUTH_KEY)) {
-				LoginActivity.AuthType enumType = (LoginActivity.AuthType) extras
-						.getSerializable(LoginActivity.AUTH_KEY);
-				if (enumType == LoginActivity.AuthType.NATIVE)
-					contentFragment = ContentFragment.newInstance(mApiKey);
+			if (extras.containsKey(KeyUtils.API_KEY))
+				mApiKey = extras.getString(KeyUtils.API_KEY);
+			if (extras.containsKey(KeyUtils.ARGS_KEY))
+				mArgs = extras.getBundle(KeyUtils.ARGS_KEY);
+			if (extras.containsKey(KeyUtils.AUTH_KEY)) {
+				KeyUtils.AuthType enumType = (KeyUtils.AuthType) extras
+						.getSerializable(KeyUtils.AUTH_KEY);
+				if (enumType == KeyUtils.AuthType.NATIVE)
+					contentFragment = ContentListFragment.newInstance(mApiKey);
 			}
 		}
 
@@ -139,22 +139,35 @@ public class MainActivity extends ActionBarActivity implements
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putInt(POSITION_KEY, mPosition);
-		outState.putString(LoginActivity.API_KEY, mApiKey);
+		outState.putString(KeyUtils.API_KEY, mApiKey);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.main, menu);
-
 		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+		getMenuInflater().inflate(R.menu.main, menu);
 		MenuItem searchItem = menu.findItem(R.id.search);
-
 		SearchView searchView = (SearchView) MenuItemCompat
 				.getActionView(searchItem);
+
+		searchView.setIconifiedByDefault(false);
+		searchView.setQueryHint(getString(R.string.menu_search_hint));
 		searchView.setSearchableInfo(searchManager
 				.getSearchableInfo(getComponentName()));
 
+		SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
+			public boolean onQueryTextChange(String newText) {
+				return true;
+			}
+
+			public boolean onQueryTextSubmit(String query) {
+				Intent intent = new Intent(MainActivity.this, SearchResultsActivity.class);
+				intent.putExtra(SearchManager.QUERY, query);
+				startActivity(intent);
+				return true;
+			}
+		};
+		searchView.setOnQueryTextListener(queryTextListener);
 		return true;
 	}
 
@@ -174,6 +187,8 @@ public class MainActivity extends ActionBarActivity implements
 		case R.id.search:
 			getSupportActionBar().setIcon(R.drawable.ic_action_logo);
 			return true;
+		case R.id.refresh:
+			contentFragment.refreshContentList();
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -234,7 +249,7 @@ public class MainActivity extends ActionBarActivity implements
 				callFacebookLogout();
 				callGooglePlusLogout();
 				Intent intent = new Intent(this, LoginActivity.class);
-				intent.putExtra(LoginActivity.LOGOUT_KEY, true);
+				intent.putExtra(KeyUtils.LOGOUT_KEY, true);
 				startActivity(intent);
 				finish();
 				return;

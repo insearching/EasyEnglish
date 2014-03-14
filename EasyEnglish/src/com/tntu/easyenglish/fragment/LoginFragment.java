@@ -21,6 +21,7 @@ import com.tntu.easyenglish.LoginActivity;
 import com.tntu.easyenglish.MainActivity;
 import com.tntu.easyenglish.R;
 import com.tntu.easyenglish.utils.JSONUtils;
+import com.tntu.easyenglish.utils.KeyUtils;
 import com.tntu.easyenglish.utils.RESTClient;
 import com.tntu.easyenglish.utils.RESTClient.JSONCompleteListener;
 
@@ -137,8 +138,8 @@ public class LoginFragment extends Fragment implements JSONCompleteListener {
 			Intent intent = new Intent(getActivity(), MainActivity.class);
 			
 			Bundle args = new Bundle();
-			args.putSerializable(LoginActivity.AUTH_KEY, LoginActivity.AuthType.NATIVE);
-			args.putString(LoginActivity.API_KEY, apiKey);
+			args.putSerializable(KeyUtils.AUTH_KEY, KeyUtils.AuthType.NATIVE);
+			args.putString(KeyUtils.API_KEY, apiKey);
 			intent.putExtras(args);
 			
 			startActivity(intent);

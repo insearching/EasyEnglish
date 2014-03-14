@@ -27,8 +27,9 @@
     <string name="wrong_credentials">Wrong username or password. Please try again.</string>
 
     <!-- Navigation Drawer -->
-    <string name="search_title">Search</string>
-    <string name="search_hint">Enter word to add to your dictionary</string>
+    <string name="menu_search_title">Search</string>
+    <string name="menu_search_hint">Add word</string>
+    <string name="menu_refresh">Refresh</string>
     <string-array name="main_menu_loged">
         <item>Profile</item>
         <item>Exercises</item>

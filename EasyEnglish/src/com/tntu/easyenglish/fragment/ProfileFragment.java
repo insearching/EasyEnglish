@@ -20,8 +20,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.tntu.easyenglish.LoginActivity;
 import com.tntu.easyenglish.R;
+import com.tntu.easyenglish.utils.KeyUtils;
 
 public class ProfileFragment extends Fragment {
 	private View convertView;
@@ -51,19 +51,19 @@ public class ProfileFragment extends Fragment {
 		}
 
 		if (args != null)
-			if (args.containsKey(LoginActivity.NAME_KEY)
-					&& args.containsKey(LoginActivity.ID_KEY)
-					&& args.containsKey(LoginActivity.AUTH_KEY)) {
+			if (args.containsKey(KeyUtils.NAME_KEY)
+					&& args.containsKey(KeyUtils.ID_KEY)
+					&& args.containsKey(KeyUtils.AUTH_KEY)) {
 				nameTv.setText("Hello "
-						+ args.getString(LoginActivity.NAME_KEY) + "!");
-				LoginActivity.AuthType type = LoginActivity.AuthType
-						.valueOf(args.getString((LoginActivity.AUTH_KEY)));
-				String id = args.getString(LoginActivity.ID_KEY);
+						+ args.getString(KeyUtils.NAME_KEY) + "!");
+				KeyUtils.AuthType type = KeyUtils.AuthType
+						.valueOf(args.getString((KeyUtils.AUTH_KEY)));
+				String id = args.getString(KeyUtils.ID_KEY);
 				String url = null;
-				if (type == LoginActivity.AuthType.FACEBOOK) {
+				if (type == KeyUtils.AuthType.FACEBOOK) {
 					url = "http://graph.facebook.com/" + id
 							+ "/picture?type=large";
-				} else if (type == LoginActivity.AuthType.GOOGLE) {
+				} else if (type == KeyUtils.AuthType.GOOGLE) {
 					url = "https://plus.google.com/s2/photos/profile/" + id
 							+ "?sz=180";
 				}

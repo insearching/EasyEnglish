@@ -2,8 +2,13 @@
     xmlns:appcompat="http://schemas.android.com/apk/res-auto">
     
     <item android:id="@+id/search"
-        android:title="@string/search_title"
+        android:title="@string/menu_search_title"
         android:icon="@android:drawable/ic_menu_search"
-        appcompat:showAsAction="collapseActionView|ifRoom"
+        appcompat:showAsAction="ifRoom|collapseActionView"
         appcompat:actionViewClass="android.support.v7.widget.SearchView"/>
+    
+    <item android:id="@+id/refresh"
+        android:title="@string/menu_refresh"
+        android:icon="@android:drawable/ic_menu_rotate"
+        appcompat:showAsAction="always"/>
 </menu>
