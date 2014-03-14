@@ -47,7 +47,7 @@ public class ContentFragment extends YouTubePlayerSupportFragment implements JSO
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		convertView = inflater.inflate(R.layout.content_fragment, null);
+		convertView = inflater.inflate(R.layout.content_fragment, null, false);
 		// playerWv = (WebView) convertView.findViewById(R.id.playerWv);
 
 		YouTubePlayerView youTubeView = (YouTubePlayerView) convertView

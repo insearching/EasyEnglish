@@ -19,7 +19,6 @@
         -->
 
         <com.google.android.youtube.player.YouTubePlayerView
-            android:name="com.google.android.youtube.player.YouTubePlayer"
             android:id="@+id/youtube_api_demo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
