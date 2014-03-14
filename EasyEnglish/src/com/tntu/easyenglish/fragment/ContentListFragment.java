@@ -8,9 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ProgressBar;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+import com.tntu.easyenglish.MainActivity;
 import com.tntu.easyenglish.R;
 import com.tntu.easyenglish.adapter.ContentListAdapter;
 import com.tntu.easyenglish.entity.Content;
@@ -24,6 +26,7 @@ public class ContentListFragment extends Fragment implements
 		JSONCompleteListener, OnItemClickListener {
 	private View convertView;
 	private ListView contentLv;
+	private ProgressBar loadPb;
 	private ContentListAdapter mAdapter;
 	private RESTClient client;
 	private String requestUrl;
@@ -46,12 +49,14 @@ public class ContentListFragment extends Fragment implements
 		convertView = inflater.inflate(R.layout.content_list_fragment, null);
 		contentLv = (ListView) convertView.findViewById(R.id.contentLv);
 		contentLv.setOnItemClickListener(this);
+		loadPb = (ProgressBar) convertView.findViewById(R.id.loadPb);
 
 		loader = new ContentCacheLoader(getActivity());
 		String info = loader.readFromFile(fileName);
 		if (!info.equals("")) {
 			setContentList(info);
 		} else {
+			hideList();
 			apiKey = getArguments().getString(KeyUtils.API_KEY);
 			requestUrl = "http://easy-english.yzi.me/api/getContentsList?api_key="
 					+ apiKey + "&count=10";
@@ -65,6 +70,7 @@ public class ContentListFragment extends Fragment implements
 	public void onRemoteCallComplete(String json) {
 		client = new RESTClient(this);
 		setContentList(json);
+		showList();
 		loader.writeToFile(fileName, json);
 	}
 
@@ -81,10 +87,21 @@ public class ContentListFragment extends Fragment implements
 		if (loader == null)
 			return;
 		loader.deleteFile(fileName);
+		hideList();
 		client = new RESTClient(this);
 		client.execute(requestUrl);
 	}
 
+	private void showList(){
+		loadPb.setVisibility(View.GONE);
+		contentLv.setVisibility(View.VISIBLE);
+	}
+	
+	private void hideList(){
+		loadPb.setVisibility(View.VISIBLE);
+		contentLv.setVisibility(View.GONE);
+	}
+	
 	@Override
 	public void onItemClick(AdapterView<?> adapter, View convertView,
 			int position, long id) {
@@ -95,7 +112,8 @@ public class ContentListFragment extends Fragment implements
 				.beginTransaction()
 				.setCustomAnimations(R.anim.float_left_to_right_in_anim,
 						R.anim.float_left_to_right_out_anim)
-				.replace(R.id.content_frame, fragment)
+				.replace(R.id.content_frame, fragment, KeyUtils.CONTENT_TAG)
 				.addToBackStack("content_list").commit();
+		
 	}
 }

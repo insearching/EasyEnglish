@@ -33,7 +33,7 @@ public class RESTClient extends AsyncTask<String, Void, String> {
 			}
 
 		} catch (Exception e) {
-			Log.e(TAG, e.getMessage());
+			//Log.e(TAG, e.getMessage());
 		}
 		return responseStr;
 	}

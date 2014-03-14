@@ -133,7 +133,7 @@ public class LoginActivity extends FragmentActivity implements
 		mArgs = new Bundle();
 		mArgs.putString(KeyUtils.NAME_KEY, user.getName());
 		mArgs.putString(KeyUtils.ID_KEY, user.getId());
-		mArgs.putString(KeyUtils.AUTH_KEY, KeyUtils.AuthType.FACEBOOK.name());
+		mArgs.putSerializable(KeyUtils.AUTH_KEY, KeyUtils.AuthType.FACEBOOK);
 
 		Intent intent = new Intent(this, MainActivity.class);
 		intent.putExtra(KeyUtils.ARGS_KEY, mArgs);
@@ -215,7 +215,7 @@ public class LoginActivity extends FragmentActivity implements
 			Person currentPerson = mPlusClient.getCurrentPerson();
 			mArgs.putString(KeyUtils.NAME_KEY, currentPerson.getDisplayName());
 			mArgs.putString(KeyUtils.ID_KEY, currentPerson.getId());
-			mArgs.putString(KeyUtils.AUTH_KEY, KeyUtils.AuthType.GOOGLE.name());
+			mArgs.putSerializable(KeyUtils.AUTH_KEY, KeyUtils.AuthType.GOOGLE);
 
 			Intent intent = new Intent(this, MainActivity.class);
 			intent.putExtra(KeyUtils.ARGS_KEY, mArgs);

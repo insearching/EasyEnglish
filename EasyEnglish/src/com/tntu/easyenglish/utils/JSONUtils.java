@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.tntu.easyenglish.entity.Content;
+import com.tntu.easyenglish.entity.User;
 
 public class JSONUtils {
 
@@ -90,6 +91,22 @@ public class JSONUtils {
 		return id;
 	}
 
+	public static User getProfileInfo(String json) {
+		JSONObject jsonObject = null;
+		User user = null;
+		try {
+			jsonObject = new JSONObject(json).getJSONObject(KeyUtils.DATA_KEY);
+			String login = jsonObject.getString(KeyUtils.LOGIN_KEY);
+			String email = jsonObject.getString(KeyUtils.EMAIL_KEY);
+			String regDate = jsonObject.getString(KeyUtils.REG_DATE);
+			
+			user = new User(login, email, regDate);
+		} catch (JSONException ex) {
+
+		}
+		return user;
+	}
+	
 	private static String transformDate(String date) {
 		SimpleDateFormat oldDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat newDateFormat = new SimpleDateFormat("dd MMM yyyy");

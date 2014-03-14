@@ -5,9 +5,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayer.Provider;
+import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+import com.google.android.youtube.player.YouTubePlayerView;
 import com.tntu.easyenglish.R;
 import com.tntu.easyenglish.entity.Content;
 import com.tntu.easyenglish.utils.ContentCacheLoader;
@@ -16,9 +22,12 @@ import com.tntu.easyenglish.utils.KeyUtils;
 import com.tntu.easyenglish.utils.RESTClient;
 import com.tntu.easyenglish.utils.RESTClient.JSONCompleteListener;
 
-public class ContentFragment extends Fragment implements JSONCompleteListener {
+public class ContentFragment extends YouTubePlayerSupportFragment implements JSONCompleteListener,
+		YouTubePlayer.OnInitializedListener {
 	private View convertView;
-	private WebView playerWv;
+	// private WebView playerWv;
+	private LinearLayout contentLl;
+	private ProgressBar loadPb;
 	private TextView contentTv;
 	private RESTClient client;
 	private String requestUrl;
@@ -39,8 +48,15 @@ public class ContentFragment extends Fragment implements JSONCompleteListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		convertView = inflater.inflate(R.layout.content_fragment, null);
-		playerWv = (WebView) convertView.findViewById(R.id.playerWv);
+		// playerWv = (WebView) convertView.findViewById(R.id.playerWv);
+
+		YouTubePlayerView youTubeView = (YouTubePlayerView) convertView
+				.findViewById(R.id.youtube_api_demo);
+		youTubeView.initialize(KeyUtils.DEVELOPER_KEY, this);
+
 		contentTv = (TextView) convertView.findViewById(R.id.contentTv);
+		contentLl = (LinearLayout) convertView.findViewById(R.id.contentLl);
+		loadPb = (ProgressBar) convertView.findViewById(R.id.loadPb);
 		loader = new ContentCacheLoader(getActivity());
 
 		String info = loader.readFromFile(fileName);
@@ -53,6 +69,7 @@ public class ContentFragment extends Fragment implements JSONCompleteListener {
 					+ apiKey + "&id=" + id;
 			client = new RESTClient(this);
 			client.execute(requestUrl);
+			hideView();
 		}
 		return convertView;
 	}
@@ -61,6 +78,7 @@ public class ContentFragment extends Fragment implements JSONCompleteListener {
 	public void onRemoteCallComplete(String json) {
 		client = new RESTClient(this);
 		setData(json);
+		showView();
 		loader.writeToFile(fileName, json);
 	}
 
@@ -70,12 +88,13 @@ public class ContentFragment extends Fragment implements JSONCompleteListener {
 			Content content = JSONUtils.getContentData(json);
 			String playerLink = content.getPlayerLink();
 			if (playerLink != null && !playerLink.equals("null")) {
-				playerWv.getSettings().setJavaScriptEnabled(true);
-				playerWv.loadDataWithBaseURL("", content.getPlayerLink(),
-						"text/html", "UTF-8", "");
-			}
-			else {
-				playerWv.setVisibility(View.GONE);
+				// playerWv.getSettings().setJavaScriptEnabled(true);
+				// playerLink =
+				// "<iframe src=\"http://www.youtube.com/embed/71m94sRcVDo\" frameborder=\"0\" allowfullscreen></iframe>";
+				// playerWv.loadDataWithBaseURL("", playerLink, "text/html",
+				// "UTF-8", "");
+			} else {
+				// playerWv.setVisibility(View.GONE);
 			}
 			contentTv.setText(content.getText());
 		}
@@ -87,5 +106,31 @@ public class ContentFragment extends Fragment implements JSONCompleteListener {
 		loader.deleteFile(fileName);
 		client = new RESTClient(this);
 		client.execute(requestUrl);
+		hideView();
+	}
+
+	private void hideView() {
+		loadPb.setVisibility(View.GONE);
+		contentLl.setVisibility(View.VISIBLE);
+	}
+
+	private void showView() {
+		loadPb.setVisibility(View.VISIBLE);
+		contentLl.setVisibility(View.GONE);
+	}
+
+	@Override
+	public void onInitializationFailure(Provider arg0,
+			YouTubeInitializationResult arg1) {
+
+	}
+
+	@Override
+	public void onInitializationSuccess(Provider provider,
+			YouTubePlayer player, boolean wasRestored) {
+		if (!wasRestored) {
+			player.cueVideo("wKJ9KzGQq0w");
+		}
+
 	}
 }

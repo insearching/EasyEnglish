@@ -2,7 +2,9 @@ package com.tntu.easyenglish;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
+import android.app.FragmentManager.OnBackStackChangedListener;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +15,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
@@ -29,15 +32,17 @@ import com.google.android.gms.common.Scopes;
 import com.google.android.gms.plus.PlusClient;
 import com.tntu.easyenglish.adapter.DrawerAdapter;
 import com.tntu.easyenglish.fragment.AboutFragment;
+import com.tntu.easyenglish.fragment.ContentFragment;
 import com.tntu.easyenglish.fragment.ContentListFragment;
 import com.tntu.easyenglish.fragment.DictionaryFragment;
 import com.tntu.easyenglish.fragment.ExercisesFragment;
 import com.tntu.easyenglish.fragment.ProfileFragment;
 import com.tntu.easyenglish.fragment.WordsFragment;
 import com.tntu.easyenglish.utils.KeyUtils;
+import com.tntu.easyenglish.utils.KeyUtils.AuthType;
 
 public class MainActivity extends ActionBarActivity implements
-		ConnectionCallbacks, OnConnectionFailedListener {
+		ConnectionCallbacks, OnConnectionFailedListener{
 
 	public static final String POSITION_KEY = "position";
 
@@ -62,8 +67,7 @@ public class MainActivity extends ActionBarActivity implements
 	private boolean isLogedOut = false;
 	private PlusClient mPlusClient;
 	private String mApiKey;
-
-	private ContentListFragment contentFragment;
+	private AuthType authType;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -84,10 +88,8 @@ public class MainActivity extends ActionBarActivity implements
 			if (extras.containsKey(KeyUtils.ARGS_KEY))
 				mArgs = extras.getBundle(KeyUtils.ARGS_KEY);
 			if (extras.containsKey(KeyUtils.AUTH_KEY)) {
-				KeyUtils.AuthType enumType = (KeyUtils.AuthType) extras
+				authType = (KeyUtils.AuthType) extras
 						.getSerializable(KeyUtils.AUTH_KEY);
-				if (enumType == KeyUtils.AuthType.NATIVE)
-					contentFragment = ContentListFragment.newInstance(mApiKey);
 			}
 		}
 
@@ -95,8 +97,11 @@ public class MainActivity extends ActionBarActivity implements
 
 		selectItem(mPosition, true);
 
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setHomeButtonEnabled(true);
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
+//		actionBar.setHomeButtonEnabled(true);
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		actionBar.setDisplayShowHomeEnabled(true);
 	}
 
 	private void initView() {
@@ -161,7 +166,8 @@ public class MainActivity extends ActionBarActivity implements
 			}
 
 			public boolean onQueryTextSubmit(String query) {
-				Intent intent = new Intent(MainActivity.this, SearchResultsActivity.class);
+				Intent intent = new Intent(MainActivity.this,
+						SearchResultsActivity.class);
 				intent.putExtra(SearchManager.QUERY, query);
 				startActivity(intent);
 				return true;
@@ -169,13 +175,6 @@ public class MainActivity extends ActionBarActivity implements
 		};
 		searchView.setOnQueryTextListener(queryTextListener);
 		return true;
-	}
-
-	@Override
-	protected void onResume() {
-
-		super.onResume();
-
 	}
 
 	@Override
@@ -188,7 +187,16 @@ public class MainActivity extends ActionBarActivity implements
 			getSupportActionBar().setIcon(R.drawable.ic_action_logo);
 			return true;
 		case R.id.refresh:
-			contentFragment.refreshContentList();
+			List<Fragment> fragments = getSupportFragmentManager()
+					.getFragments();
+			for (Fragment f : fragments) {
+				if (f instanceof ContentListFragment && f.isVisible()) {
+					((ContentListFragment) f).refreshContentList();
+				}
+				else if (f instanceof ContentFragment && f.isVisible()) {
+					((ContentFragment) f).refreshContentList();
+				}
+			}
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -216,7 +224,17 @@ public class MainActivity extends ActionBarActivity implements
 
 	private void selectItem(int position, boolean isFirstTime) {
 		Fragment fragment = null;
-		if (isFirstTime || position != mPosition) {
+		boolean isInternalFragment = false;
+		List<Fragment> fragments = getSupportFragmentManager().getFragments();
+		if (fragments != null) {
+			for (Fragment f : fragments) {
+				if (f.isVisible()) {
+					if (f instanceof ContentFragment)
+						isInternalFragment = true;
+				}
+			}
+		}
+		if (isFirstTime || position != mPosition || isInternalFragment) {
 			switch (position) {
 			case PROFILE:
 				fragment = ProfileFragment.newInstance(mArgs);
@@ -231,16 +249,9 @@ public class MainActivity extends ActionBarActivity implements
 				fragment = new DictionaryFragment();
 				break;
 			case CONTENT:
-				// Bundle extras = getIntent().getExtras();
-				// if(extras != null){
-				// if(extras.containsKey(LoginActivity.AUTH_KEY)){
-				// LoginActivity.AuthType enumType =
-				// (LoginActivity.AuthType)extras.getSerializable(LoginActivity.AUTH_KEY);
-				// if(enumType == LoginActivity.AuthType.NATIVE)
-				// fragment = ContentFragment.newInstance(mApiKey);
-				// }
-				// }
-				fragment = contentFragment;
+				if (authType == KeyUtils.AuthType.NATIVE){
+					fragment = ContentListFragment.newInstance(mApiKey);
+				}
 				break;
 			case ABOUT:
 				fragment = new AboutFragment();
@@ -248,6 +259,7 @@ public class MainActivity extends ActionBarActivity implements
 			case LOGOUT:
 				callFacebookLogout();
 				callGooglePlusLogout();
+
 				Intent intent = new Intent(this, LoginActivity.class);
 				intent.putExtra(KeyUtils.LOGOUT_KEY, true);
 				startActivity(intent);
