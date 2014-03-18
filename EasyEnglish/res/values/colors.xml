@@ -11,4 +11,5 @@
     <color name="edit_text_selected_bg">#ffecd385</color>
     <!-- Content -->
      <color name="content_description">#ff999999</color>
+     <color name="transparent">#00000000</color> 
 </resources>

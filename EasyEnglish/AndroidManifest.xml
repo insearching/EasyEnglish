@@ -37,7 +37,7 @@
             android:screenOrientation="portrait" >
 
         </activity>
-        <activity android:name=".SearchResultsActivity" >
+        <activity android:name="SearchResultsActivity" >
     ...
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
@@ -54,6 +54,7 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+        <activity android:name="YoutubeActivity"></activity>
     </application>
 
 </manifest>

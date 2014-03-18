@@ -61,15 +61,18 @@ public class JSONUtils {
 			jsonObject = new JSONObject(json).getJSONObject(KeyUtils.DATA_KEY);
 
 			int id = jsonObject.getInt(KeyUtils.ID_KEY);
-			String title = jsonObject.getString(KeyUtils.TITLE_KEY);
+			String title = getNullString(jsonObject.getString(KeyUtils.TITLE_KEY));
 			int ownerId = jsonObject.getInt(KeyUtils.OWNER_ID_KEY);
 			int type = jsonObject.getInt(KeyUtils.TYPE_KEY);
-			String genre = jsonObject.getString(KeyUtils.GENRE_KEY);
-			String text = jsonObject.getString(KeyUtils.TEXT_KEY);
+			String genre = getNullString(jsonObject.getString(KeyUtils.GENRE_KEY));
+			String text = getNullString(jsonObject.getString(KeyUtils.TEXT_KEY));
 			int level = jsonObject.getInt(KeyUtils.LEVEL_KEY);
 			int pages = jsonObject.getInt(KeyUtils.PAGES_KEY);
-			String playerLink = jsonObject.getString(KeyUtils.PLAYER_LINK_KEY);
-			String date = transformDate(jsonObject.getString(KeyUtils.DATE_KEY));
+			String playerLink = getNullString(jsonObject.getString(KeyUtils.PLAYER_LINK_KEY));
+			String dateObject = getNullString(jsonObject.getString(KeyUtils.DATE_KEY));
+			String date = null;
+			if(dateObject != null)
+				date = transformDate(dateObject);
 
 			content = new Content(id, title, ownerId, type, genre, text, level,
 					pages, playerLink, date);
@@ -77,6 +80,13 @@ public class JSONUtils {
 
 		}
 		return content;
+	}
+	
+	private static String getNullString(String s){
+		if(s.equals("null"))
+			return null;
+		else
+			return s;
 	}
 
 	public static int getContentId(String json) {

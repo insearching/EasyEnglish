@@ -8,15 +8,13 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 public class RESTClient extends AsyncTask<String, Void, String> {
 
-	private static final String TAG = "EasyEnglish";
-	private JSONCompleteListener getJSONlistener;
+	private JSONCompleteListener listner;
 
 	public RESTClient (JSONCompleteListener context){
-		this.getJSONlistener = context;
+		this.listner = context;
 	}
 	
 	@Override
@@ -41,10 +39,10 @@ public class RESTClient extends AsyncTask<String, Void, String> {
 	@Override
 	protected void onPostExecute(String result) {
 		super.onPostExecute(result);
-		if (result == null)
+		if (result == null || result.equals(""))
 			return;
 		
-		getJSONlistener.onRemoteCallComplete(result);
+		listner.onRemoteCallComplete(result);
 
 	}
 	

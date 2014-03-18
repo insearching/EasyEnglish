@@ -39,5 +39,8 @@
         <item>About</item>
         <item>Sign out</item>
     </string-array>
+    
+    <!-- Content -->
+    <string name="select_translation">select a translation</string>
 
 </resources>

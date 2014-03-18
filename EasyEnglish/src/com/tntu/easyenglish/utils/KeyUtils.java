@@ -9,6 +9,7 @@ public class KeyUtils {
 	public static final String API_KEY = "api_key";
 	public static final String ARGS_KEY = "args";
 	public static final String LOGOUT_KEY = "logout";
+	public static final String VIDEO_ID_KEY = "video";
 	
 	public enum AuthType {
 		FACEBOOK, GOOGLE, NATIVE
@@ -34,8 +35,7 @@ public class KeyUtils {
 	public static final String REG_DATE = "registration_date";
 	
 
-	
-	public static final int VIDEO_TYPE_KEY = 1;
-	public static final int AUDIO_TYPE_KEY = 2;
+	public static final int VIDEO_TYPE_KEY = 2;
+	public static final int AUDIO_TYPE_KEY = 1;
 	public static final int TEXT_TYPE_KEY = 3;
 }

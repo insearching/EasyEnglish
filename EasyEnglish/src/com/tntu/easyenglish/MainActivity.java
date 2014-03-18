@@ -228,7 +228,7 @@ public class MainActivity extends ActionBarActivity implements
 		List<Fragment> fragments = getSupportFragmentManager().getFragments();
 		if (fragments != null) {
 			for (Fragment f : fragments) {
-				if (f.isVisible()) {
+				if (f != null && f.isVisible()) {
 					if (f instanceof ContentFragment)
 						isInternalFragment = true;
 				}
