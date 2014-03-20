@@ -34,8 +34,9 @@ public class KeyUtils {
 	public static final String EMAIL_KEY = "email";
 	public static final String AVATAR_KEY = "avatar";
 	public static final String REG_DATE = "registration_date";
+	public static final String ERROR_KEY = "error";
+	public static final String MSG_KEY = "msg";
 	
-
 	public static final int VIDEO_TYPE_KEY = 2;
 	public static final int AUDIO_TYPE_KEY = 1;
 	public static final int TEXT_TYPE_KEY = 3;

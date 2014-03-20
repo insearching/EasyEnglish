@@ -17,6 +17,7 @@
     <string name="login_with_gplus">Login with Google+</string>
     <string name="username_or_email">Username or email</string>
     <string name="password">Password</string>
+    <string name="confirm_password">Confirm password</string>
     <string name="submit">Submit</string>
     <string name="email">Email</string>
     <string name="username">Username</string>
@@ -25,7 +26,10 @@
     <string name="ok">OK</string>
     <string name="empty_credentials">Empty credentials</string>
     <string name="wrong_credentials">Wrong username or password. Please try again.</string>
-
+    
+    <!-- Signup -->
+    <string name="passwords_not_same">Passwords are not the same! Please retype it.</string>
+    
     <!-- Navigation Drawer -->
     <string name="menu_search_title">Search</string>
     <string name="menu_search_hint">Add word</string>

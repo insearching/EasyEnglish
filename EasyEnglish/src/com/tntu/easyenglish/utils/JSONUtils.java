@@ -29,6 +29,18 @@ public class JSONUtils {
 		}
 		return success;
 	}
+	
+	public static String getValue(String json, String key) {
+		String value = null;
+		JSONObject jsonObject = null;
+		try {
+			jsonObject = new JSONObject(json);
+			value = jsonObject.getString(key);
+		} catch (JSONException ex) {
+			ex.printStackTrace();
+		}
+		return value;
+	}
 
 	public static ArrayList<Content> getContentList(String json) {
 		ArrayList<Content> data = new ArrayList<Content>();
@@ -122,6 +134,17 @@ public class JSONUtils {
 		}
 		return user;
 	}
+	
+	public String registerNewUser(String json){
+		String apiKey = null;
+		try {
+			JSONObject jsonObject = new JSONObject(json).getJSONObject(KeyUtils.DATA_KEY);
+			apiKey = jsonObject.getString(KeyUtils.API_KEY);
+		} catch (JSONException ex) {
+			ex.printStackTrace();
+		}
+		return apiKey;
+	}
 
 	private static String transformDate(String date) {
 		SimpleDateFormat oldDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -136,7 +159,7 @@ public class JSONUtils {
 		return newDate;
 	}
 
-	public static String getValueFromJSON(String json, String valueName) {
+	public static String getValueFromData(String json, String valueName) {
 		String value = null;
 		JSONObject jsonObject = null;
 

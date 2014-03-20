@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -79,6 +80,7 @@ public class ContentListFragment extends Fragment implements
 			}
 			
 		}
+
 		showList();
 	}
 

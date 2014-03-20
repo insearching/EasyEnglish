@@ -91,28 +91,15 @@ public class MainActivity extends ActionBarActivity implements
 			if (extras.containsKey(KeyUtils.API_KEY))
 				mApiKey = extras.getString(KeyUtils.API_KEY);
 		}
-		// if (extras != null) {
-		// mArgs = extras;
-		// if (extras.containsKey(KeyUtils.API_KEY))
-		// mApiKey = extras.getString(KeyUtils.API_KEY);
-		// if (extras.containsKey(KeyUtils.ARGS_KEY))
-		// mArgs = extras.getBundle(KeyUtils.ARGS_KEY);
-		// if (extras.containsKey(KeyUtils.AUTH_KEY)) {
-		// authType = (KeyUtils.AuthType) extras
-		// .getSerializable(KeyUtils.AUTH_KEY);
-		// }
-		// }
 
 		initView();
 
-//		selectItem(mPosition, true);
-		
 		getSupportFragmentManager()
-		.beginTransaction()
-		.setCustomAnimations(
-				R.anim.float_left_to_right_in_anim,
-				R.anim.float_left_to_right_out_anim)
-		.replace(R.id.content_frame, ProfileFragment.newInstance(extras)).commit();
+				.beginTransaction()
+				.setCustomAnimations(R.anim.float_left_to_right_in_anim,
+						R.anim.float_left_to_right_out_anim)
+				.replace(R.id.content_frame,
+						ProfileFragment.newInstance(extras)).commit();
 
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
@@ -200,6 +187,7 @@ public class MainActivity extends ActionBarActivity implements
 		if (mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
+
 		switch (item.getItemId()) {
 		case R.id.search:
 			getSupportActionBar().setIcon(R.drawable.ic_action_logo);
@@ -209,6 +197,11 @@ public class MainActivity extends ActionBarActivity implements
 					.getFragments();
 			for (Fragment f : fragments) {
 				if (f instanceof ContentListFragment && f.isVisible()) {
+					// Animation rotation = AnimationUtils.loadAnimation(this,
+					// R.anim.rotate_anim);
+					// rotation.setRepeatCount(Animation.INFINITE);
+					// iv.startAnimation(rotation);
+					// item = MenuItemCompat.setActionView(item, iv);
 					((ContentListFragment) f).refreshContentList();
 				} else if (f instanceof ContentFragment && f.isVisible()) {
 					((ContentFragment) f).refreshContentList();
@@ -293,8 +286,7 @@ public class MainActivity extends ActionBarActivity implements
 						.setCustomAnimations(
 								R.anim.float_left_to_right_in_anim,
 								R.anim.float_left_to_right_out_anim)
-						.replace(R.id.content_frame, fragment)
-						.addToBackStack(backStackTag).commit();
+						.replace(R.id.content_frame, fragment).commit();
 			}
 		}
 		mDrawerList.setItemChecked(position, true);

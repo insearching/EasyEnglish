@@ -13,7 +13,7 @@
         android:src="@drawable/logo" />
 
     <EditText
-        android:id="@+id/userNameEt"
+        android:id="@+id/logEt"
         android:layout_width="match_parent"
         android:layout_height="@dimen/login_button_height"
         android:layout_below="@+id/logoIv"
@@ -25,13 +25,14 @@
         android:hint="@string/username"
         android:inputType="textEmailAddress"
         android:paddingLeft="@dimen/edit_text_padding"
-        android:textSize="@dimen/buttons_text_size" />
+        android:textSize="@dimen/buttons_text_size"
+        android:text="insearching"/>
 
     <EditText
         android:id="@+id/emailEt"
         android:layout_width="match_parent"
         android:layout_height="@dimen/login_button_height"
-        android:layout_below="@+id/userNameEt"
+        android:layout_below="@+id/logEt"
         android:layout_marginLeft="@dimen/side_margin"
         android:layout_marginRight="@dimen/side_margin"
         android:layout_marginTop="@dimen/login_margin_top"
@@ -40,10 +41,11 @@
         android:hint="@string/email"
         android:inputType="textEmailAddress"
         android:paddingLeft="@dimen/edit_text_padding"
-        android:textSize="@dimen/buttons_text_size" />
+        android:textSize="@dimen/buttons_text_size"
+        android:text="email@google.com"/>
 
     <EditText
-        android:id="@+id/passEt"
+        android:id="@+id/passwordEt"
         android:layout_width="match_parent"
         android:layout_height="@dimen/login_button_height"
         android:layout_below="@+id/emailEt"
@@ -55,21 +57,38 @@
         android:hint="@string/password"
         android:inputType="textPassword"
         android:paddingLeft="@dimen/edit_text_padding"
-        android:textSize="@dimen/buttons_text_size" />
+        android:textSize="@dimen/buttons_text_size"
+        android:text="@string/app_name"/>
 
-    <TextView
-        android:id="@+id/submitTv"
+    <EditText
+        android:id="@+id/confirmPassEt"
         android:layout_width="match_parent"
         android:layout_height="@dimen/login_button_height"
-        android:layout_below="@+id/passEt"
+        android:layout_below="@+id/passwordEt"
+        android:layout_marginLeft="@dimen/side_margin"
+        android:layout_marginRight="@dimen/side_margin"
+        android:layout_marginTop="@dimen/login_margin_top"
+        android:background="@drawable/edit_text_bg"
+        android:ems="10"
+        android:hint="@string/confirm_password"
+        android:inputType="textPassword"
+        android:paddingLeft="@dimen/edit_text_padding"
+        android:textSize="@dimen/buttons_text_size"
+        android:text="@string/app_name"/>
+
+    <TextView
+        android:id="@+id/addWordTv"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/login_button_height"
+        android:layout_below="@+id/confirmPassEt"
         android:layout_marginLeft="@dimen/side_margin"
         android:layout_marginRight="@dimen/side_margin"
         android:layout_marginTop="@dimen/login_margin_top"
         android:background="@drawable/login_button_bg"
+        android:clickable="true"
         android:gravity="center"
         android:text="@string/sign_up"
-        android:textSize="@dimen/buttons_text_size"
         android:textColor="@color/white"
-        android:clickable="true"/>
+        android:textSize="@dimen/buttons_text_size" />
 
 </RelativeLayout>

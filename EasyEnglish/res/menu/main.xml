@@ -3,12 +3,12 @@
     
     <item android:id="@+id/search"
         android:title="@string/menu_search_title"
-        android:icon="@android:drawable/ic_menu_search"
+        android:icon="@drawable/menu_search"
         appcompat:showAsAction="ifRoom|collapseActionView"
         appcompat:actionViewClass="android.support.v7.widget.SearchView"/>
     
     <item android:id="@+id/refresh"
         android:title="@string/menu_refresh"
-        android:icon="@android:drawable/ic_menu_rotate"
+        android:icon="@drawable/menu_refresh"
         appcompat:showAsAction="always"/>
 </menu>
