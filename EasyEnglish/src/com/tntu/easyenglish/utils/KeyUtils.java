@@ -12,7 +12,7 @@ public class KeyUtils {
 	public static final String VIDEO_ID_KEY = "video";
 	
 	public enum AuthType {
-		FACEBOOK, GOOGLE, NATIVE
+		FACEBOOK, GOOGLE, NATIVE, NONE
 	}
 	
 	public static final String DEVELOPER_KEY = "AIzaSyDMkvG5GL6Rjx0SaiB-uDUazlkdYhStYpo";
@@ -32,6 +32,7 @@ public class KeyUtils {
 	public static final String DATE_KEY = "date";
 	public static final String LOGIN_KEY = "login";
 	public static final String EMAIL_KEY = "email";
+	public static final String AVATAR_KEY = "avatar";
 	public static final String REG_DATE = "registration_date";
 	
 

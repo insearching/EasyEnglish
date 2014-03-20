@@ -130,13 +130,10 @@ public class LoginActivity extends FragmentActivity implements
 	}
 
 	public void onFacebookLoged(GraphUser user) {
-		mArgs = new Bundle();
-		mArgs.putString(KeyUtils.NAME_KEY, user.getName());
-		mArgs.putString(KeyUtils.ID_KEY, user.getId());
-		mArgs.putSerializable(KeyUtils.AUTH_KEY, KeyUtils.AuthType.FACEBOOK);
-
 		Intent intent = new Intent(this, MainActivity.class);
-		intent.putExtra(KeyUtils.ARGS_KEY, mArgs);
+		intent.putExtra(KeyUtils.NAME_KEY, user.getName());
+		intent.putExtra(KeyUtils.ID_KEY, user.getId());
+		intent.putExtra(KeyUtils.AUTH_KEY, KeyUtils.AuthType.FACEBOOK);
 		startActivity(intent);
 		finish();
 	}
@@ -210,15 +207,12 @@ public class LoginActivity extends FragmentActivity implements
 		mConnectionProgressDialog.dismiss();
 		Toast.makeText(this, "Loged in Google+", Toast.LENGTH_LONG).show();
 		if (mPlusClient.getCurrentPerson() != null) {
-			mArgs = new Bundle();
-
 			Person currentPerson = mPlusClient.getCurrentPerson();
-			mArgs.putString(KeyUtils.NAME_KEY, currentPerson.getDisplayName());
-			mArgs.putString(KeyUtils.ID_KEY, currentPerson.getId());
-			mArgs.putSerializable(KeyUtils.AUTH_KEY, KeyUtils.AuthType.GOOGLE);
 
 			Intent intent = new Intent(this, MainActivity.class);
-			intent.putExtra(KeyUtils.ARGS_KEY, mArgs);
+			intent.putExtra(KeyUtils.NAME_KEY, currentPerson.getDisplayName());
+			intent.putExtra(KeyUtils.ID_KEY, currentPerson.getId());
+			intent.putExtra(KeyUtils.AUTH_KEY, KeyUtils.AuthType.GOOGLE);
 			startActivity(intent);
 			finish();
 		}

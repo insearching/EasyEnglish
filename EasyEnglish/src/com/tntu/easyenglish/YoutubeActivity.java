@@ -9,14 +9,16 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayer.Provider;
 import com.google.android.youtube.player.YouTubePlayerView;
 import com.tntu.easyenglish.utils.KeyUtils;
-import com.tntu.easyenglish.view.ViewInitializer;
+import com.tntu.easyenglish.view.TranslationDialog;
 
 public class YoutubeActivity extends YouTubeBaseActivity implements
 		YouTubePlayer.OnInitializedListener {
 
 	private YouTubePlayerView youTubeView;
 	private TextView contentTv;
+	
 	private String videoId = null;
+	private String apiKey = null;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -27,14 +29,18 @@ public class YoutubeActivity extends YouTubeBaseActivity implements
 		String text = null;
 
 		Bundle extras = getIntent().getExtras();
+		if (extras.containsKey(KeyUtils.TITLE_KEY))
+			setTitle(extras.getString(KeyUtils.TITLE_KEY));
 		if (extras.containsKey(KeyUtils.VIDEO_ID_KEY))
 			videoId = extras.getString(KeyUtils.VIDEO_ID_KEY);
 		if (extras.containsKey(KeyUtils.TEXT_KEY))
 			text = extras.getString(KeyUtils.TEXT_KEY);
+		if (extras.containsKey(KeyUtils.API_KEY))
+			apiKey = extras.getString(KeyUtils.API_KEY);
 
 		initViews();
-		ViewInitializer.initContentText(this, contentTv, text.trim());
-
+		TranslationDialog dialog = new TranslationDialog(this, apiKey);
+		dialog.initContentText(contentTv, text.trim());
 	}
 
 	@Override
@@ -56,5 +62,6 @@ public class YoutubeActivity extends YouTubeBaseActivity implements
 		youTubeView.initialize(KeyUtils.DEVELOPER_KEY, this);
 
 		contentTv = (TextView) findViewById(R.id.contentTv);
+		
 	}
 }

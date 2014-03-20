@@ -1,6 +1,5 @@
 package com.tntu.easyenglish.fragment;
 
-import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -17,7 +16,7 @@ import com.tntu.easyenglish.utils.JSONUtils;
 import com.tntu.easyenglish.utils.KeyUtils;
 import com.tntu.easyenglish.utils.RESTClient;
 import com.tntu.easyenglish.utils.RESTClient.JSONCompleteListener;
-import com.tntu.easyenglish.view.ViewInitializer;
+import com.tntu.easyenglish.view.TranslationDialog;
 
 public class ContentFragment extends Fragment implements JSONCompleteListener {
 	private View convertView;
@@ -77,7 +76,9 @@ public class ContentFragment extends Fragment implements JSONCompleteListener {
 		String status = JSONUtils.getResponseStatus(json);
 		if (status.equals(JSONUtils.SUCCESS_TRUE)) {
 			Content content = JSONUtils.getContentData(json);
-			ViewInitializer.initContentText(getActivity(), contentTv, content.getText().trim());
+			String apiKey = getArguments().getString(KeyUtils.API_KEY);
+			TranslationDialog dialog = new TranslationDialog(getActivity(), apiKey);
+			dialog.initContentText(contentTv, content.getText().trim());
 		}
 	}
 

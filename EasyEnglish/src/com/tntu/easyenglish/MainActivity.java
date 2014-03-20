@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import android.app.FragmentManager.OnBackStackChangedListener;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -42,7 +41,7 @@ import com.tntu.easyenglish.utils.KeyUtils;
 import com.tntu.easyenglish.utils.KeyUtils.AuthType;
 
 public class MainActivity extends ActionBarActivity implements
-		ConnectionCallbacks, OnConnectionFailedListener{
+		ConnectionCallbacks, OnConnectionFailedListener {
 
 	public static final String POSITION_KEY = "position";
 
@@ -63,11 +62,13 @@ public class MainActivity extends ActionBarActivity implements
 	private ActionBarDrawerToggle mDrawerToggle;
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
-	private Bundle mArgs = null;
+	// private Bundle mArgs = null;
 	private boolean isLogedOut = false;
 	private PlusClient mPlusClient;
 	private String mApiKey;
 	private AuthType authType;
+
+	private Bundle extras;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -78,28 +79,44 @@ public class MainActivity extends ActionBarActivity implements
 			if (savedInstanceState.containsKey(KeyUtils.API_KEY))
 				mApiKey = savedInstanceState.getString(KeyUtils.API_KEY);
 			if (savedInstanceState.containsKey(KeyUtils.ARGS_KEY))
-				mArgs = savedInstanceState.getBundle(KeyUtils.ARGS_KEY);
+				extras = savedInstanceState.getBundle(KeyUtils.ARGS_KEY);
 		}
 
-		Bundle extras = getIntent().getExtras();
+		extras = getIntent().getExtras();
 		if (extras != null) {
-			if (extras.containsKey(KeyUtils.API_KEY))
-				mApiKey = extras.getString(KeyUtils.API_KEY);
-			if (extras.containsKey(KeyUtils.ARGS_KEY))
-				mArgs = extras.getBundle(KeyUtils.ARGS_KEY);
 			if (extras.containsKey(KeyUtils.AUTH_KEY)) {
 				authType = (KeyUtils.AuthType) extras
 						.getSerializable(KeyUtils.AUTH_KEY);
 			}
+			if (extras.containsKey(KeyUtils.API_KEY))
+				mApiKey = extras.getString(KeyUtils.API_KEY);
 		}
+		// if (extras != null) {
+		// mArgs = extras;
+		// if (extras.containsKey(KeyUtils.API_KEY))
+		// mApiKey = extras.getString(KeyUtils.API_KEY);
+		// if (extras.containsKey(KeyUtils.ARGS_KEY))
+		// mArgs = extras.getBundle(KeyUtils.ARGS_KEY);
+		// if (extras.containsKey(KeyUtils.AUTH_KEY)) {
+		// authType = (KeyUtils.AuthType) extras
+		// .getSerializable(KeyUtils.AUTH_KEY);
+		// }
+		// }
 
 		initView();
 
-		selectItem(mPosition, true);
+//		selectItem(mPosition, true);
+		
+		getSupportFragmentManager()
+		.beginTransaction()
+		.setCustomAnimations(
+				R.anim.float_left_to_right_in_anim,
+				R.anim.float_left_to_right_out_anim)
+		.replace(R.id.content_frame, ProfileFragment.newInstance(extras)).commit();
 
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-//		actionBar.setHomeButtonEnabled(true);
+		// actionBar.setHomeButtonEnabled(true);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		actionBar.setDisplayShowHomeEnabled(true);
 	}
@@ -145,6 +162,7 @@ public class MainActivity extends ActionBarActivity implements
 		super.onSaveInstanceState(outState);
 		outState.putInt(POSITION_KEY, mPosition);
 		outState.putString(KeyUtils.API_KEY, mApiKey);
+		outState.putBundle(KeyUtils.ARGS_KEY, extras);
 	}
 
 	@Override
@@ -192,8 +210,7 @@ public class MainActivity extends ActionBarActivity implements
 			for (Fragment f : fragments) {
 				if (f instanceof ContentListFragment && f.isVisible()) {
 					((ContentListFragment) f).refreshContentList();
-				}
-				else if (f instanceof ContentFragment && f.isVisible()) {
+				} else if (f instanceof ContentFragment && f.isVisible()) {
 					((ContentFragment) f).refreshContentList();
 				}
 			}
@@ -237,7 +254,7 @@ public class MainActivity extends ActionBarActivity implements
 		if (isFirstTime || position != mPosition || isInternalFragment) {
 			switch (position) {
 			case PROFILE:
-				fragment = ProfileFragment.newInstance(mArgs);
+				fragment = ProfileFragment.newInstance(extras);
 				break;
 			case EXERCISES:
 				fragment = new ExercisesFragment();
@@ -249,7 +266,7 @@ public class MainActivity extends ActionBarActivity implements
 				fragment = new DictionaryFragment();
 				break;
 			case CONTENT:
-				if (authType == KeyUtils.AuthType.NATIVE){
+				if (authType == KeyUtils.AuthType.NATIVE) {
 					fragment = ContentListFragment.newInstance(mApiKey);
 				}
 				break;
@@ -267,15 +284,18 @@ public class MainActivity extends ActionBarActivity implements
 				return;
 
 			default:
-				fragment = ProfileFragment.newInstance(mArgs);
+				fragment = ProfileFragment.newInstance(extras);
 			}
 
-			getSupportFragmentManager()
-					.beginTransaction()
-					.setCustomAnimations(R.anim.float_left_to_right_in_anim,
-							R.anim.float_left_to_right_out_anim)
-					.replace(R.id.content_frame, fragment)
-					.addToBackStack(backStackTag).commit();
+			if (fragment != null) {
+				getSupportFragmentManager()
+						.beginTransaction()
+						.setCustomAnimations(
+								R.anim.float_left_to_right_in_anim,
+								R.anim.float_left_to_right_out_anim)
+						.replace(R.id.content_frame, fragment)
+						.addToBackStack(backStackTag).commit();
+			}
 		}
 		mDrawerList.setItemChecked(position, true);
 		setTitle(mAdapter.getItem(position));

@@ -32,16 +32,15 @@ public class ContentListFragment extends Fragment implements
 	private ProgressBar loadPb;
 	private ContentListAdapter mAdapter;
 	private RESTClient client;
-	private static ContentListFragment instance;
 	private ContentCacheLoader loader;
 	private static final String fileName = "content_list.txt";
 
 	public static ContentListFragment newInstance(String apiKey) {
-		instance = new ContentListFragment();
+		ContentListFragment fragment = new ContentListFragment();
 		Bundle args = new Bundle();
 		args.putString(KeyUtils.API_KEY, apiKey);
-		instance.setArguments(args);
-		return instance;
+		fragment.setArguments(args);
+		return fragment;
 	}
 
 	@Override
@@ -78,16 +77,19 @@ public class ContentListFragment extends Fragment implements
 				setContentList(json);
 				loader.writeToFile(fileName, json);
 			}
-			showList();
+			
 		}
+		showList();
 	}
 
 	private void showVideoActivity(String json) {
 		String status = JSONUtils.getResponseStatus(json);
 		if (status.equals(JSONUtils.SUCCESS_TRUE)) {
 			Content content = JSONUtils.getContentData(json);
+			String title = content.getTitle();
 			String playerLink = content.getPlayerLink();
 			String text = content.getText();
+			String apiKey = getArguments().getString(KeyUtils.API_KEY);
 
 			if (playerLink != null && text != null) {
 				String videoId = getVideoId(playerLink);
@@ -95,8 +97,10 @@ public class ContentListFragment extends Fragment implements
 				if (videoId != null) {
 					Intent intent = new Intent(getActivity(),
 							YoutubeActivity.class);
+					intent.putExtra(KeyUtils.TITLE_KEY, title);
 					intent.putExtra(KeyUtils.VIDEO_ID_KEY, videoId);
 					intent.putExtra(KeyUtils.TEXT_KEY, text);
+					intent.putExtra(KeyUtils.API_KEY, apiKey);
 					startActivity(intent);
 				}
 			}

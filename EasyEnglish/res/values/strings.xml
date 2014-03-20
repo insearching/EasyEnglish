@@ -42,5 +42,8 @@
     
     <!-- Content -->
     <string name="select_translation">select a translation</string>
+    <string name="added_to_dictionary">added to your dictionary</string>
+    <!-- Profile -->
+    <string name="hello">Hello </string>
 
 </resources>
