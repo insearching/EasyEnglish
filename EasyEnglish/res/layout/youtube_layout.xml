@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="5dp"
-    android:paddingLeft="10dp" >
+    android:padding="15dp">
 
     <LinearLayout
         android:id="@+id/contentLl"
@@ -18,14 +17,16 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp">
 
             <TextView
                 android:id="@+id/contentTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/app_name"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black"
+                android:layout_marginLeft="5dp"/>
         </ScrollView>
     </LinearLayout>
 

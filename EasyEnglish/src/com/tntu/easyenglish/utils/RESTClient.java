@@ -13,8 +13,8 @@ public class RESTClient extends AsyncTask<String, Void, String> {
 
 	private JSONCompleteListener listner;
 
-	public RESTClient (JSONCompleteListener context){
-		this.listner = context;
+	public RESTClient (JSONCompleteListener listener){
+		this.listner = listener;
 	}
 	
 	@Override

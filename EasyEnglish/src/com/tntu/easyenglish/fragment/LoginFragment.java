@@ -7,10 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,7 +27,6 @@ public class LoginFragment extends Fragment implements JSONCompleteListener {
 	private RESTClient client;
 	private View convertView;
 
-	private ImageView logoIv;
 	private EditText loginEt;
 	private EditText passEt;
 	private TextView submitTv;
@@ -38,8 +34,6 @@ public class LoginFragment extends Fragment implements JSONCompleteListener {
 	private TextView notRegisteredTv;
 	private SignInButton googleButt;
 
-	private Animation anim;
-	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -48,15 +42,10 @@ public class LoginFragment extends Fragment implements JSONCompleteListener {
 		
 		initViews();
 
-		anim = AnimationUtils.loadAnimation(getActivity(), R.anim.fly_in_anim);
-		logoIv.setAnimation(anim);
-		logoIv.startAnimation(anim);
-
 		return convertView;
 	}
 
 	private void initViews() {
-		logoIv = (ImageView) convertView.findViewById(R.id.logoIv);
 		loginEt = (EditText) convertView.findViewById(R.id.loginEt);
 		passEt = (EditText) convertView.findViewById(R.id.passEt);
 
@@ -64,7 +53,6 @@ public class LoginFragment extends Fragment implements JSONCompleteListener {
 		submitTv.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				
 				String username = loginEt.getText().toString();
 				String password = passEt.getText().toString();
 

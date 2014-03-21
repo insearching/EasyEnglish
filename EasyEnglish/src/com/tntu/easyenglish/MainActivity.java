@@ -8,6 +8,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.facebook.Session;
@@ -140,7 +142,6 @@ public class MainActivity extends ActionBarActivity implements
 				supportInvalidateOptionsMenu();
 			}
 		};
-
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 	}
 
@@ -164,6 +165,15 @@ public class MainActivity extends ActionBarActivity implements
 		searchView.setQueryHint(getString(R.string.menu_search_hint));
 		searchView.setSearchableInfo(searchManager
 				.getSearchableInfo(getComponentName()));
+		EditText searchEditText = (EditText) searchView
+				.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+		searchEditText.setTextColor(Color.WHITE);
+		searchEditText.setHintTextColor(Color.WHITE);
+
+		View searchplate = (View) searchView
+				.findViewById(android.support.v7.appcompat.R.id.search_plate);
+		searchplate
+				.setBackgroundResource(R.drawable.search_view_bg);
 
 		SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
 			public boolean onQueryTextChange(String newText) {

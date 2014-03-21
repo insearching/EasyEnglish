@@ -170,7 +170,7 @@ public class ProfileFragment extends Fragment implements JSONCompleteListener {
 		Bitmap circleBitmap = Bitmap.createBitmap(bitmap.getWidth(),
 				bitmap.getHeight(), Bitmap.Config.ARGB_8888);
 		Paint paint = new Paint();
-		paint.setColor(Color.YELLOW);
+		paint.setColor(getResources().getColor(R.color.yellow));
 		paint.setStrokeWidth(10);
 		Canvas c = new Canvas(circleBitmap);
 		// This draw a circle of Gerycolor which will be the border of image.
