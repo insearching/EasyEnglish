@@ -3,5 +3,5 @@
   <item android:state_enabled="true" android:state_pressed="true" android:drawable="@color/orange" />
   <item android:state_enabled="true" android:state_focused="true" android:drawable="@color/orange" />
   <item android:state_enabled="true" android:state_selected="true" android:drawable="@color/orange" />
-  <item android:drawable="@color/white" />
+  <item android:drawable="@color/drawer_bg"/>
 </selector>
