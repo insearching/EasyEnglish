@@ -254,7 +254,7 @@ public class MainActivity extends ActionBarActivity implements
 				}
 			}
 		}
-		if (isFirstTime || position != mPosition || isInternalFragment) {
+		if (isFirstTime || position != mPosition) {
 			switch (position) {
 			case PROFILE:
 				fragment = ProfileFragment.newInstance(extras);

@@ -10,7 +10,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Shader;
 import android.os.AsyncTask;
@@ -206,7 +205,6 @@ public class ProfileFragment extends Fragment implements JSONCompleteListener {
 			loader.displayImage(avatar, profileIv, true);
 			
 			nameTv.setText(getString(R.string.hello) + login + "!");
-			
 		}
 	}
 }

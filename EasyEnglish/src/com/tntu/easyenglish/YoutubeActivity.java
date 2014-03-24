@@ -1,6 +1,11 @@
 package com.tntu.easyenglish;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.google.android.youtube.player.YouTubeBaseActivity;
@@ -16,16 +21,17 @@ public class YoutubeActivity extends YouTubeBaseActivity implements
 
 	private YouTubePlayerView youTubeView;
 	private TextView contentTv;
-	
+
 	private String videoId = null;
 	private String apiKey = null;
 
 	/** Called when the activity is first created. */
+	@SuppressLint("NewApi")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.youtube_layout);
-
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 		String text = null;
 
 		Bundle extras = getIntent().getExtras();
@@ -41,6 +47,17 @@ public class YoutubeActivity extends YouTubeBaseActivity implements
 		initViews();
 		TranslationDialog dialog = new TranslationDialog(this, apiKey);
 		dialog.initContentText(contentTv, text.trim());
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		// Respond to the action bar's Up/Home button
+		case android.R.id.home:
+			finish();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
@@ -62,6 +79,6 @@ public class YoutubeActivity extends YouTubeBaseActivity implements
 		youTubeView.initialize(KeyUtils.DEVELOPER_KEY, this);
 
 		contentTv = (TextView) findViewById(R.id.contentTv);
-		
+
 	}
 }

@@ -6,22 +6,31 @@ import java.util.Locale;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.text.Spannable;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.Window;
+import android.view.animation.OvershootInterpolator;
+import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
 import android.widget.Toast;
+import android.view.ViewTreeObserver;
 
+import com.koushikdutta.urlimageviewhelper.UrlImageViewCallback;
+import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 import com.tntu.easyenglish.R;
+import com.tntu.easyenglish.entity.Translation;
 import com.tntu.easyenglish.utils.JSONUtils;
 import com.tntu.easyenglish.utils.RESTClient;
 import com.tntu.easyenglish.utils.RESTClient.JSONCompleteListener;
@@ -35,6 +44,7 @@ public class TranslationDialog implements JSONCompleteListener {
 
 	private TextView origWordTv;
 	private ImageView wordIv;
+	private RelativeLayout contentLayout;
 	private LinearLayout transLayout;
 
 	public TranslationDialog(Context context, String apiKey) {
@@ -53,6 +63,8 @@ public class TranslationDialog implements JSONCompleteListener {
 
 		origWordTv = (TextView) dialog.findViewById(R.id.origWordTv);
 		wordIv = (ImageView) dialog.findViewById(R.id.wordIv);
+		contentLayout = (RelativeLayout) dialog.findViewById(R.id.contentRl);
+		contentLayout.setVisibility(View.INVISIBLE);
 		transLayout = (LinearLayout) dialog.findViewById(R.id.translationLl);
 
 		contentTv.setMovementMethod(LinkMovementMethod.getInstance());
@@ -86,9 +98,6 @@ public class TranslationDialog implements JSONCompleteListener {
 					dialog.dismiss();
 					return;
 				}
-				((ProgressBar) dialog.findViewById(R.id.loadPb))
-						.setVisibility(View.VISIBLE);
-				transLayout.setVisibility(View.GONE);
 
 				origWordTv.setText(mWord + " — "
 						+ context.getString(R.string.select_translation));
@@ -96,6 +105,9 @@ public class TranslationDialog implements JSONCompleteListener {
 				client.execute("http://easy-english.yzi.me/api/translate?api_key="
 						+ apiKey + "&text=" + mWord);
 				dialog.show();
+				contentLayout.setVisibility(View.INVISIBLE);
+//				((ProgressBar) dialog.findViewById(R.id.loadPb))
+//				.setVisibility(View.VISIBLE);
 			}
 
 			public void updateDrawState(TextPaint ds) {
@@ -106,13 +118,35 @@ public class TranslationDialog implements JSONCompleteListener {
 
 	@Override
 	public void onRemoteCallComplete(String json) {
-		ArrayList<String> data = JSONUtils.getTranslation(json);
+		ArrayList<Translation> data = JSONUtils.getTranslation(json);
 
 		wordIv.setImageResource(R.drawable.ic_launcher);
 
 		transLayout.removeAllViews();
 		for (int i = 0; i < data.size(); i++) {
-			final String translation = data.get(i);
+			Translation tr = data.get(i);
+			final String translation = tr.getText();
+			final String imageUrl = tr.getImageUrl();
+
+			UrlImageViewHelper.setUrlDrawable(wordIv, imageUrl,
+					R.drawable.ic_launcher, new UrlImageViewCallback() {
+						@Override
+						public void onLoaded(ImageView imageView,
+								Bitmap loadedBitmap, String url,
+								boolean loadedFromCache) {
+
+							if (!loadedFromCache) {
+								ScaleAnimation scale = new ScaleAnimation(0, 1,
+										0, 1, ScaleAnimation.RELATIVE_TO_SELF,
+										.5f, ScaleAnimation.RELATIVE_TO_SELF,
+										.5f);
+								scale.setDuration(500);
+								scale.setInterpolator(new OvershootInterpolator());
+								imageView.startAnimation(scale);
+							}
+						}
+					});
+
 			TextView transTv = new TextView(context);
 			transTv.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
 					LayoutParams.WRAP_CONTENT));
@@ -134,7 +168,7 @@ public class TranslationDialog implements JSONCompleteListener {
 			transLayout.addView(transTv);
 		}
 
-		transLayout.setVisibility(View.VISIBLE);
+		contentLayout.setVisibility(View.VISIBLE);
 		((ProgressBar) dialog.findViewById(R.id.loadPb))
 				.setVisibility(View.INVISIBLE);
 	}

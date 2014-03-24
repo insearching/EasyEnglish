@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.tntu.easyenglish.entity.Content;
+import com.tntu.easyenglish.entity.Translation;
 import com.tntu.easyenglish.entity.User;
 
 public class JSONUtils {
@@ -172,14 +173,20 @@ public class JSONUtils {
 		return value;
 	}
 
-	public static ArrayList<String> getTranslation(String json) {
+	public static ArrayList<Translation> getTranslation(String json) {
 		JSONArray jsonArray = null;
-		ArrayList<String> translations = new ArrayList<String>();
+		ArrayList<Translation> translations = new ArrayList<Translation>();
 		try {
-			jsonArray = new JSONObject(json).getJSONArray(KeyUtils.DATA_KEY);
+			jsonArray = new JSONObject(json).getJSONObject(KeyUtils.DATA_KEY).getJSONArray(KeyUtils.TRANSLATION_KEY);
+			
 			for (int i = 0; i < jsonArray.length(); i++) {
-				String s = jsonArray.getString(i);
-				translations.add(s);
+				JSONObject jsonObject = jsonArray.getJSONObject(i);
+				
+				String text = jsonObject.getString(KeyUtils.TEXT_KEY);
+				String imageUrl = jsonObject.getString(KeyUtils.IMAGE_KEY);
+				
+				Translation tr = new Translation(text, imageUrl);
+				translations.add(tr);
 			}
 		} catch (JSONException ex) {
 			ex.printStackTrace();
