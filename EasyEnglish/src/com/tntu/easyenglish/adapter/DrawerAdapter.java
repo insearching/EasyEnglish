@@ -40,7 +40,7 @@ public class DrawerAdapter extends BaseAdapter {
 		LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		ViewHolder holder;
 		if(convertView == null){
-			convertView = inflater.inflate(R.layout.drawer_list_item, null);
+			convertView = inflater.inflate(R.layout.drawer_row, null);
 			holder = new ViewHolder();
 			holder.labelTv = (TextView) convertView.findViewById(R.id.labelTv);
 			convertView.setTag(holder);

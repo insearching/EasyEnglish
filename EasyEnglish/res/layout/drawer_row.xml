@@ -2,13 +2,12 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/labelTv"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="?android:attr/listPreferredItemHeight"
     android:gravity="center_vertical"
     android:padding="10dp"
     android:text="@string/app_name"
     android:textSize="@dimen/drawer_item_text_size"
     android:textColor="@color/drawer_list_item_text_color"
-    
     android:background="@drawable/drawer_list_item_bg">
 
 </TextView>

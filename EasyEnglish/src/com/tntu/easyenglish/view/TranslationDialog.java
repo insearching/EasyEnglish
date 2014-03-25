@@ -13,7 +13,6 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.Window;
 import android.view.animation.OvershootInterpolator;
 import android.view.animation.ScaleAnimation;
@@ -25,7 +24,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
 import android.widget.Toast;
-import android.view.ViewTreeObserver;
 
 import com.koushikdutta.urlimageviewhelper.UrlImageViewCallback;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
@@ -66,7 +64,13 @@ public class TranslationDialog implements JSONCompleteListener {
 		contentLayout = (RelativeLayout) dialog.findViewById(R.id.contentRl);
 		contentLayout.setVisibility(View.INVISIBLE);
 		transLayout = (LinearLayout) dialog.findViewById(R.id.translationLl);
-
+		((TextView) dialog.findViewById(R.id.cancelTv)).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});
+		
 		contentTv.setMovementMethod(LinkMovementMethod.getInstance());
 		contentTv.setText(text, BufferType.SPANNABLE);
 		Spannable spans = (Spannable) contentTv.getText();
@@ -106,8 +110,6 @@ public class TranslationDialog implements JSONCompleteListener {
 						+ apiKey + "&text=" + mWord);
 				dialog.show();
 				contentLayout.setVisibility(View.INVISIBLE);
-//				((ProgressBar) dialog.findViewById(R.id.loadPb))
-//				.setVisibility(View.VISIBLE);
 			}
 
 			public void updateDrawState(TextPaint ds) {

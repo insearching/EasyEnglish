@@ -15,7 +15,7 @@
     <EditText
         android:id="@+id/logEt"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/login_button_height"
+        android:layout_height="@dimen/button_height"
         android:layout_below="@+id/logoIv"
         android:layout_marginLeft="@dimen/side_margin"
         android:layout_marginRight="@dimen/side_margin"
@@ -31,7 +31,7 @@
     <EditText
         android:id="@+id/emailEt"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/login_button_height"
+        android:layout_height="@dimen/button_height"
         android:layout_below="@+id/logEt"
         android:layout_marginLeft="@dimen/side_margin"
         android:layout_marginRight="@dimen/side_margin"
@@ -47,7 +47,7 @@
     <EditText
         android:id="@+id/passwordEt"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/login_button_height"
+        android:layout_height="@dimen/button_height"
         android:layout_below="@+id/emailEt"
         android:layout_marginLeft="@dimen/side_margin"
         android:layout_marginRight="@dimen/side_margin"
@@ -63,7 +63,7 @@
     <EditText
         android:id="@+id/confirmPassEt"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/login_button_height"
+        android:layout_height="@dimen/button_height"
         android:layout_below="@+id/passwordEt"
         android:layout_marginLeft="@dimen/side_margin"
         android:layout_marginRight="@dimen/side_margin"
@@ -79,12 +79,12 @@
     <TextView
         android:id="@+id/addWordTv"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/login_button_height"
+        android:layout_height="@dimen/button_height"
         android:layout_below="@+id/confirmPassEt"
         android:layout_marginLeft="@dimen/side_margin"
         android:layout_marginRight="@dimen/side_margin"
         android:layout_marginTop="@dimen/login_margin_top"
-        android:background="@drawable/login_button_bg"
+        android:background="@drawable/button_bg"
         android:clickable="true"
         android:gravity="center"
         android:text="@string/sign_up"

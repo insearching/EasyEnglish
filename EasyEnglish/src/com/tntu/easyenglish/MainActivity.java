@@ -7,9 +7,11 @@ import java.util.List;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -18,12 +20,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.facebook.Session;
 import com.google.android.gms.common.ConnectionResult;
@@ -55,7 +59,9 @@ public class MainActivity extends ActionBarActivity implements
 	private static final int ABOUT = 5;
 	private static final int LOGOUT = 6;
 
-	private static String backStackTag = "main";
+	private static final String TAG = "EASYENGLISH";
+
+	// private static String backStackTag = "main";
 
 	private int mPosition = PROFILE;
 	private DrawerAdapter mAdapter;
@@ -172,8 +178,7 @@ public class MainActivity extends ActionBarActivity implements
 
 		View searchplate = (View) searchView
 				.findViewById(android.support.v7.appcompat.R.id.search_plate);
-		searchplate
-				.setBackgroundResource(R.drawable.search_view_bg);
+		searchplate.setBackgroundResource(R.drawable.search_view_bg);
 
 		SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
 			public boolean onQueryTextChange(String newText) {
@@ -233,6 +238,17 @@ public class MainActivity extends ActionBarActivity implements
 		mDrawerToggle.onConfigurationChanged(newConfig);
 	}
 
+	boolean isBackPressed = false;
+
+	@Override
+	public void onBackPressed() {
+		if (!isBackPressed)
+			Toast.makeText(this, "Press once more to exit.", Toast.LENGTH_SHORT)
+					.show();
+		else
+			finish();
+	}
+
 	private class DrawerItemClickListener implements
 			ListView.OnItemClickListener {
 		@Override
@@ -244,16 +260,17 @@ public class MainActivity extends ActionBarActivity implements
 
 	private void selectItem(int position, boolean isFirstTime) {
 		Fragment fragment = null;
-		boolean isInternalFragment = false;
-		List<Fragment> fragments = getSupportFragmentManager().getFragments();
-		if (fragments != null) {
-			for (Fragment f : fragments) {
-				if (f != null && f.isVisible()) {
-					if (f instanceof ContentFragment)
-						isInternalFragment = true;
-				}
-			}
-		}
+		// boolean isInternalFragment = false;
+		// List<Fragment> fragments =
+		// getSupportFragmentManager().getFragments();
+		// if (fragments != null) {
+		// for (Fragment f : fragments) {
+		// if (f != null && f.isVisible()) {
+		// if (f instanceof ContentFragment)
+		// isInternalFragment = true;
+		// }
+		// }
+		// }
 		if (isFirstTime || position != mPosition) {
 			switch (position) {
 			case PROFILE:
@@ -279,6 +296,19 @@ public class MainActivity extends ActionBarActivity implements
 			case LOGOUT:
 				callFacebookLogout();
 				callGooglePlusLogout();
+
+				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+				SharedPreferences.Editor editor = prefs.edit();
+				if (prefs.contains(KeyUtils.API_KEY)) {
+					editor.remove(KeyUtils.API_KEY);
+					editor.commit();
+				}
+
+				if (prefs.contains(KeyUtils.API_KEY)) {
+					Log.d(TAG, "Still here");
+				} else {
+					Log.d(TAG, "Deleted");
+				}
 
 				Intent intent = new Intent(this, LoginActivity.class);
 				intent.putExtra(KeyUtils.LOGOUT_KEY, true);

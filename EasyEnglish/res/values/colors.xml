@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <color name="white">#ffffffff</color>
-    <color name="red">#ffff0000</color>
     <color name="black">#ff000000</color>
-    <!-- Login -->
     <color name="orange">#ffdb5800</color>
+    <color name="light_orange">#ffff9000</color>
+    <!-- Login -->
     <color name="dark_orange">#ffc75a1e</color>
     <color name="edit_text_bg">#ffece486</color>
     <color name="edit_text_selected_bg">#ffecd385</color>
@@ -15,6 +16,7 @@
     <!-- Profile -->
     <color name="yellow">#ffF0C600</color>
     <!-- Content -->
-     <color name="content_description">#ff999999</color>
-     <color name="transparent">#00000000</color> 
+    <color name="content_description">#ff999999</color>
+    <color name="transparent">#00000000</color>
+
 </resources>

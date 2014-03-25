@@ -99,7 +99,7 @@ public class LoginActivity extends FragmentActivity implements
 				|| exception instanceof FacebookAuthorizationException) {
 			new AlertDialog.Builder(this).setTitle(R.string.cancelled)
 					.setMessage(R.string.permission_not_granted)
-					.setPositiveButton(R.string.ok, null).show();
+					.setPositiveButton(android.R.string.ok, null).show();
 		}
 	}
 

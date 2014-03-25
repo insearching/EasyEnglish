@@ -39,6 +39,13 @@ public class KeyUtils {
 	public static final String TRANSLATION_KEY = "transltations";
 	public static final String IMAGE_KEY = "image";
 	
+	//Dictionary
+	public static final String DICT_ID_KEY = "dictionary_id";
+	public static final String WORD_ID_KEY = "word_id";
+	public static final String WORD_KEY = "word";
+	public static final String CONTEXT_KEY = "contexts";
+	public static final String SOUND_KEY = "sound";
+	
 	public static final int VIDEO_TYPE_KEY = 2;
 	public static final int AUDIO_TYPE_KEY = 1;
 	public static final int TEXT_TYPE_KEY = 3;

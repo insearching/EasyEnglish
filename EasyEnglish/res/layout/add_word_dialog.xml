@@ -3,13 +3,13 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:minHeight="100dp"
-    android:minWidth="200dp">
+    android:minWidth="200dp" >
 
     <RelativeLayout
         android:id="@+id/contentRl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="visible">
+        android:visibility="visible" >
 
         <RelativeLayout
             android:id="@+id/origWordLl"
@@ -18,8 +18,8 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:padding="10dp"
-            android:minHeight="50dp">
+            android:minHeight="50dp"
+            android:padding="10dp" >
 
             <TextView
                 android:id="@+id/origWordTv"
@@ -32,15 +32,15 @@
 
             <ImageView
                 android:id="@+id/wordIv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/button_height"
+                android:layout_height="@dimen/button_height"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_launcher" />
         </RelativeLayout>
 
         <TextView
-            android:id="@+id/lineTv"
+            android:id="@+id/lineTv1"
             android:layout_width="wrap_content"
             android:layout_height="2dp"
             android:layout_alignParentLeft="true"
@@ -55,48 +55,35 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
-            android:layout_below="@id/lineTv"
+            android:layout_below="@id/lineTv1"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
+            android:minHeight="50dp"
             android:orientation="vertical"
-            android:padding="10dp"
-            android:minHeight="50dp">
-
+            android:padding="10dp" >
         </LinearLayout>
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/lineTv2"
+            android:layout_width="wrap_content"
+            android:layout_height="2dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/translationLl"
+            android:layout_marginTop="5dp"
+            android:background="@color/orange" />
+
+        <TextView
+            android:id="@+id/cancelTv"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_below="@+id/translationLl"
-            android:weightSum="3">
-
-            <Button
-                android:id="@+id/button1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Button"
-                android:layout_weight="1"
-                android:layout_margin="5dp"/>
-
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Button"
-                android:layout_weight="1"
-                android:layout_margin="5dp"/>
-
-            <EditText
-                android:id="@+id/editText1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:layout_margin="5dp"/>
-
-        </LinearLayout>
-
+            android:layout_height="@dimen/button_height"
+            android:layout_below="@id/lineTv2"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="10dp"
+            android:textColor="@drawable/text_butt_bg"
+            android:text="@string/cancel"
+            android:gravity="center"
+            android:textSize="@dimen/buttons_text_size"/>
     </RelativeLayout>
 
     <ProgressBar

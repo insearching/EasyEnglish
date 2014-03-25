@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.tntu.easyenglish.entity.Content;
+import com.tntu.easyenglish.entity.DictionaryWord;
 import com.tntu.easyenglish.entity.Translation;
 import com.tntu.easyenglish.entity.User;
 
@@ -30,7 +31,7 @@ public class JSONUtils {
 		}
 		return success;
 	}
-	
+
 	public static String getValue(String json, String key) {
 		String value = null;
 		JSONObject jsonObject = null;
@@ -50,7 +51,7 @@ public class JSONUtils {
 			jsonArray = new JSONObject(json).getJSONArray(KeyUtils.DATA_KEY);
 			for (int i = 0; i < jsonArray.length(); ++i) {
 				JSONObject object = jsonArray.getJSONObject(i);
-				
+
 				int id = object.getInt(KeyUtils.ID_KEY);
 				String title = object.getString(KeyUtils.TITLE_KEY);
 				String genre = object.getString(KeyUtils.GENRE_KEY);
@@ -135,11 +136,12 @@ public class JSONUtils {
 		}
 		return user;
 	}
-	
-	public String registerNewUser(String json){
+
+	public String registerNewUser(String json) {
 		String apiKey = null;
 		try {
-			JSONObject jsonObject = new JSONObject(json).getJSONObject(KeyUtils.DATA_KEY);
+			JSONObject jsonObject = new JSONObject(json)
+					.getJSONObject(KeyUtils.DATA_KEY);
 			apiKey = jsonObject.getString(KeyUtils.API_KEY);
 		} catch (JSONException ex) {
 			ex.printStackTrace();
@@ -177,14 +179,15 @@ public class JSONUtils {
 		JSONArray jsonArray = null;
 		ArrayList<Translation> translations = new ArrayList<Translation>();
 		try {
-			jsonArray = new JSONObject(json).getJSONObject(KeyUtils.DATA_KEY).getJSONArray(KeyUtils.TRANSLATION_KEY);
-			
+			jsonArray = new JSONObject(json).getJSONObject(KeyUtils.DATA_KEY)
+					.getJSONArray(KeyUtils.TRANSLATION_KEY);
+
 			for (int i = 0; i < jsonArray.length(); i++) {
 				JSONObject jsonObject = jsonArray.getJSONObject(i);
-				
+
 				String text = jsonObject.getString(KeyUtils.TEXT_KEY);
 				String imageUrl = jsonObject.getString(KeyUtils.IMAGE_KEY);
-				
+
 				Translation tr = new Translation(text, imageUrl);
 				translations.add(tr);
 			}
@@ -192,5 +195,46 @@ public class JSONUtils {
 			ex.printStackTrace();
 		}
 		return translations;
+	}
+
+	public ArrayList<DictionaryWord> getUserDictionary(String json) {
+		JSONArray jsonArray = null;
+		ArrayList<DictionaryWord> words = new ArrayList<DictionaryWord>();
+		try {
+			jsonArray = new JSONObject(json).getJSONObject(KeyUtils.DATA_KEY)
+					.getJSONArray(KeyUtils.TRANSLATION_KEY);
+
+			for (int i = 0; i < jsonArray.length(); i++) {
+				JSONObject jsonObject = jsonArray.getJSONObject(i);
+				int dictionaryId = jsonObject.getInt(KeyUtils.DICT_ID_KEY);
+				int wordId = jsonObject.getInt(KeyUtils.WORD_ID_KEY);
+				String word = jsonObject.getString(KeyUtils.WORD_KEY);
+				String[] translations = getArray(jsonObject, KeyUtils.TRANSLATION_KEY);
+				String[] contexts = getArray(jsonObject, KeyUtils.CONTEXT_KEY);
+				String[] images = getArray(jsonObject, KeyUtils.IMAGE_KEY);
+				String sound = jsonObject.getString(KeyUtils.SOUND_KEY);
+				String date = jsonObject.getString(KeyUtils.DATE_KEY);
+				
+				DictionaryWord tr = new DictionaryWord(dictionaryId, wordId,
+						word, translations, contexts, images, sound, date);
+				words.add(tr);
+			}
+		} catch (JSONException ex) {
+			ex.printStackTrace();
+		}
+		return words;
+	}
+
+	private String[] getArray(JSONObject jsonObj, String key) {
+		String[] arr = null;
+		try {
+			JSONArray jsonArr = jsonObj.getJSONArray(key);
+			arr = new String[jsonArr.length()];
+			for (int i = 0; i < jsonArr.length(); i++)
+				arr[i] = jsonArr.getString(i);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return arr;
 	}
 }

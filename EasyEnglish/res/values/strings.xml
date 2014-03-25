@@ -23,9 +23,10 @@
     <string name="username">Username</string>
     <string name="cancelled">Cancelled</string>
     <string name="permission_not_granted">Unable to perform selected action because permissions were not granted.</string>
-    <string name="ok">OK</string>
     <string name="empty_credentials">Empty credentials</string>
     <string name="wrong_credentials">Wrong username or password. Please try again.</string>
+    <string name="preference_file_key">com.tntu.easyenglish.auth_key</string>
+    <string name="auth_failed">Sorry, authorization failed. Please try again later.</string>
     
     <!-- Signup -->
     <string name="passwords_not_same">Passwords are not the same! Please retype it.</string>

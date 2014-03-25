@@ -1,7 +1,10 @@
 package com.tntu.easyenglish.fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +44,12 @@ public class LoginFragment extends Fragment implements JSONCompleteListener {
 		client = new RESTClient(this);
 		
 		initViews();
+		
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+		String apiKey = sharedPrefs.getString(KeyUtils.API_KEY, null);
+		if(apiKey != null){
+			login(apiKey);
+		}
 
 		return convertView;
 	}
@@ -123,15 +132,18 @@ public class LoginFragment extends Fragment implements JSONCompleteListener {
 			passEt.setText("");
 
 			apiKey = JSONUtils.getValueFromData(json, KeyUtils.API_KEY);
-			Intent intent = new Intent(getActivity(), MainActivity.class);
+			if(apiKey == null || apiKey.equals("null")){
+				Toast.makeText(getActivity(), getActivity().getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
+				return;
+			}
 			
-			Bundle args = new Bundle();
-			args.putSerializable(KeyUtils.AUTH_KEY, KeyUtils.AuthType.NATIVE);
-			args.putString(KeyUtils.API_KEY, apiKey);
-			intent.putExtras(args);
+			SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+			SharedPreferences.Editor editor = sharedPref.edit();
+			editor.putString(KeyUtils.API_KEY, apiKey);
+			editor.commit();
 			
-			startActivity(intent);
-			getActivity().finish();
+			login(apiKey);
+			
 		} else if (status.equals(JSONUtils.SUCCESS_FALSE)) {
 			loginEt.requestFocus();
 			passEt.setText("");
@@ -142,5 +154,17 @@ public class LoginFragment extends Fragment implements JSONCompleteListener {
 
 		((LoginActivity)getActivity()).onLoginCompleted();
 		client = new RESTClient(this);
+	}
+	
+	private void login(String apiKey){
+		Intent intent = new Intent(getActivity(), MainActivity.class);
+		
+		Bundle args = new Bundle();
+		args.putSerializable(KeyUtils.AUTH_KEY, KeyUtils.AuthType.NATIVE);
+		args.putString(KeyUtils.API_KEY, apiKey);
+		intent.putExtras(args);
+		
+		startActivity(intent);
+		getActivity().finish();
 	}
 }
