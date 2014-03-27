@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -34,7 +34,7 @@ public class ContentListFragment extends Fragment implements
 	private ContentListAdapter mAdapter;
 	private RESTClient client;
 	private ContentCacheLoader loader;
-	private static final String fileName = "content_list.txt";
+	private static final String bufferFileName = "content_list.txt";
 
 	public static ContentListFragment newInstance(String apiKey) {
 		ContentListFragment fragment = new ContentListFragment();
@@ -53,11 +53,11 @@ public class ContentListFragment extends Fragment implements
 		loadPb = (ProgressBar) convertView.findViewById(R.id.loadPb);
 
 		loader = new ContentCacheLoader(getActivity());
-		String info = loader.readFromFile(fileName);
+		String info = loader.readFromFile(bufferFileName);
 		if (!info.equals("")) {
-			setContentList(info);
+			setData(info);
 		} else {
-			hideList();
+			hideView();
 			String apiKey = getArguments().getString(KeyUtils.API_KEY);
 			String requestUrl = "http://easy-english.yzi.me/api/getContentsList?api_key="
 					+ apiKey + "&count=10";
@@ -68,6 +68,15 @@ public class ContentListFragment extends Fragment implements
 	}
 
 	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.refresh:
+			refreshContentList();
+		}
+		return true;
+	}
+
+	@Override
 	public void onRemoteCallComplete(String json) {
 		client = new RESTClient(this);
 
@@ -75,13 +84,13 @@ public class ContentListFragment extends Fragment implements
 			if (json.contains(KeyUtils.PLAYER_LINK_KEY)) {
 				showVideoActivity(json);
 			} else {
-				setContentList(json);
-				loader.writeToFile(fileName, json);
+				setData(json);
+				loader.writeToFile(bufferFileName, json);
 			}
-			
+
 		}
 
-		showList();
+		showView();
 	}
 
 	private void showVideoActivity(String json) {
@@ -118,7 +127,7 @@ public class ContentListFragment extends Fragment implements
 		return videoId;
 	}
 
-	private void setContentList(String json) {
+	private void setData(String json) {
 		String status = JSONUtils.getResponseStatus(json);
 		if (status.equals(JSONUtils.SUCCESS_TRUE)) {
 			ArrayList<Content> contentList = JSONUtils.getContentList(json);
@@ -130,8 +139,8 @@ public class ContentListFragment extends Fragment implements
 	public void refreshContentList() {
 		if (loader == null)
 			return;
-		loader.deleteFile(fileName);
-		hideList();
+		loader.deleteFile(bufferFileName);
+		hideView();
 		String apiKey = getArguments().getString(KeyUtils.API_KEY);
 		String requestUrl = "http://easy-english.yzi.me/api/getContentsList?api_key="
 				+ apiKey + "&count=10";
@@ -139,14 +148,14 @@ public class ContentListFragment extends Fragment implements
 		client.execute(requestUrl);
 	}
 
-	private void showList() {
-		loadPb.setVisibility(View.GONE);
-		contentLv.setVisibility(View.VISIBLE);
-	}
-
-	private void hideList() {
+	private void hideView() {
 		loadPb.setVisibility(View.VISIBLE);
 		contentLv.setVisibility(View.GONE);
+	}
+
+	private void showView() {
+		loadPb.setVisibility(View.GONE);
+		contentLv.setVisibility(View.VISIBLE);
 	}
 
 	@Override
@@ -161,7 +170,7 @@ public class ContentListFragment extends Fragment implements
 					+ apiKey + "&id=" + id;
 			client = new RESTClient(this);
 			client.execute(requestUrl);
-			hideList();
+			hideView();
 		} else {
 			ContentFragment fragment = ContentFragment.newInstance(
 					getArguments().getString(KeyUtils.API_KEY), sId);

@@ -36,7 +36,7 @@ public class KeyUtils {
 	public static final String REG_DATE = "registration_date";
 	public static final String ERROR_KEY = "error";
 	public static final String MSG_KEY = "msg";
-	public static final String TRANSLATION_KEY = "transltations";
+	public static final String TRANSLATION_KEY = "translations";
 	public static final String IMAGE_KEY = "image";
 	
 	//Dictionary

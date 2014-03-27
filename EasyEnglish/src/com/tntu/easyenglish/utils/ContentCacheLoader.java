@@ -18,10 +18,10 @@ public class ContentCacheLoader {
 		this.context = context;
 	}
 
-	public void writeToFile(String fileName, String data) {
+	public void writeToFile(String bufferFileName, String data) {
 		try {
 			OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
-					context.openFileOutput(fileName, Context.MODE_PRIVATE));
+					context.openFileOutput(bufferFileName, Context.MODE_PRIVATE));
 			outputStreamWriter.write(data);
 			outputStreamWriter.close();
 		} catch (IOException e) {

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import android.R.bool;
+import android.app.ActivityManager;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -37,7 +39,6 @@ import com.google.android.gms.common.Scopes;
 import com.google.android.gms.plus.PlusClient;
 import com.tntu.easyenglish.adapter.DrawerAdapter;
 import com.tntu.easyenglish.fragment.AboutFragment;
-import com.tntu.easyenglish.fragment.ContentFragment;
 import com.tntu.easyenglish.fragment.ContentListFragment;
 import com.tntu.easyenglish.fragment.DictionaryFragment;
 import com.tntu.easyenglish.fragment.ExercisesFragment;
@@ -207,23 +208,23 @@ public class MainActivity extends ActionBarActivity implements
 		case R.id.search:
 			getSupportActionBar().setIcon(R.drawable.ic_action_logo);
 			return true;
-		case R.id.refresh:
-			List<Fragment> fragments = getSupportFragmentManager()
-					.getFragments();
-			for (Fragment f : fragments) {
-				if (f instanceof ContentListFragment && f.isVisible()) {
-					// Animation rotation = AnimationUtils.loadAnimation(this,
-					// R.anim.rotate_anim);
-					// rotation.setRepeatCount(Animation.INFINITE);
-					// iv.startAnimation(rotation);
-					// item = MenuItemCompat.setActionView(item, iv);
-					((ContentListFragment) f).refreshContentList();
-				} else if (f instanceof ContentFragment && f.isVisible()) {
-					((ContentFragment) f).refreshContentList();
-				}
-			}
+			// case R.id.refresh:
+			// List<Fragment> fragments = getSupportFragmentManager()
+			// .getFragments();
+			// for (Fragment f : fragments) {
+			// if (f instanceof ContentListFragment && f.isVisible()) {
+			// // Animation rotation = AnimationUtils.loadAnimation(this,
+			// // R.anim.rotate_anim);
+			// // rotation.setRepeatCount(Animation.INFINITE);
+			// // iv.startAnimation(rotation);
+			// // item = MenuItemCompat.setActionView(item, iv);
+			// ((ContentListFragment) f).refreshContentList();
+			// } else if (f instanceof ContentFragment && f.isVisible()) {
+			// ((ContentFragment) f).refreshContentList();
+			// }
+			// }
 		}
-		return super.onOptionsItemSelected(item);
+		return true;
 	}
 
 	@Override
@@ -242,11 +243,24 @@ public class MainActivity extends ActionBarActivity implements
 
 	@Override
 	public void onBackPressed() {
-		if (!isBackPressed)
+		if (!isBackPressed) {
 			Toast.makeText(this, "Press once more to exit.", Toast.LENGTH_SHORT)
 					.show();
-		else
+			isBackPressed = true;
+			Thread t1 = new Thread(new Runnable() {
+				public void run() {
+					try {
+						Thread.sleep(2000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					isBackPressed = false;
+				}
+			});
+			t1.start();
+		} else {
 			finish();
+		}
 	}
 
 	private class DrawerItemClickListener implements
@@ -260,18 +274,8 @@ public class MainActivity extends ActionBarActivity implements
 
 	private void selectItem(int position, boolean isFirstTime) {
 		Fragment fragment = null;
-		// boolean isInternalFragment = false;
-		// List<Fragment> fragments =
-		// getSupportFragmentManager().getFragments();
-		// if (fragments != null) {
-		// for (Fragment f : fragments) {
-		// if (f != null && f.isVisible()) {
-		// if (f instanceof ContentFragment)
-		// isInternalFragment = true;
-		// }
-		// }
-		// }
-		if (isFirstTime || position != mPosition) {
+		if ((isFirstTime || position != mPosition)
+				&& authType == KeyUtils.AuthType.NATIVE) {
 			switch (position) {
 			case PROFILE:
 				fragment = ProfileFragment.newInstance(extras);
@@ -283,12 +287,10 @@ public class MainActivity extends ActionBarActivity implements
 				fragment = new WordsFragment();
 				break;
 			case DICTIONARY:
-				fragment = new DictionaryFragment();
+				fragment = DictionaryFragment.newInstance(mApiKey);
 				break;
 			case CONTENT:
-				if (authType == KeyUtils.AuthType.NATIVE) {
-					fragment = ContentListFragment.newInstance(mApiKey);
-				}
+				fragment = ContentListFragment.newInstance(mApiKey);
 				break;
 			case ABOUT:
 				fragment = new AboutFragment();
@@ -297,7 +299,8 @@ public class MainActivity extends ActionBarActivity implements
 				callFacebookLogout();
 				callGooglePlusLogout();
 
-				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+				SharedPreferences prefs = PreferenceManager
+						.getDefaultSharedPreferences(this);
 				SharedPreferences.Editor editor = prefs.edit();
 				if (prefs.contains(KeyUtils.API_KEY)) {
 					editor.remove(KeyUtils.API_KEY);

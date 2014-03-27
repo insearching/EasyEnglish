@@ -197,12 +197,11 @@ public class JSONUtils {
 		return translations;
 	}
 
-	public ArrayList<DictionaryWord> getUserDictionary(String json) {
+	public static ArrayList<DictionaryWord> getUserDictionary(String json) {
 		JSONArray jsonArray = null;
 		ArrayList<DictionaryWord> words = new ArrayList<DictionaryWord>();
 		try {
-			jsonArray = new JSONObject(json).getJSONObject(KeyUtils.DATA_KEY)
-					.getJSONArray(KeyUtils.TRANSLATION_KEY);
+			jsonArray = new JSONObject(json).getJSONArray(KeyUtils.DATA_KEY);
 
 			for (int i = 0; i < jsonArray.length(); i++) {
 				JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -213,7 +212,7 @@ public class JSONUtils {
 				String[] contexts = getArray(jsonObject, KeyUtils.CONTEXT_KEY);
 				String[] images = getArray(jsonObject, KeyUtils.IMAGE_KEY);
 				String sound = jsonObject.getString(KeyUtils.SOUND_KEY);
-				String date = jsonObject.getString(KeyUtils.DATE_KEY);
+				String date = transformDate(jsonObject.getString(KeyUtils.DATE_KEY));
 				
 				DictionaryWord tr = new DictionaryWord(dictionaryId, wordId,
 						word, translations, contexts, images, sound, date);
@@ -225,7 +224,7 @@ public class JSONUtils {
 		return words;
 	}
 
-	private String[] getArray(JSONObject jsonObj, String key) {
+	private static String[] getArray(JSONObject jsonObj, String key) {
 		String[] arr = null;
 		try {
 			JSONArray jsonArr = jsonObj.getJSONArray(key);

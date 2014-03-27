@@ -188,7 +188,7 @@ public class ProfileFragment extends Fragment implements JSONCompleteListener {
 	@Override
 	public void onRemoteCallComplete(String json) {
 		String status = JSONUtils.getResponseStatus(json);
-		if (status.equals(JSONUtils.SUCCESS_TRUE)) {
+		if (status != null && status.equals(JSONUtils.SUCCESS_TRUE)) {
 			User user = JSONUtils.getProfileInfo(json);
 			String avatar = user.getAvatar();
 			String login = user.getLogin();
