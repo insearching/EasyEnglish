@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import android.R.bool;
-import android.app.ActivityManager;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -39,6 +37,7 @@ import com.google.android.gms.common.Scopes;
 import com.google.android.gms.plus.PlusClient;
 import com.tntu.easyenglish.adapter.DrawerAdapter;
 import com.tntu.easyenglish.fragment.AboutFragment;
+import com.tntu.easyenglish.fragment.ContentFragment;
 import com.tntu.easyenglish.fragment.ContentListFragment;
 import com.tntu.easyenglish.fragment.DictionaryFragment;
 import com.tntu.easyenglish.fragment.ExercisesFragment;
@@ -208,21 +207,24 @@ public class MainActivity extends ActionBarActivity implements
 		case R.id.search:
 			getSupportActionBar().setIcon(R.drawable.ic_action_logo);
 			return true;
-			// case R.id.refresh:
-			// List<Fragment> fragments = getSupportFragmentManager()
-			// .getFragments();
-			// for (Fragment f : fragments) {
-			// if (f instanceof ContentListFragment && f.isVisible()) {
-			// // Animation rotation = AnimationUtils.loadAnimation(this,
-			// // R.anim.rotate_anim);
-			// // rotation.setRepeatCount(Animation.INFINITE);
-			// // iv.startAnimation(rotation);
-			// // item = MenuItemCompat.setActionView(item, iv);
-			// ((ContentListFragment) f).refreshContentList();
-			// } else if (f instanceof ContentFragment && f.isVisible()) {
-			// ((ContentFragment) f).refreshContentList();
-			// }
-			// }
+		case R.id.refresh:
+			List<Fragment> fragments = getSupportFragmentManager()
+					.getFragments();
+			for (Fragment f : fragments) {
+				if (f instanceof ContentListFragment && f.isVisible()) {
+//					 Animation rotation = AnimationUtils.loadAnimation(this,
+//					 R.anim.rotate_anim);
+//					 rotation.setRepeatCount(Animation.INFINITE);
+//					 iv.startAnimation(rotation);
+//					 item = MenuItemCompat.setActionView(item, iv);
+					((ContentListFragment) f).refreshContentList();
+				} else if (f instanceof ContentFragment && f.isVisible()) {
+					((ContentFragment) f).refreshContentList();
+				}
+				else if (f instanceof DictionaryFragment && f.isVisible()) {
+					((DictionaryFragment) f).refreshContentList();
+				}
+			}
 		}
 		return true;
 	}

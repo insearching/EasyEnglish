@@ -31,22 +31,24 @@ import com.tntu.easyenglish.R;
 import com.tntu.easyenglish.entity.Translation;
 import com.tntu.easyenglish.utils.JSONUtils;
 import com.tntu.easyenglish.utils.RESTClient;
-import com.tntu.easyenglish.utils.RESTClient.JSONCompleteListener;
+import com.tntu.easyenglish.utils.RESTClient.JSONCompleteListenerMethod;
 
-public class TranslationDialog implements JSONCompleteListener {
+public class TranslationDialog implements JSONCompleteListenerMethod {
 
 	private Context context;
-	private RESTClient client;
 	private Dialog dialog;
 	private String apiKey;
+	private String mWord;
 
 	private TextView origWordTv;
 	private ImageView wordIv;
 	private RelativeLayout contentLayout;
 	private LinearLayout transLayout;
 
+	private static final String ADD_TO_DICTIONARY = "addWordToDictionary";
+	private static final String TRANSLATE = "translate";
+
 	public TranslationDialog(Context context, String apiKey) {
-		client = new RESTClient(TranslationDialog.this);
 		this.context = context;
 		this.apiKey = apiKey;
 	}
@@ -64,13 +66,14 @@ public class TranslationDialog implements JSONCompleteListener {
 		contentLayout = (RelativeLayout) dialog.findViewById(R.id.contentRl);
 		contentLayout.setVisibility(View.INVISIBLE);
 		transLayout = (LinearLayout) dialog.findViewById(R.id.translationLl);
-		((TextView) dialog.findViewById(R.id.cancelTv)).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				dialog.dismiss();
-			}
-		});
-		
+		((TextView) dialog.findViewById(R.id.cancelTv))
+				.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						dialog.dismiss();
+					}
+				});
+
 		contentTv.setMovementMethod(LinkMovementMethod.getInstance());
 		contentTv.setText(text, BufferType.SPANNABLE);
 		Spannable spans = (Spannable) contentTv.getText();
@@ -90,26 +93,29 @@ public class TranslationDialog implements JSONCompleteListener {
 
 	private ClickableSpan getClickableSpan(final String word) {
 		return new ClickableSpan() {
-			final String mWord;
+			final String sWord;
 			{
-				mWord = word;
+				sWord = word;
 			}
 
 			@Override
 			public void onClick(View widget) {
-
+				mWord = sWord;
 				if (dialog.isShowing()) {
 					dialog.dismiss();
 					return;
 				}
 
-				origWordTv.setText(mWord + " — "
+				origWordTv.setText(sWord + " — "
 						+ context.getString(R.string.select_translation));
-				client = new RESTClient(TranslationDialog.this);
+				RESTClient client = new RESTClient(TranslationDialog.this,
+						TRANSLATE);
 				client.execute("http://easy-english.yzi.me/api/translate?api_key="
-						+ apiKey + "&text=" + mWord);
+						+ apiKey + "&text=" + sWord);
 				dialog.show();
 				contentLayout.setVisibility(View.INVISIBLE);
+				((ProgressBar) dialog.findViewById(R.id.loadPb))
+						.setVisibility(View.VISIBLE);
 			}
 
 			public void updateDrawState(TextPaint ds) {
@@ -119,59 +125,81 @@ public class TranslationDialog implements JSONCompleteListener {
 	}
 
 	@Override
-	public void onRemoteCallComplete(String json) {
-		ArrayList<Translation> data = JSONUtils.getTranslation(json);
+	public void onRemoteCallComplete(String json, String method) {
+		if (JSONUtils.getResponseStatus(json) == JSONUtils.SUCCESS_TRUE) {
+			if (method.equals(ADD_TO_DICTIONARY)) {
+				Toast.makeText(
+						context,
+						"Word"
+								+ " "
+								+ context
+										.getString(R.string.added_to_dictionary),
+						Toast.LENGTH_LONG).show();
+			}
 
-		wordIv.setImageResource(R.drawable.ic_launcher);
+			if (method.equals(TRANSLATE)) {
+				ArrayList<Translation> data = JSONUtils.getTranslation(json);
 
-		transLayout.removeAllViews();
-		for (int i = 0; i < data.size(); i++) {
-			Translation tr = data.get(i);
-			final String translation = tr.getText();
-			final String imageUrl = tr.getImageUrl();
+				wordIv.setImageResource(R.drawable.ic_launcher);
 
-			UrlImageViewHelper.setUrlDrawable(wordIv, imageUrl,
-					R.drawable.ic_launcher, new UrlImageViewCallback() {
+				transLayout.removeAllViews();
+				for (int i = 0; i < data.size(); i++) {
+					Translation tr = data.get(i);
+					final String translation = tr.getText();
+					final String imageUrl = tr.getImageUrl();
+
+					UrlImageViewHelper.setUrlDrawable(wordIv, imageUrl,
+							R.drawable.ic_launcher, new UrlImageViewCallback() {
+								@Override
+								public void onLoaded(ImageView imageView,
+										Bitmap loadedBitmap, String url,
+										boolean loadedFromCache) {
+
+									if (!loadedFromCache) {
+										ScaleAnimation scale = new ScaleAnimation(
+												0,
+												1,
+												0,
+												1,
+												ScaleAnimation.RELATIVE_TO_SELF,
+												.5f,
+												ScaleAnimation.RELATIVE_TO_SELF,
+												.5f);
+										scale.setDuration(500);
+										scale.setInterpolator(new OvershootInterpolator());
+										imageView.startAnimation(scale);
+									}
+								}
+							});
+
+					TextView transTv = new TextView(context);
+					LayoutParams params = new LayoutParams(
+							LayoutParams.WRAP_CONTENT,
+							LayoutParams.WRAP_CONTENT);
+					params.setMargins(0, 20, 0, 0);
+					transTv.setLayoutParams(params);
+					transTv.setText(i + 1 + ". " + translation);
+					transTv.setClickable(true);
+					transTv.setOnClickListener(new OnClickListener() {
 						@Override
-						public void onLoaded(ImageView imageView,
-								Bitmap loadedBitmap, String url,
-								boolean loadedFromCache) {
-
-							if (!loadedFromCache) {
-								ScaleAnimation scale = new ScaleAnimation(0, 1,
-										0, 1, ScaleAnimation.RELATIVE_TO_SELF,
-										.5f, ScaleAnimation.RELATIVE_TO_SELF,
-										.5f);
-								scale.setDuration(500);
-								scale.setInterpolator(new OvershootInterpolator());
-								imageView.startAnimation(scale);
-							}
+						public void onClick(View v) {
+							addWordToDictionary(mWord, translation);
 						}
 					});
-
-			TextView transTv = new TextView(context);
-			transTv.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
-					LayoutParams.WRAP_CONTENT));
-			transTv.setText(i + 1 + ". " + translation);
-			transTv.setClickable(true);
-			transTv.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-
-					Toast.makeText(
-							context,
-							translation
-									+ " "
-									+ context
-											.getString(R.string.added_to_dictionary),
-							Toast.LENGTH_LONG).show();
+					transLayout.addView(transTv);
 				}
-			});
-			transLayout.addView(transTv);
-		}
 
-		contentLayout.setVisibility(View.VISIBLE);
-		((ProgressBar) dialog.findViewById(R.id.loadPb))
-				.setVisibility(View.INVISIBLE);
+				contentLayout.setVisibility(View.VISIBLE);
+				((ProgressBar) dialog.findViewById(R.id.loadPb))
+						.setVisibility(View.INVISIBLE);
+			}
+		}
+	}
+
+	private void addWordToDictionary(String word, String translation) {
+		RESTClient client = new RESTClient(this, ADD_TO_DICTIONARY);
+		String request = "http://easy-english.yzi.me/api/addToDictionary?api_key="
+				+ apiKey + "&eng_text=" + word + "&translation=" + translation;
+		client.execute(request);
 	}
 }

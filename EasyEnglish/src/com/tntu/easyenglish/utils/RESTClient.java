@@ -12,9 +12,16 @@ import android.os.AsyncTask;
 public class RESTClient extends AsyncTask<String, Void, String> {
 
 	private JSONCompleteListener listner;
+	private JSONCompleteListenerMethod methodListner;
+	private String method = null;
 
 	public RESTClient (JSONCompleteListener listener){
 		this.listner = listener;
+	}
+	
+	public RESTClient (JSONCompleteListenerMethod listener, String method){
+		this.methodListner = listener;
+		this.method = method;
 	}
 	
 	@Override
@@ -42,11 +49,18 @@ public class RESTClient extends AsyncTask<String, Void, String> {
 		if (result == null || result.equals(""))
 			return;
 		
-		listner.onRemoteCallComplete(result);
-
+		if(method == null)
+			listner.onRemoteCallComplete(result);
+		else
+			methodListner.onRemoteCallComplete(result, method);
+		
 	}
 	
 	public interface JSONCompleteListener {
 		public void onRemoteCallComplete(String json);
+	}
+	
+	public interface JSONCompleteListenerMethod {
+		public void onRemoteCallComplete(String json, String method);
 	}
 }

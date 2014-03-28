@@ -96,8 +96,9 @@ public class DictionaryFragment extends Fragment implements
 					.getUserDictionary(json);
 			mAdapter = new DictionaryAdapter(getActivity(), dictionary);
 			dictionaryLv.setAdapter(mAdapter);
-			showView();
 			loader.writeToFile(bufferFileName, json);
+			
+			showView();
 		}
 	}
 

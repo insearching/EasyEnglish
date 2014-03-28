@@ -41,7 +41,7 @@ public class JSONUtils {
 		} catch (JSONException ex) {
 			ex.printStackTrace();
 		}
-		return value;
+		return getNullString(value);
 	}
 
 	public static ArrayList<Content> getContentList(String json) {
@@ -175,12 +175,15 @@ public class JSONUtils {
 		return value;
 	}
 
+	/*
+	 * !!!!Change translation key!!!!!
+	 */
 	public static ArrayList<Translation> getTranslation(String json) {
 		JSONArray jsonArray = null;
 		ArrayList<Translation> translations = new ArrayList<Translation>();
 		try {
 			jsonArray = new JSONObject(json).getJSONObject(KeyUtils.DATA_KEY)
-					.getJSONArray(KeyUtils.TRANSLATION_KEY);
+					.getJSONArray("transltations");
 
 			for (int i = 0; i < jsonArray.length(); i++) {
 				JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -235,5 +238,9 @@ public class JSONUtils {
 			e.printStackTrace();
 		}
 		return arr;
+	}
+	
+	public static void addWordToDictionary(){
+		
 	}
 }
