@@ -43,6 +43,19 @@ public class JSONUtils {
 		}
 		return getNullString(value);
 	}
+	
+	public static String getValueFromData(String json, String valueName) {
+		String value = null;
+		JSONObject jsonObject = null;
+
+		try {
+			jsonObject = new JSONObject(json).getJSONObject("data");
+			value = jsonObject.getString(valueName);
+		} catch (JSONException ex) {
+			ex.printStackTrace();
+		}
+		return getNullString(value);
+	}
 
 	public static ArrayList<Content> getContentList(String json) {
 		ArrayList<Content> data = new ArrayList<Content>();
@@ -160,19 +173,6 @@ public class JSONUtils {
 		}
 		String newDate = newDateFormat.format(oldDate);
 		return newDate;
-	}
-
-	public static String getValueFromData(String json, String valueName) {
-		String value = null;
-		JSONObject jsonObject = null;
-
-		try {
-			jsonObject = new JSONObject(json).getJSONObject("data");
-			value = jsonObject.getString(valueName);
-		} catch (JSONException ex) {
-			ex.printStackTrace();
-		}
-		return value;
 	}
 
 	/*

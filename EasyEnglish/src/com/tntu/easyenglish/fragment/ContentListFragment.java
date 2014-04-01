@@ -82,20 +82,13 @@ public class ContentListFragment extends Fragment implements
 		client = new RESTClient(this);
 
 		if (JSONUtils.getResponseStatus(json).equals(JSONUtils.SUCCESS_TRUE)) {
-			String playerLink = JSONUtils.getValue(json, KeyUtils.PLAYER_LINK_KEY);
-			
-			if (playerLink != null) {
-				startVideoActivity(json);
-			} else {
-				startContentActivity(json);
-			}
-
+			startContentActivity(json);
 		}
 
 		showView();
 	}
 
-	private void startVideoActivity(String json) {
+	private void startContentActivity(String json) {
 		String status = JSONUtils.getResponseStatus(json);
 		if (status.equals(JSONUtils.SUCCESS_TRUE)) {
 			Content content = JSONUtils.getContentData(json);
@@ -104,27 +97,20 @@ public class ContentListFragment extends Fragment implements
 			String text = content.getText();
 			String apiKey = getArguments().getString(KeyUtils.API_KEY);
 
+			Intent intent = null;
 			if (playerLink != null && text != null) {
 				String videoId = getVideoId(playerLink);
-
 				if (videoId != null) {
-					Intent intent = new Intent(getActivity(),
-							YoutubeActivity.class);
-					intent.putExtra(KeyUtils.TITLE_KEY, title);
+					intent = new Intent(getActivity(), YoutubeActivity.class);
 					intent.putExtra(KeyUtils.VIDEO_ID_KEY, videoId);
-					intent.putExtra(KeyUtils.TEXT_KEY, text);
-					intent.putExtra(KeyUtils.API_KEY, apiKey);
-					startActivity(intent);
-				}
+				} 
 			}
-		}
-	}
-	
-	private void startContentActivity(String json) {
-		String status = JSONUtils.getResponseStatus(json);
-		if (status.equals(JSONUtils.SUCCESS_TRUE)) {
-			Intent intent = new Intent(getActivity(), ContentActivity.class);
-			intent.putExtra(KeyUtils.JSON_KEY, json);
+			else {
+				intent = new Intent(getActivity(), ContentActivity.class);
+			}
+			intent.putExtra(KeyUtils.TITLE_KEY, title);
+			intent.putExtra(KeyUtils.TEXT_KEY, text);
+			intent.putExtra(KeyUtils.API_KEY, apiKey);
 			startActivity(intent);
 		}
 	}
@@ -173,26 +159,12 @@ public class ContentListFragment extends Fragment implements
 	public void onItemClick(AdapterView<?> adapter, View convertView,
 			int position, long id) {
 		int sId = mAdapter.getItem(position).getId();
-		int type = mAdapter.getItem(position).getType();
 
-//		if (type == KeyUtils.VIDEO_TYPE_KEY) {
-			String apiKey = getArguments().getString(KeyUtils.API_KEY);
-			String requestUrl = "http://easy-english.yzi.me/api/getContentData?api_key="
-					+ apiKey + "&id=" + sId;
-			client = new RESTClient(this);
-			client.execute(requestUrl);
-			hideView();
-//		} else {
-//			ContentFragment fragment = ContentFragment.newInstance(
-//					getArguments().getString(KeyUtils.API_KEY), sId);
-//			getActivity()
-//					.getSupportFragmentManager()
-//					.beginTransaction()
-//					.setCustomAnimations(R.anim.float_left_to_right_in_anim,
-//							R.anim.float_left_to_right_out_anim)
-//					.replace(R.id.content_frame, fragment, KeyUtils.CONTENT_TAG)
-//					.addToBackStack("content_list").commit();
-//		}
-
+		String apiKey = getArguments().getString(KeyUtils.API_KEY);
+		String requestUrl = "http://easy-english.yzi.me/api/getContentData?api_key="
+				+ apiKey + "&id=" + sId;
+		client = new RESTClient(this);
+		client.execute(requestUrl);
+		hideView();
 	}
 }

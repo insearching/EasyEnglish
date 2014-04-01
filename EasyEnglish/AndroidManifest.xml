@@ -57,15 +57,20 @@
 
         <activity
             android:name="YoutubeActivity"
-            android:screenOrientation="portrait"
-            android:parentActivityName="com.tntu.easyenglish.MainActivity" >
+            android:parentActivityName="com.tntu.easyenglish.MainActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tntu.easyenglish.MainActivity" />
         </activity>
-                <activity
+        <activity
             android:name="ContentActivity"
-            android:screenOrientation="portrait" />
+            android:parentActivityName="com.tntu.easyenglish.MainActivity"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.tntu.easyenglish.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
