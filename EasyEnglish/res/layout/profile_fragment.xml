@@ -1,6 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:padding="@dimen/default_padding">
 
     <ImageView
         android:id="@+id/profileIv"
@@ -8,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/greetTv"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/com_facebook_profile_picture_blank_square" />
+        android:src="@drawable/com_facebook_profile_picture_blank_square"/>
 
     <TextView
         android:id="@+id/greetTv"

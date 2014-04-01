@@ -11,6 +11,7 @@ import android.text.Spannable;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -172,14 +173,18 @@ public class TranslationDialog implements JSONCompleteListenerMethod {
 								}
 							});
 
-					TextView transTv = new TextView(context);
-					LayoutParams params = new LayoutParams(
-							LayoutParams.WRAP_CONTENT,
-							LayoutParams.WRAP_CONTENT);
-					params.setMargins(0, 20, 0, 0);
-					transTv.setLayoutParams(params);
+//					TextView transTv = new TextView(context);
+//					LayoutParams params = new LayoutParams(
+//							LayoutParams.MATCH_PARENT,
+//							LayoutParams.WRAP_CONTENT);
+//					params.setMargins(0, 20, 0, 0);
+//					params.setMargins(5, 5, 5, 5);
+//					transTv.setLayoutParams(params);
+
+//					transTv.setClickable(true);
+//					transTv.setBackgroundResource(R.drawable.word_bg);
+					TextView transTv = (TextView)LayoutInflater.from(context).inflate(R.layout.word_cell_layout, null);
 					transTv.setText(i + 1 + ". " + translation);
-					transTv.setClickable(true);
 					transTv.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {

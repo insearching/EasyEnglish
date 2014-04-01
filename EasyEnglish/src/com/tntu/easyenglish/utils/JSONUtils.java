@@ -120,7 +120,7 @@ public class JSONUtils {
 		return id;
 	}
 
-	public static User getProfileInfo(String json) {
+	public static User getUserData(String json) {
 		JSONObject jsonObject = null;
 		User user = null;
 		try {

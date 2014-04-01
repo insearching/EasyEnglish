@@ -5,6 +5,9 @@
     <color name="black">#ff000000</color>
     <color name="orange">#ffdb5800</color>
     <color name="light_orange">#ffff9000</color>
+    <color name="yellow">#ffF0C600</color>
+    <color name="green">#ff8EA106</color>
+    <color name="dark_green">#ff59631E</color>
     <!-- Login -->
     <color name="dark_orange">#ffc75a1e</color>
     <color name="edit_text_bg">#ffece486</color>

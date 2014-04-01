@@ -3,6 +3,7 @@
 
     <string name="app_name">EasyEnglish</string>
     <string name="app_id">591631684250216</string>
+    <string name="failed_to_retrieve_data">Failed to retrieve data. Please try again later.</string>
 
     <!-- Facebook login -->
     <string name="get_started">To get started, log in using Facebook</string>

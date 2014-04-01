@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tntu.easyenglish.R;
 import com.tntu.easyenglish.entity.User;
@@ -189,7 +190,7 @@ public class ProfileFragment extends Fragment implements JSONCompleteListener {
 	public void onRemoteCallComplete(String json) {
 		String status = JSONUtils.getResponseStatus(json);
 		if (status != null && status.equals(JSONUtils.SUCCESS_TRUE)) {
-			User user = JSONUtils.getProfileInfo(json);
+			User user = JSONUtils.getUserData(json);
 			String avatar = user.getAvatar();
 			String login = user.getLogin();
 			
@@ -205,6 +206,9 @@ public class ProfileFragment extends Fragment implements JSONCompleteListener {
 			loader.displayImage(avatar, profileIv, true);
 			
 			nameTv.setText(getString(R.string.hello) + login + "!");
+		}
+		else {
+			Toast.makeText(getActivity(), getString(R.string.failed_to_retrieve_data), Toast.LENGTH_SHORT).show();
 		}
 	}
 }

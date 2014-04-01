@@ -63,6 +63,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tntu.easyenglish.MainActivity" />
         </activity>
+                <activity
+            android:name="ContentActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
