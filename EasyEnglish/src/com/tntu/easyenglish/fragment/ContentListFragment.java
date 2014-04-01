@@ -16,6 +16,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import com.tntu.easyenglish.ContentActivity;
 import com.tntu.easyenglish.R;
 import com.tntu.easyenglish.YoutubeActivity;
 import com.tntu.easyenglish.adapter.ContentListAdapter;
@@ -81,11 +82,12 @@ public class ContentListFragment extends Fragment implements
 		client = new RESTClient(this);
 
 		if (JSONUtils.getResponseStatus(json).equals(JSONUtils.SUCCESS_TRUE)) {
-			if (json.contains(KeyUtils.PLAYER_LINK_KEY)) {
-				showVideoActivity(json);
+			String playerLink = JSONUtils.getValue(json, KeyUtils.PLAYER_LINK_KEY);
+			
+			if (playerLink != null) {
+				startVideoActivity(json);
 			} else {
-				setData(json);
-				loader.writeToFile(bufferFileName, json);
+				startContentActivity(json);
 			}
 
 		}
@@ -93,7 +95,7 @@ public class ContentListFragment extends Fragment implements
 		showView();
 	}
 
-	private void showVideoActivity(String json) {
+	private void startVideoActivity(String json) {
 		String status = JSONUtils.getResponseStatus(json);
 		if (status.equals(JSONUtils.SUCCESS_TRUE)) {
 			Content content = JSONUtils.getContentData(json);
@@ -115,6 +117,15 @@ public class ContentListFragment extends Fragment implements
 					startActivity(intent);
 				}
 			}
+		}
+	}
+	
+	private void startContentActivity(String json) {
+		String status = JSONUtils.getResponseStatus(json);
+		if (status.equals(JSONUtils.SUCCESS_TRUE)) {
+			Intent intent = new Intent(getActivity(), ContentActivity.class);
+			intent.putExtra(KeyUtils.JSON_KEY, json);
+			startActivity(intent);
 		}
 	}
 
@@ -164,24 +175,24 @@ public class ContentListFragment extends Fragment implements
 		int sId = mAdapter.getItem(position).getId();
 		int type = mAdapter.getItem(position).getType();
 
-		if (type == KeyUtils.VIDEO_TYPE_KEY) {
+//		if (type == KeyUtils.VIDEO_TYPE_KEY) {
 			String apiKey = getArguments().getString(KeyUtils.API_KEY);
 			String requestUrl = "http://easy-english.yzi.me/api/getContentData?api_key="
-					+ apiKey + "&id=" + id;
+					+ apiKey + "&id=" + sId;
 			client = new RESTClient(this);
 			client.execute(requestUrl);
 			hideView();
-		} else {
-			ContentFragment fragment = ContentFragment.newInstance(
-					getArguments().getString(KeyUtils.API_KEY), sId);
-			getActivity()
-					.getSupportFragmentManager()
-					.beginTransaction()
-					.setCustomAnimations(R.anim.float_left_to_right_in_anim,
-							R.anim.float_left_to_right_out_anim)
-					.replace(R.id.content_frame, fragment, KeyUtils.CONTENT_TAG)
-					.addToBackStack("content_list").commit();
-		}
+//		} else {
+//			ContentFragment fragment = ContentFragment.newInstance(
+//					getArguments().getString(KeyUtils.API_KEY), sId);
+//			getActivity()
+//					.getSupportFragmentManager()
+//					.beginTransaction()
+//					.setCustomAnimations(R.anim.float_left_to_right_in_anim,
+//							R.anim.float_left_to_right_out_anim)
+//					.replace(R.id.content_frame, fragment, KeyUtils.CONTENT_TAG)
+//					.addToBackStack("content_list").commit();
+//		}
 
 	}
 }

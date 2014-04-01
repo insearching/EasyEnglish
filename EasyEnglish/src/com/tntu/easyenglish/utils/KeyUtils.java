@@ -10,6 +10,7 @@ public class KeyUtils {
 	public static final String ARGS_KEY = "args";
 	public static final String LOGOUT_KEY = "logout";
 	public static final String VIDEO_ID_KEY = "video";
+	public static final String JSON_KEY = "json";
 	
 	public enum AuthType {
 		FACEBOOK, GOOGLE, NATIVE, NONE

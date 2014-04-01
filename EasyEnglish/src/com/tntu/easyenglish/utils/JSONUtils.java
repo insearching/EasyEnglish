@@ -102,7 +102,7 @@ public class JSONUtils {
 	}
 
 	private static String getNullString(String s) {
-		if (s.equals("null"))
+		if (s == null || s.equals("null"))
 			return null;
 		else
 			return s;
