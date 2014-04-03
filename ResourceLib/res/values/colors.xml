@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+        <color name="listview_bg">#ffefefef</color>
+    <color name="listview_row_focused">#ffF0C600</color>
+    <color name="listview_content">#ff3e3e3e</color>
+</resources>

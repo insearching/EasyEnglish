@@ -18,7 +18,7 @@
      limitations under the License.
 -->
 
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="Theme.App_style" parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <item name="actionBarItemBackground">@drawable/selectable_background_app_style</item>

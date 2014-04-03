@@ -8,14 +8,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 
+import com.costum.android.widget.PullAndLoadListView;
+import com.costum.android.widget.PullAndLoadListView.OnLoadMoreListener;
+import com.costum.android.widget.PullToRefreshListView.OnRefreshListener;
 import com.tntu.easyenglish.ContentActivity;
 import com.tntu.easyenglish.R;
 import com.tntu.easyenglish.YoutubeActivity;
@@ -25,17 +25,17 @@ import com.tntu.easyenglish.utils.ContentCacheLoader;
 import com.tntu.easyenglish.utils.JSONUtils;
 import com.tntu.easyenglish.utils.KeyUtils;
 import com.tntu.easyenglish.utils.RESTClient;
-import com.tntu.easyenglish.utils.RESTClient.JSONCompleteListener;
+import com.tntu.easyenglish.utils.RESTClient.JSONCompleteListenerMethod;
 
 public class ContentListFragment extends Fragment implements
-		JSONCompleteListener, OnItemClickListener {
+		JSONCompleteListenerMethod, OnItemClickListener {
 	private View convertView;
-	private ListView contentLv;
-	private ProgressBar loadPb;
+	private PullAndLoadListView contentLv;
 	private ContentListAdapter mAdapter;
-	private RESTClient client;
 	private ContentCacheLoader loader;
 	private static final String bufferFileName = "content_list.txt";
+	private static final String GET_LIST_METHOD = "getList";
+	private static final String GET_CONTENT_METHOD = "getContent";
 
 	public static ContentListFragment newInstance(String apiKey) {
 		ContentListFragment fragment = new ContentListFragment();
@@ -49,43 +49,49 @@ public class ContentListFragment extends Fragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		convertView = inflater.inflate(R.layout.content_list_fragment, null);
-		contentLv = (ListView) convertView.findViewById(R.id.contentLv);
+		contentLv = (PullAndLoadListView) convertView
+				.findViewById(R.id.contentLv);
 		contentLv.setOnItemClickListener(this);
-		loadPb = (ProgressBar) convertView.findViewById(R.id.loadPb);
+		contentLv.setOnRefreshListener(new OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				refreshContentList();
+				
+			}
+		});
+		
+		contentLv.setOnLoadMoreListener(new OnLoadMoreListener() {
+			
+			@Override
+			public void onLoadMore() {
+				refreshContentList();
+			}
+		});
 
 		loader = new ContentCacheLoader(getActivity());
 		String info = loader.readFromFile(bufferFileName);
 		if (!info.equals("")) {
 			setData(info);
 		} else {
-			hideView();
-			String apiKey = getArguments().getString(KeyUtils.API_KEY);
-			String requestUrl = "http://easy-english.yzi.me/api/getContentsList?api_key="
-					+ apiKey + "&count=10";
-			client = new RESTClient(this);
-			client.execute(requestUrl);
+			refreshContentList();
 		}
 		return convertView;
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.refresh:
-			refreshContentList();
-		}
-		return true;
-	}
-
-	@Override
-	public void onRemoteCallComplete(String json) {
-		client = new RESTClient(this);
-
+	public void onRemoteCallComplete(String json, String method) {
+		contentLv.onRefreshComplete();
 		if (JSONUtils.getResponseStatus(json).equals(JSONUtils.SUCCESS_TRUE)) {
-			startContentActivity(json);
+			if (method.equals(GET_CONTENT_METHOD)) {
+				startContentActivity(json);
+			} else if (method.equals(GET_LIST_METHOD)) {
+				contentLv.onRefreshComplete();
+				setData(json);
+			}
+
 		}
 
-		showView();
+//		showView();
 	}
 
 	private void startContentActivity(String json) {
@@ -103,9 +109,8 @@ public class ContentListFragment extends Fragment implements
 				if (videoId != null) {
 					intent = new Intent(getActivity(), YoutubeActivity.class);
 					intent.putExtra(KeyUtils.VIDEO_ID_KEY, videoId);
-				} 
-			}
-			else {
+				}
+			} else {
 				intent = new Intent(getActivity(), ContentActivity.class);
 			}
 			intent.putExtra(KeyUtils.TITLE_KEY, title);
@@ -137,23 +142,23 @@ public class ContentListFragment extends Fragment implements
 		if (loader == null)
 			return;
 		loader.deleteFile(bufferFileName);
-		hideView();
+//		hideView();
 		String apiKey = getArguments().getString(KeyUtils.API_KEY);
 		String requestUrl = "http://easy-english.yzi.me/api/getContentsList?api_key="
 				+ apiKey + "&count=10";
-		client = new RESTClient(this);
+		RESTClient client = new RESTClient(this, GET_LIST_METHOD);
 		client.execute(requestUrl);
 	}
-
-	private void hideView() {
-		loadPb.setVisibility(View.VISIBLE);
-		contentLv.setVisibility(View.GONE);
-	}
-
-	private void showView() {
-		loadPb.setVisibility(View.GONE);
-		contentLv.setVisibility(View.VISIBLE);
-	}
+//
+//	private void hideView() {
+//		loadPb.setVisibility(View.VISIBLE);
+//		contentLv.setVisibility(View.GONE);
+//	}
+//
+//	private void showView() {
+//		loadPb.setVisibility(View.GONE);
+//		contentLv.setVisibility(View.VISIBLE);
+//	}
 
 	@Override
 	public void onItemClick(AdapterView<?> adapter, View convertView,
@@ -163,8 +168,8 @@ public class ContentListFragment extends Fragment implements
 		String apiKey = getArguments().getString(KeyUtils.API_KEY);
 		String requestUrl = "http://easy-english.yzi.me/api/getContentData?api_key="
 				+ apiKey + "&id=" + sId;
-		client = new RESTClient(this);
+		RESTClient client = new RESTClient(this, GET_CONTENT_METHOD);
 		client.execute(requestUrl);
-		hideView();
+//		hideView();
 	}
 }

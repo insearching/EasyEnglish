@@ -8,14 +8,16 @@
     <color name="yellow">#ffF0C600</color>
     <color name="green">#ff8EA106</color>
     <color name="dark_green">#ff59631E</color>
+    <color name="ligh_yellow">#fff6ca90</color>
+    
+    <color name="listview_bg">#ffefefef</color>
+    <color name="listview_text_color">#ff3e3e3e</color>
     <!-- Login -->
     <color name="dark_orange">#ffc75a1e</color>
     <color name="edit_text_bg">#ffece486</color>
     <color name="edit_text_selected_bg">#ffecd385</color>
     <!-- Navigation drawer -->
-    <color name="ligh_yellow">#fff6ca90</color>
-    <color name="drawer_bg">#ffefefef</color>
-    <color name="drawer_text_color">#ff3e3e3e</color>
+    <color name="light_yellow">#fff6ca90</color>
     <!-- Profile -->
     <color name="yellow">#ffF0C600</color>
     <!-- Content -->

@@ -4,14 +4,13 @@ import java.util.ArrayList;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 
+import com.costum.android.widget.PullAndLoadListView;
+import com.costum.android.widget.PullAndLoadListView.OnLoadMoreListener;
+import com.costum.android.widget.PullToRefreshListView.OnRefreshListener;
 import com.tntu.easyenglish.R;
 import com.tntu.easyenglish.adapter.DictionaryAdapter;
 import com.tntu.easyenglish.entity.DictionaryWord;
@@ -24,8 +23,7 @@ import com.tntu.easyenglish.utils.RESTClient.JSONCompleteListener;
 public class DictionaryFragment extends Fragment implements
 		JSONCompleteListener {
 	private View convertView;
-	private ListView dictionaryLv;
-	private ProgressBar loadPb;
+	private PullAndLoadListView contentLv;
 	private DictionaryAdapter mAdapter;
 	private ContentCacheLoader loader;
 
@@ -45,8 +43,22 @@ public class DictionaryFragment extends Fragment implements
 			Bundle savedInstanceState) {
 		convertView = inflater.inflate(R.layout.dictionary_fragment, null);
 		
-		dictionaryLv = (ListView) convertView.findViewById(R.id.dictionaryLv);
-		loadPb = (ProgressBar) convertView.findViewById(R.id.loadPb);
+		contentLv = (PullAndLoadListView) convertView.findViewById(R.id.contentLv);
+		contentLv.setOnRefreshListener(new OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				refreshContentList();
+				
+			}
+		});
+		
+		contentLv.setOnLoadMoreListener(new OnLoadMoreListener() {
+			
+			@Override
+			public void onLoadMore() {
+				refreshContentList();
+			}
+		});
 		setHasOptionsMenu(true);
 
 		loader = new ContentCacheLoader(getActivity());
@@ -54,9 +66,7 @@ public class DictionaryFragment extends Fragment implements
 		if (json != null && !json.equals("")) {
 			setData(json);
 		} else {
-			String apiKey = getArguments().getString(KeyUtils.API_KEY);
-			RESTClient client = new RESTClient(this);
-			client.execute(getQuery(apiKey));
+			refreshContentList();
 		}
 
 		return convertView;
@@ -67,22 +77,11 @@ public class DictionaryFragment extends Fragment implements
 		super.onActivityCreated(savedInstanceState);
 		setHasOptionsMenu(true);
 	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		Log.d("TAG", ""+item.getTitle());
-		switch (item.getItemId()) {
-		case R.id.refresh:
-			refreshContentList();
-		}
-		return true;
-	}
 
 	public void refreshContentList() {
 		if (loader == null)
 			return;
 		loader.deleteFile(bufferFileName);
-		hideView();
 
 		String apiKey = getArguments().getString(KeyUtils.API_KEY);
 		RESTClient client = new RESTClient(this);
@@ -95,26 +94,16 @@ public class DictionaryFragment extends Fragment implements
 			ArrayList<DictionaryWord> dictionary = JSONUtils
 					.getUserDictionary(json);
 			mAdapter = new DictionaryAdapter(getActivity(), dictionary);
-			dictionaryLv.setAdapter(mAdapter);
+			contentLv.setAdapter(mAdapter);
 			loader.writeToFile(bufferFileName, json);
-			
-			showView();
 		}
 	}
 
 	@Override
 	public void onRemoteCallComplete(String json) {
+		contentLv.onLoadMoreComplete();
+		contentLv.onRefreshComplete();
 		setData(json);
-	}
-
-	private void hideView() {
-		dictionaryLv.setVisibility(View.GONE);
-		loadPb.setVisibility(View.VISIBLE);
-	}
-
-	private void showView() {
-		dictionaryLv.setVisibility(View.VISIBLE);
-		loadPb.setVisibility(View.GONE);
 	}
 
 	private String getQuery(String apiKey) {
