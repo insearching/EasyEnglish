@@ -39,6 +39,10 @@ public class KeyUtils {
 	public static final String MSG_KEY = "msg";
 	public static final String TRANSLATION_KEY = "translations";
 	public static final String IMAGE_KEY = "image";
+	public static final String WORD_TRANSLATION = "Word-Translation";
+	public static final String TRANSLATION_WORD = "Translation-Word";
+	public static final String BUILD_WORD = "BuildWord";
+	public static final String SOUND_TO_WORD ="SoundToWord";
 	
 	//Dictionary
 	public static final String DICT_ID_KEY = "dictionary_id";

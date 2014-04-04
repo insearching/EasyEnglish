@@ -1,13 +1,51 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
-    
-    <TextView
-        android:id="@+id/greetTv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="Here will be your exercises" />
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:padding="5dp"
+    android:weightSum="2" >
 
-</RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/origWordRl"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+
+        <ImageView
+            android:id="@+id/wordIv"
+            android:layout_width="@dimen/image_width"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:src="@drawable/ic_launcher" />
+
+        <TextView
+            android:id="@+id/origTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/wordIv"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp"
+            android:text="@string/app_name"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="17dp"
+            android:text="Medium Text"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/varLv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+</LinearLayout>

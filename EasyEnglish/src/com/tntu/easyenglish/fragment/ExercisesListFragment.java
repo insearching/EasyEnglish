@@ -10,13 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class ExercisesFragment extends Fragment{
+public class ExercisesListFragment extends Fragment implements JSONCompleteListener{
 	private View convertView;
 	
-	public static ExercisesFragment newInstance(String json) {
-		ExercisesFragment fragment = new ExercisesFragment();
+	public static ExercisesListFragment newInstance(String apiKey) {
+		ExercisesListFragment fragment = new ExercisesListFragment();
 		Bundle args = new Bundle();
-		args.putString(KeyUtils.JSON_KEY, json);
+		args.putString(KeyUtils.API_KEY, apiKey);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -27,5 +27,10 @@ public class ExercisesFragment extends Fragment{
 			Bundle savedInstanceState) {
 		convertView = inflater.inflate(R.layout.exercises_fragment, null);
 		return convertView;
+	}
+
+	@Override
+	public void onRemoteCallComplete(String json) {
+		
 	}
 }

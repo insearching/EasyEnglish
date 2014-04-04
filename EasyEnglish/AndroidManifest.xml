@@ -71,6 +71,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tntu.easyenglish.MainActivity" />
         </activity>
+        <activity android:name="ExercisesActivity"></activity>
     </application>
 
 </manifest>
