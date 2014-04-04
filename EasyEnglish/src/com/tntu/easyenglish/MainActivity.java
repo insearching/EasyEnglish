@@ -207,24 +207,6 @@ public class MainActivity extends ActionBarActivity implements
 		case R.id.search:
 			getSupportActionBar().setIcon(R.drawable.ic_action_logo);
 			return true;
-		case R.id.refresh:
-			List<Fragment> fragments = getSupportFragmentManager()
-					.getFragments();
-			for (Fragment f : fragments) {
-				if (f instanceof ContentListFragment && f.isVisible()) {
-//					 Animation rotation = AnimationUtils.loadAnimation(this,
-//					 R.anim.rotate_anim);
-//					 rotation.setRepeatCount(Animation.INFINITE);
-//					 iv.startAnimation(rotation);
-//					 item = MenuItemCompat.setActionView(item, iv);
-					((ContentListFragment) f).refreshContentList();
-				} else if (f instanceof ContentFragment && f.isVisible()) {
-					((ContentFragment) f).refreshContentList();
-				}
-				else if (f instanceof DictionaryFragment && f.isVisible()) {
-					((DictionaryFragment) f).refreshContentList();
-				}
-			}
 		}
 		return true;
 	}

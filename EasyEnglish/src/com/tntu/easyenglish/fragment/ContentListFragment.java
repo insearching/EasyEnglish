@@ -36,6 +36,8 @@ public class ContentListFragment extends Fragment implements
 	private static final String bufferFileName = "content_list.txt";
 	private static final String GET_LIST_METHOD = "getList";
 	private static final String GET_CONTENT_METHOD = "getContent";
+	private static final int COUNT = 10;
+	private static int offset = 0;
 
 	public static ContentListFragment newInstance(String apiKey) {
 		ContentListFragment fragment = new ContentListFragment();
@@ -56,7 +58,6 @@ public class ContentListFragment extends Fragment implements
 			@Override
 			public void onRefresh() {
 				refreshContentList();
-				
 			}
 		});
 		
@@ -64,7 +65,7 @@ public class ContentListFragment extends Fragment implements
 			
 			@Override
 			public void onLoadMore() {
-				refreshContentList();
+				
 			}
 		});
 
@@ -88,10 +89,7 @@ public class ContentListFragment extends Fragment implements
 				contentLv.onRefreshComplete();
 				setData(json);
 			}
-
 		}
-
-//		showView();
 	}
 
 	private void startContentActivity(String json) {
@@ -142,27 +140,29 @@ public class ContentListFragment extends Fragment implements
 		if (loader == null)
 			return;
 		loader.deleteFile(bufferFileName);
-//		hideView();
 		String apiKey = getArguments().getString(KeyUtils.API_KEY);
-		String requestUrl = "http://easy-english.yzi.me/api/getContentsList?api_key="
-				+ apiKey + "&count=10";
 		RESTClient client = new RESTClient(this, GET_LIST_METHOD);
-		client.execute(requestUrl);
+		client.execute(getQuery(getArguments().getString(KeyUtils.API_KEY),
+				0));
+		offset = COUNT;
 	}
-//
-//	private void hideView() {
-//		loadPb.setVisibility(View.VISIBLE);
-//		contentLv.setVisibility(View.GONE);
-//	}
-//
-//	private void showView() {
-//		loadPb.setVisibility(View.GONE);
-//		contentLv.setVisibility(View.VISIBLE);
-//	}
+	
+	public void loadMoreContent() {
+		RESTClient client = new RESTClient(this, GET_LIST_METHOD);
+		client.execute(getQuery(getArguments().getString(KeyUtils.API_KEY),
+				offset));
+		offset += COUNT;
+	}
+	
+	private String getQuery(String apiKey, int offset) {
+		return  "http://easy-english.yzi.me/api/getContentsList?api_key="
+				+ apiKey + "&count=" + COUNT + "&offset=" + offset;
+	}
 
 	@Override
 	public void onItemClick(AdapterView<?> adapter, View convertView,
 			int position, long id) {
+		position -= 1;
 		int sId = mAdapter.getItem(position).getId();
 
 		String apiKey = getArguments().getString(KeyUtils.API_KEY);
@@ -170,6 +170,5 @@ public class ContentListFragment extends Fragment implements
 				+ apiKey + "&id=" + sId;
 		RESTClient client = new RESTClient(this, GET_CONTENT_METHOD);
 		client.execute(requestUrl);
-//		hideView();
 	}
 }

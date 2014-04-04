@@ -2,11 +2,19 @@ package com.tntu.easyenglish.fragment;
 
 import java.util.ArrayList;
 
+import android.app.ProgressDialog;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.costum.android.widget.PullAndLoadListView;
 import com.costum.android.widget.PullAndLoadListView.OnLoadMoreListener;
@@ -21,13 +29,13 @@ import com.tntu.easyenglish.utils.RESTClient;
 import com.tntu.easyenglish.utils.RESTClient.JSONCompleteListener;
 
 public class DictionaryFragment extends Fragment implements
-		JSONCompleteListener {
+		JSONCompleteListener, OnItemClickListener {
 	private View convertView;
 	private PullAndLoadListView contentLv;
 	private DictionaryAdapter mAdapter;
 	private ContentCacheLoader loader;
-
-	private static final int mCount = 10;
+	private static final int COUNT = 10;
+	private static int offset = 0;
 	private static final String bufferFileName = "dictionary.txt";
 
 	public static DictionaryFragment newInstance(String apiKey) {
@@ -42,24 +50,26 @@ public class DictionaryFragment extends Fragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		convertView = inflater.inflate(R.layout.dictionary_fragment, null);
-		
-		contentLv = (PullAndLoadListView) convertView.findViewById(R.id.contentLv);
+		setHasOptionsMenu(true);
+
+		contentLv = (PullAndLoadListView) convertView
+				.findViewById(R.id.contentLv);
 		contentLv.setOnRefreshListener(new OnRefreshListener() {
 			@Override
 			public void onRefresh() {
 				refreshContentList();
-				
 			}
 		});
-		
+
 		contentLv.setOnLoadMoreListener(new OnLoadMoreListener() {
-			
+
 			@Override
 			public void onLoadMore() {
-				refreshContentList();
+				loadMoreContent();
 			}
 		});
-		setHasOptionsMenu(true);
+
+		contentLv.setOnItemClickListener(this);
 
 		loader = new ContentCacheLoader(getActivity());
 		String json = loader.readFromFile(bufferFileName);
@@ -71,7 +81,7 @@ public class DictionaryFragment extends Fragment implements
 
 		return convertView;
 	}
-	
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -83,9 +93,18 @@ public class DictionaryFragment extends Fragment implements
 			return;
 		loader.deleteFile(bufferFileName);
 
-		String apiKey = getArguments().getString(KeyUtils.API_KEY);
 		RESTClient client = new RESTClient(this);
-		client.execute(getQuery(apiKey));
+		client.execute(getQuery(getArguments().getString(KeyUtils.API_KEY), 0));
+
+		mAdapter = null;
+		offset = COUNT;
+	}
+
+	public void loadMoreContent() {
+		RESTClient client = new RESTClient(this);
+		client.execute(getQuery(getArguments().getString(KeyUtils.API_KEY),
+				offset));
+		offset += COUNT;
 	}
 
 	private void setData(String json) {
@@ -93,9 +112,26 @@ public class DictionaryFragment extends Fragment implements
 		if (status.equals(JSONUtils.SUCCESS_TRUE)) {
 			ArrayList<DictionaryWord> dictionary = JSONUtils
 					.getUserDictionary(json);
-			mAdapter = new DictionaryAdapter(getActivity(), dictionary);
-			contentLv.setAdapter(mAdapter);
-			loader.writeToFile(bufferFileName, json);
+
+			int savedPosition = contentLv.getFirstVisiblePosition();
+			View firstVisibleView = contentLv.getChildAt(0);
+			int savedListTop = (firstVisibleView == null) ? 0
+					: firstVisibleView.getTop();
+			if (mAdapter == null) {
+				mAdapter = new DictionaryAdapter(getActivity(), dictionary);
+				contentLv.setAdapter(mAdapter);
+				loader.writeToFile(bufferFileName, json);
+			} else if (mAdapter != null && dictionary.size() > 0) {
+				for (DictionaryWord word : dictionary) {
+					mAdapter.addItem(word);
+				}
+				mAdapter.notifyDataSetChanged();
+				loader.writeToFile(bufferFileName, json);
+			}
+			if (dictionary.size() == 0) {
+				contentLv.setSelectionFromTop(savedPosition - 1, savedListTop);
+			}
+
 		}
 	}
 
@@ -106,8 +142,14 @@ public class DictionaryFragment extends Fragment implements
 		setData(json);
 	}
 
-	private String getQuery(String apiKey) {
+	private String getQuery(String apiKey, int offset) {
 		return "http://easy-english.yzi.me/api/getUserDictionary?api_key="
-				+ apiKey + "&count=" + mCount + "&offset=0";
+				+ apiKey + "&count=" + COUNT + "&offset=" + offset;
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+			long arg3) {
+		position -= 1;
 	}
 }

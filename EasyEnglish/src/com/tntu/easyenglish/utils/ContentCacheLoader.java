@@ -2,10 +2,10 @@ package com.tntu.easyenglish.utils;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 
 import android.content.Context;
 import android.util.Log;
@@ -18,12 +18,11 @@ public class ContentCacheLoader {
 		this.context = context;
 	}
 
-	public void writeToFile(String bufferFileName, String data) {
+	public void writeToFile(String filename, String data) {
 		try {
-			OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
-					context.openFileOutput(bufferFileName, Context.MODE_PRIVATE));
-			outputStreamWriter.write(data);
-			outputStreamWriter.close();
+			FileWriter fw = new FileWriter(filename,true);
+			fw.write(data);
+			fw.close();
 		} catch (IOException e) {
 			Log.e("Exception", "File write failed: " + e.toString());
 		}
@@ -58,8 +57,8 @@ public class ContentCacheLoader {
 
 		return info;
 	}
-	
-	public void deleteFile(String fileName){
+
+	public void deleteFile(String fileName) {
 		context.deleteFile(fileName);
 	}
 }

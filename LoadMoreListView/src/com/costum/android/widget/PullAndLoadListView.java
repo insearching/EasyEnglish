@@ -1,7 +1,5 @@
 package com.costum.android.widget;
 
-import com.android.widget.R;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -9,6 +7,8 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+
+import com.android.widget.R;
 
 /*
  * Copyright (C) 2012 Fabian Leon Ortega <http://orleonsoft.blogspot.com/,
@@ -44,8 +44,10 @@ public class PullAndLoadListView extends PullToRefreshListView {
 	// private TextView mLabLoadMore;
 	private ProgressBar mProgressBarLoadMore;
 
-	public PullAndLoadListView(Context context) { super(context);
-	  initComponent(context); }
+	public PullAndLoadListView(Context context) {
+		super(context);
+		initComponent(context);
+	}
 
 	public PullAndLoadListView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);

@@ -26,6 +26,10 @@ public class ContentListAdapter extends BaseAdapter {
 		return data.size();
 	}
 
+	public void addItem(Content content){
+		data.add(content);
+	}
+	
 	@Override
 	public Content getItem(int position) {
 		return data.get(position);
