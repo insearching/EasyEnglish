@@ -44,14 +44,34 @@ public class KeyUtils {
 	public static final String BUILD_WORD = "BuildWord";
 	public static final String SOUND_TO_WORD ="SoundToWord";
 	
+	public static final String QUESTION_KEY = "question";
+	public static final String ANWERS_KEY = "answers";
+	public static final String PHRASE_KEY = "phrase";
+	public static final String PICTURE_LINK_KEY = "pictureLink";
+	public static final String CONTEXT_KEY = "context";
+	public static final String VOICE_LINK_KEY = "voiceLink";
+	public static final String ANSWER_ID_KEY ="answerId";
+	public static final String ANSWERS_KEY ="answers";
+	
 	//Dictionary
 	public static final String DICT_ID_KEY = "dictionary_id";
 	public static final String WORD_ID_KEY = "word_id";
 	public static final String WORD_KEY = "word";
-	public static final String CONTEXT_KEY = "contexts";
+	public static final String CONTEXTS_KEY = "contexts";
 	public static final String SOUND_KEY = "sound";
 	
 	public static final int VIDEO_TYPE_KEY = 2;
 	public static final int AUDIO_TYPE_KEY = 1;
 	public static final int TEXT_TYPE_KEY = 3;
+	
+	//Exercises
+	public static final String EXERCISES_TYPE_KEY = "exercises_type";
+	public enum ExerciseType {
+		WORD_TRANSLATION, TRANSLATION_WORD, WORD_CONSTRUCTOR, LISTENING
+	}
+	public static final String WORD_TRANSLATION_KEY = "Word-Translation";
+	public static final String TRANSLATION_WORD_KEY = "Translation-Word";
+	public static final String WORD_CONSTRUCTOR_KEY = "BuildWord";
+	public static final String LISTENING_KEY = "SoundToWord";
+	
 }

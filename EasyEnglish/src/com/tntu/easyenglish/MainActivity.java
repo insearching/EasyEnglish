@@ -2,7 +2,6 @@ package com.tntu.easyenglish;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import android.app.SearchManager;
 import android.content.Context;
@@ -37,7 +36,6 @@ import com.google.android.gms.common.Scopes;
 import com.google.android.gms.plus.PlusClient;
 import com.tntu.easyenglish.adapter.DrawerAdapter;
 import com.tntu.easyenglish.fragment.AboutFragment;
-import com.tntu.easyenglish.fragment.ContentFragment;
 import com.tntu.easyenglish.fragment.ContentListFragment;
 import com.tntu.easyenglish.fragment.DictionaryFragment;
 import com.tntu.easyenglish.fragment.ExercisesFragment;
@@ -265,7 +263,7 @@ public class MainActivity extends ActionBarActivity implements
 				fragment = ProfileFragment.newInstance(extras);
 				break;
 			case EXERCISES:
-				fragment = new ExercisesFragment();
+				fragment = ExercisesFragment.newInstance(mApiKey);
 				break;
 			case WORDS:
 				fragment = new WordsFragment();

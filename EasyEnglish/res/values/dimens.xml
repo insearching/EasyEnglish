@@ -24,4 +24,5 @@
     <dimen name="words_item_padding">5dp</dimen>
     <!-- Excercises -->
     <dimen name="image_width">50dp</dimen>
+    <dimen name="label_margin">50dp</dimen>
 </resources>

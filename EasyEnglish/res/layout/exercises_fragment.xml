@@ -1,51 +1,51 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:padding="5dp"
-    android:weightSum="2" >
+    android:padding="@dimen/default_padding" >
 
-    <RelativeLayout
-        android:id="@+id/origWordRl"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" >
+    <TextView
+        android:id="@+id/wordTransTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/label_margin"
+        android:text="@string/word_trans"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:clickable="true"/>
 
-        <ImageView
-            android:id="@+id/wordIv"
-            android:layout_width="@dimen/image_width"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="50dp"
-            android:src="@drawable/ic_launcher" />
+    <TextView
+        android:id="@+id/transWordTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/wordTransTv"
+        android:layout_marginTop="@dimen/label_margin"
+        android:text="@string/trans_word"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:clickable="true"/>
 
-        <TextView
-            android:id="@+id/origTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/wordIv"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="40dp"
-            android:text="@string/app_name"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+    <TextView
+        android:id="@+id/wordConstrTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/transWordTv"
+        android:layout_marginTop="@dimen/label_margin"
+        android:text="@string/word_constructor"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:clickable="true"/>
 
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="17dp"
-            android:text="Medium Text"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    </RelativeLayout>
-
-    <ListView
-        android:id="@+id/varLv"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
-</LinearLayout>
+    <TextView
+        android:id="@+id/listeningTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/wordConstrTv"
+        android:layout_marginTop="@dimen/label_margin"
+        android:text="@string/listening"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:clickable="true"/>
+    
+</RelativeLayout>

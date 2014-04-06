@@ -42,7 +42,7 @@ public class ContentFragment extends Fragment implements JSONCompleteListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		convertView = inflater.inflate(R.layout.content_fragment, null, false);
-		// playerWv = (WebView) convertView.findViewById(R.id.playerWv);
+
 		contentTv = (TextView) convertView.findViewById(R.id.contentTv);
 		contentLl = (LinearLayout) convertView.findViewById(R.id.contentLl);
 		loadPb = (ProgressBar) convertView.findViewById(R.id.loadPb);

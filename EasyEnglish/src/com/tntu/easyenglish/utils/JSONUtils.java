@@ -9,10 +9,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.provider.UserDictionary.Words;
+
 import com.tntu.easyenglish.entity.Content;
 import com.tntu.easyenglish.entity.DictionaryWord;
 import com.tntu.easyenglish.entity.Translation;
 import com.tntu.easyenglish.entity.User;
+import com.tntu.easyenglish.entity.WordTrans;
+import com.tntu.easyenglish.entity.WordTrans.Answer;
 
 public class JSONUtils {
 
@@ -212,7 +216,7 @@ public class JSONUtils {
 				int wordId = jsonObject.getInt(KeyUtils.WORD_ID_KEY);
 				String word = jsonObject.getString(KeyUtils.WORD_KEY);
 				String[] translations = getArray(jsonObject, KeyUtils.TRANSLATION_KEY);
-				String[] contexts = getArray(jsonObject, KeyUtils.CONTEXT_KEY);
+				String[] contexts = getArray(jsonObject, KeyUtils.CONTEXTS_KEY);
 				String[] images = getArray(jsonObject, KeyUtils.IMAGE_KEY);
 				String sound = jsonObject.getString(KeyUtils.SOUND_KEY);
 				String date = transformDate(jsonObject.getString(KeyUtils.DATE_KEY));
@@ -226,6 +230,41 @@ public class JSONUtils {
 		}
 		return words;
 	}
+	
+	public static ArrayList<WordTrans> getWordTransExercises(String json){
+		JSONArray jsonArray = null;
+		ArrayList<WordTrans> exercises = new ArrayList<WordTrans>();
+		try {
+			jsonArray = new JSONObject(json).getJSONArray(KeyUtils.DATA_KEY);
+
+			for (int i = 0; i < jsonArray.length(); i++) {
+				JSONObject exerciseJson = jsonArray.getJSONObject(i);
+				JSONObject question = exerciseJson.getJSONObject(KeyUtils.QUESTION_KEY);
+				
+				int id = question.getInt(KeyUtils.ID_KEY);
+				String phrase = question.getString(KeyUtils.PHRASE_KEY);
+				String pictureLink = question.getString(KeyUtils.PICTURE_LINK_KEY);
+				String context = question.getString(KeyUtils.CONTEXT_KEY);
+				String voiceLink = question.getString(KeyUtils.VOICE_LINK_KEY);
+				int correctAnswerId = question.getInt(KeyUtils.ANSWER_ID_KEY);
+				
+				JSONArray answersArray = exerciseJson.getJSONArray(KeyUtils.ANSWERS_KEY);
+				Answer[] answers = new Answer[answersArray.length()];
+				for(int j=0; j<answersArray.length(); j++){
+					JSONObject answerObject = answersArray.getJSONObject(j);
+					Answer answer = new Answer();
+					answer.id = answerObject.getInt(KeyUtils.ID_KEY);
+					answer.phrase =  answerObject.getString(KeyUtils.PHRASE_KEY);
+					answers[j] = answer;
+				}
+				WordTrans exercise = new WordTrans(id, phrase, pictureLink, context, voiceLink, correctAnswerId, answers);
+				exercises.add(exercise);
+			}
+		} catch (JSONException ex) {
+			ex.printStackTrace();
+		}
+		return exercises;
+	}
 
 	private static String[] getArray(JSONObject jsonObj, String key) {
 		String[] arr = null;
@@ -238,9 +277,5 @@ public class JSONUtils {
 			e.printStackTrace();
 		}
 		return arr;
-	}
-	
-	public static void addWordToDictionary(){
-		
 	}
 }
