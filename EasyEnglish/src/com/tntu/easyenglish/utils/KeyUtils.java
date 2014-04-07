@@ -66,6 +66,7 @@ public class KeyUtils {
 	
 	//Exercises
 	public static final String EXERCISES_TYPE_KEY = "exercises_type";
+	public static final String EXERCISE_KEY = "exercises";
 	public enum ExerciseType {
 		WORD_TRANSLATION, TRANSLATION_WORD, WORD_CONSTRUCTOR, LISTENING
 	}

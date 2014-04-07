@@ -1,7 +1,10 @@
 package com.tntu.easyenglish.entity;
 
-public class WordTrans {
+import java.io.Serializable;
 
+public class WordTrans implements Serializable{
+
+	private static final long serialVersionUID = 1L;
 	private int id;
 	private String phrase;
 	private String pictureLink;
