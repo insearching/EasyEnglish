@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -40,13 +41,18 @@ public class WordTransFragment extends Fragment implements OnItemClickListener{
 
 	public static WordTransFragment newInstance(String apiKey,
 			WordTrans exercise) {
-		
 		WordTransFragment fragment = new WordTransFragment();
 		Bundle args = new Bundle();
 		args.putString(KeyUtils.API_KEY, apiKey);
 		args.putSerializable(KeyUtils.EXERCISE_KEY, exercise);
 		fragment.setArguments(args);
 		return fragment;
+	}
+	
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		listener = (ExerciseListener)activity;
 	}
 
 	@Override
@@ -144,8 +150,7 @@ public class WordTransFragment extends Fragment implements OnItemClickListener{
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		Integer answerId = data.get(adapter.getItem(position));
-		listener.onTestCompleted(answerId);
+		listener.onTestCompleted((int) (long)id);
 	}
 	
 	public interface ExerciseListener {

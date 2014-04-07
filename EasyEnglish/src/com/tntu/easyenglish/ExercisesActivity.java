@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.widget.Toast;
 
 import com.tntu.easyenglish.entity.WordTrans;
 import com.tntu.easyenglish.exercise.WordTransFragment;
@@ -86,7 +87,7 @@ public class ExercisesActivity extends FragmentActivity implements
 
 		@Override
 		public int getCount() {
-			return PAGES_NUM;
+			return data.size();
 		}
 	}
 
@@ -104,5 +105,6 @@ public class ExercisesActivity extends FragmentActivity implements
 	@Override
 	public void onTestCompleted(Integer answerId) {
 		results.add(answerId);
+		Toast.makeText(this, "Test completed " + answerId, Toast.LENGTH_SHORT).show();
 	}
 }
