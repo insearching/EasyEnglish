@@ -9,9 +9,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.BounceInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.widget.AdapterView;
@@ -27,7 +24,7 @@ import com.tntu.easyenglish.adapter.AnswersAdapter;
 import com.tntu.easyenglish.entity.WordTrans;
 import com.tntu.easyenglish.utils.KeyUtils;
 
-public class WordTransFragment extends Fragment implements OnItemClickListener {
+public class TransWordFragment extends Fragment implements OnItemClickListener{
 
 	private ExerciseListener listener;
 	private View convertView;
@@ -37,27 +34,27 @@ public class WordTransFragment extends Fragment implements OnItemClickListener {
 	private ListView answersLv;
 	private WordTrans mExercise;
 
-	public static WordTransFragment newInstance(String apiKey,
+	public static TransWordFragment newInstance(String apiKey,
 			WordTrans exercise) {
-		WordTransFragment fragment = new WordTransFragment();
+		TransWordFragment fragment = new TransWordFragment();
 		Bundle args = new Bundle();
 		args.putString(KeyUtils.API_KEY, apiKey);
 		args.putSerializable(KeyUtils.EXERCISE_KEY, exercise);
 		fragment.setArguments(args);
 		return fragment;
 	}
-
+	
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		this.listener = (ExerciseListener) activity;
+		this.listener = (ExerciseListener)activity;
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		initView(inflater);
-
+		
 		mExercise = (WordTrans) getArguments().getSerializable(
 				KeyUtils.EXERCISE_KEY);
 		setData();
@@ -76,11 +73,27 @@ public class WordTransFragment extends Fragment implements OnItemClickListener {
 	}
 
 	private void setData() {
+		UrlImageViewHelper.setUrlDrawable(wordIv, mExercise.getPictureLink(),
+				R.drawable.ic_launcher, new UrlImageViewCallback() {
+					@Override
+					public void onLoaded(ImageView imageView,
+							Bitmap loadedBitmap, String url,
+							boolean loadedFromCache) {
 
+						if (!loadedFromCache) {
+							ScaleAnimation scale = new ScaleAnimation(0, 1, 0,
+									1, ScaleAnimation.RELATIVE_TO_SELF, .5f,
+									ScaleAnimation.RELATIVE_TO_SELF, .5f);
+							scale.setDuration(500);
+							scale.setInterpolator(new OvershootInterpolator());
+							imageView.startAnimation(scale);
+						}
+					}
+				});
 
 		origTv.setText(mExercise.getPhrase());
 		contextTv.setText(mExercise.getContext());
-
+		
 		HashMap<String, Integer> answers = mExercise.getAnswers();
 		AnswersAdapter adapter = new AnswersAdapter(getActivity(), answers);
 		answersLv.setAdapter(adapter);
@@ -90,31 +103,8 @@ public class WordTransFragment extends Fragment implements OnItemClickListener {
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		UrlImageViewHelper.setUrlDrawable(wordIv, mExercise.getPictureLink(),
-				R.drawable.ic_launcher, new UrlImageViewCallback() {
-					@Override
-					public void onLoaded(ImageView imageView,
-							Bitmap loadedBitmap, String url,
-							boolean loadedFromCache) {
-						if (!loadedFromCache) {
-							imageView.setVisibility(View.VISIBLE);
-							Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.fly_in_anim);
-							imageView.startAnimation(anim);
-						}
-					}
-				});
-		
-		
 		int correctAnswerId = mExercise.getCorrectAnswer();
 		boolean isCorrect = correctAnswerId == id ? true : false;
-		if(isCorrect)
-			((AnswersAdapter)answersLv.getAdapter()).setCorrectAnswer(position);
-		else
-			((AnswersAdapter)answersLv.getAdapter()).setWrongAnswer(position);
-		
-		((AnswersAdapter)answersLv.getAdapter()).notifyDataSetChanged();
-		
-		listener.onTestCompleted(mExercise.getId(), isCorrect,
-				KeyUtils.WORD_TRANSLATION_KEY);
+		listener.onTestCompleted(mExercise.getId(), isCorrect, KeyUtils.TRANSLATION_WORD_KEY);
 	}
 }

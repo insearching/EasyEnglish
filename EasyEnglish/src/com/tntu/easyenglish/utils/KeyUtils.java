@@ -1,6 +1,8 @@
 package com.tntu.easyenglish.utils;
 
 public class KeyUtils {
+	public static final String TAG = "EASY ENGLISH";
+	
 	//Bundle keys
 	public static final String USER_KEY = "user";
 	public static final String NAME_KEY = "name";
@@ -74,5 +76,6 @@ public class KeyUtils {
 	public static final String TRANSLATION_WORD_KEY = "Translation-Word";
 	public static final String WORD_CONSTRUCTOR_KEY = "BuildWord";
 	public static final String LISTENING_KEY = "SoundToWord";
-	
+	public static final String CORRECT_KEY = "correct";
+	public static final String RESULTS_KEY = "results";
 }

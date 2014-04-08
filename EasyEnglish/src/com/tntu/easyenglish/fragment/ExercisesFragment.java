@@ -41,22 +41,22 @@ public class ExercisesFragment extends Fragment implements OnClickListener{
 	public void onClick(View v) {
 		int id = v.getId();
 		Intent intent = new Intent(getActivity(), ExercisesActivity.class);
-		ExerciseType type = ExerciseType.WORD_TRANSLATION;
+		String type = null;
 		switch (id) {
 		case R.id.wordTransTv:
-			type = ExerciseType.WORD_TRANSLATION;
+			type = KeyUtils.WORD_TRANSLATION_KEY;
 			break;
 			
 		case R.id.transWordTv:
-			type = ExerciseType.TRANSLATION_WORD;
+			type = KeyUtils.TRANSLATION_WORD_KEY;
 			break;
 			
 		case R.id.wordConstrTv:
-			type = ExerciseType.WORD_CONSTRUCTOR;
+			type = KeyUtils.WORD_CONSTRUCTOR_KEY;
 			break;
 			
 		case R.id.listeningTv:
-			type = ExerciseType.LISTENING;
+			type = KeyUtils.LISTENING_KEY;
 			break;
 		default:
 			break;

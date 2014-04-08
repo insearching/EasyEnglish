@@ -1,6 +1,7 @@
 package com.tntu.easyenglish.entity;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
 public class WordTrans implements Serializable{
 
@@ -12,7 +13,9 @@ public class WordTrans implements Serializable{
 	private String voiceLink;
 	private int correctAnswer;
 
-	private Answer[] answers;
+//	private Answer[] answers;
+	
+	private HashMap<String, Integer> answers;
 	
 	public static class Answer {
 		public int id;
@@ -20,7 +23,7 @@ public class WordTrans implements Serializable{
 	}
 
 	public WordTrans(int id, String phrase, String pictureLink, String context,
-			String voiceLink, int correctAnswer, Answer[] answers) {
+			String voiceLink, int correctAnswer, HashMap<String, Integer> answers) {
 		super();
 		this.id = id;
 		this.phrase = phrase;
@@ -57,7 +60,7 @@ public class WordTrans implements Serializable{
 		return correctAnswer;
 	}
 	
-	public Answer[] getAnswers(){
+	public HashMap<String, Integer> getAnswers(){
 		return answers;
 	}
 }

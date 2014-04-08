@@ -67,11 +67,11 @@
             android:name="ContentActivity"
             android:parentActivityName="com.tntu.easyenglish.MainActivity"
             android:screenOrientation="portrait" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.tntu.easyenglish.MainActivity" />
         </activity>
-        <activity android:name="ExercisesActivity"></activity>
+        <activity android:name="ExercisesActivity"
+            android:parentActivityName="com.tntu.easyenglish.MainActivity"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>
