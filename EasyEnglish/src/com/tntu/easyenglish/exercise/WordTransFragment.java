@@ -11,9 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.BounceInterpolator;
-import android.view.animation.OvershootInterpolator;
-import android.view.animation.ScaleAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
@@ -107,12 +104,13 @@ public class WordTransFragment extends Fragment implements OnItemClickListener {
 		
 		int correctAnswerId = mExercise.getCorrectAnswer();
 		boolean isCorrect = correctAnswerId == id ? true : false;
-		if(isCorrect)
-			((AnswersAdapter)answersLv.getAdapter()).setCorrectAnswer(position);
-		else
-			((AnswersAdapter)answersLv.getAdapter()).setWrongAnswer(position);
+		AnswersAdapter adapter = ((AnswersAdapter)answersLv.getAdapter());
+		adapter.setCorrectAnswer(adapter.getItemPosition(correctAnswerId));
+		if(!isCorrect)
+			adapter.setWrongAnswer(position);
 		
 		((AnswersAdapter)answersLv.getAdapter()).notifyDataSetChanged();
+		answersLv.setClickable(false);
 		
 		listener.onTestCompleted(mExercise.getId(), isCorrect,
 				KeyUtils.WORD_TRANSLATION_KEY);

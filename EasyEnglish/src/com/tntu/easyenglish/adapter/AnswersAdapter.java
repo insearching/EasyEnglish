@@ -2,9 +2,7 @@ package com.tntu.easyenglish.adapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import com.tntu.easyenglish.R;
-import com.tntu.easyenglish.entity.WordTrans.Answer;
+import java.util.Map.Entry;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -14,15 +12,18 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.tntu.easyenglish.R;
+import com.tntu.easyenglish.entity.WordTrans.Answer;
+
 public class AnswersAdapter extends BaseAdapter {
 
 	private HashMap<String, Integer> answers;
 	private Context context;
 	private ArrayList<String> phrases;
-	
+
 	private int correctPosition = -1;
 	private int wrongPosition = -1;
-	
+
 	public AnswersAdapter(Context context, HashMap<String, Integer> answers) {
 		this.context = context;
 		this.answers = answers;
@@ -34,8 +35,7 @@ public class AnswersAdapter extends BaseAdapter {
 	public int getCount() {
 		return phrases.size();
 	}
-	
-	
+
 	@Override
 	public Answer getItem(int position) {
 		Answer answer = new Answer();
@@ -48,26 +48,38 @@ public class AnswersAdapter extends BaseAdapter {
 	public long getItemId(int position) {
 		return answers.get(phrases.get(position));
 	}
-	
+
+	public int getItemPosition(long id) {
+		int position = -1;
+		for (Entry<String, Integer> entry : answers.entrySet()) {
+			if (entry.getValue() == id) {
+				position = phrases.indexOf(entry.getKey());
+			}
+		}
+		return position;
+	}
+
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
-		convertView = inflater.inflate(R.layout.answer_row_layout, parent, false);
-		TextView tv = (TextView)convertView.findViewById(R.id.answerTv);
+		LayoutInflater inflater = (LayoutInflater) context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		convertView = inflater.inflate(R.layout.answer_row_layout, parent,
+				false);
+		TextView tv = (TextView) convertView.findViewById(R.id.answerTv);
 		tv.setText(phrases.get(position));
-		
-		if(correctPosition != -1)
+
+		if (correctPosition != -1 && correctPosition == position)
 			convertView.setBackgroundColor(Color.GREEN);
-		if(wrongPosition != -1)
+		if (wrongPosition != -1 && wrongPosition == position)
 			convertView.setBackgroundColor(Color.RED);
 		return convertView;
 	}
-	
-	public void setCorrectAnswer(int position){
+
+	public void setCorrectAnswer(int position) {
 		correctPosition = position;
 	}
-	
-	public void setWrongAnswer(int position){
+
+	public void setWrongAnswer(int position) {
 		wrongPosition = position;
 	}
 }
