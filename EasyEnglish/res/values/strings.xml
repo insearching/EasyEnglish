@@ -58,5 +58,6 @@
     <string name="trans_word">Translation-Word</string>
     <string name="word_constructor">Word Constructor</string>
     <string name="listening">Listening</string>
+    <string name="dont_know">Don\'t know</string>
 
 </resources>

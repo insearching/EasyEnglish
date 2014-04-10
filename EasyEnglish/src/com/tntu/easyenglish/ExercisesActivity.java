@@ -6,13 +6,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.ActionBarActivity;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
@@ -20,6 +22,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.tntu.easyenglish.entity.WordTrans;
@@ -38,11 +41,10 @@ public class ExercisesActivity extends ActionBarActivity implements
 
 	private ViewPager mPager;
 	private PagerAdapter mPagerAdapter;
+	private ProgressBar loadPb;
 
 	private int counter = 0;
 	private JSONArray results;
-	
-	private boolean testCompleted = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,8 @@ public class ExercisesActivity extends ActionBarActivity implements
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		mPager = (ViewPager) findViewById(R.id.pager);
+		loadPb = (ProgressBar) findViewById(R.id.loadPb);
+
 		results = new JSONArray();
 
 		Bundle extras = getIntent().getExtras();
@@ -63,6 +67,7 @@ public class ExercisesActivity extends ActionBarActivity implements
 			}
 		}
 
+		hideView();
 		RESTClient client = new RESTClient(this, mType);
 		client.execute("http://easy-english.yzi.me/api/getTraining?api_key="
 				+ mApiKey + "&type=" + mType);
@@ -78,6 +83,10 @@ public class ExercisesActivity extends ActionBarActivity implements
 		return true;
 	}
 
+	public void getNextWord() {
+		mPager.setCurrentItem(mPager.getCurrentItem() + 1, true);
+	}
+
 	private class ExercisesAdapter extends FragmentStatePagerAdapter {
 		ArrayList<WordTrans> data;
 
@@ -88,8 +97,8 @@ public class ExercisesActivity extends ActionBarActivity implements
 
 		@Override
 		public Fragment getItem(int position) {
-			if (mType.equals(KeyUtils.WORD_TRANSLATION_KEY) || 
-					mType.equals(KeyUtils.TRANSLATION_WORD_KEY))
+			if (mType.equals(KeyUtils.WORD_TRANSLATION_KEY)
+					|| mType.equals(KeyUtils.TRANSLATION_WORD_KEY))
 				return WordTransFragment.newInstance(mApiKey,
 						data.get(position));
 			else
@@ -106,41 +115,22 @@ public class ExercisesActivity extends ActionBarActivity implements
 	@Override
 	public void onRemoteCallComplete(String json, String method) {
 		if (JSONUtils.getResponseStatus(json).equals(JSONUtils.SUCCESS_TRUE)) {
+			showView();
 			ArrayList<WordTrans> exercises = new ArrayList<WordTrans>();
 			if (method.equals(KeyUtils.WORD_TRANSLATION_KEY)) {
 				exercises = JSONUtils.getWordTransExercises(json);
-			}
-			else if (method.equals(KeyUtils.TRANSLATION_WORD_KEY)) {
+			} else if (method.equals(KeyUtils.TRANSLATION_WORD_KEY)) {
 				exercises = JSONUtils.getTransWordExercises(json);
 			}
-			if(exercises == null)
+			if (exercises == null)
 				return;
 			mPagerAdapter = new ExercisesAdapter(getSupportFragmentManager(),
 					exercises);
 			mPager.setAdapter(mPagerAdapter);
-			
-			mPager.setOnPageChangeListener(new OnPageChangeListener() {
-				
-				@Override
-				public void onPageSelected(int arg0) {
-					testCompleted = false;
-				}
-				
-				@Override
-				public void onPageScrolled(int arg0, float arg1, int arg2) {}
-				
-				@Override
-				public void onPageScrollStateChanged(int arg0) {}
-			});
-			
+
 			mPager.setOnTouchListener(new OnSwipeTouchListener() {
 				public void onSwipeRight() {
-					mPager.setCurrentItem(mPager.getCurrentItem()+1, true);
-				}
-				
-				public void onSwipeLeft(){
-					if(!testCompleted)
-						mPager.setCurrentItem(mPager.getCurrentItem()-1, true);
+					mPager.setCurrentItem(mPager.getCurrentItem() + 1, true);
 				}
 			});
 		}
@@ -149,7 +139,6 @@ public class ExercisesActivity extends ActionBarActivity implements
 	@Override
 	public void onTestCompleted(Integer exerciseId, boolean isCorrect,
 			String type) {
-		testCompleted = true;
 		JSONObject object = new JSONObject();
 		try {
 			object.put(KeyUtils.ID_KEY, exerciseId);
@@ -181,7 +170,17 @@ public class ExercisesActivity extends ActionBarActivity implements
 			finish();
 		}
 	}
-	
+
+	private void hideView() {
+		loadPb.setVisibility(View.VISIBLE);
+		mPager.setVisibility(View.GONE);
+	}
+
+	private void showView() {
+		loadPb.setVisibility(View.GONE);
+		mPager.setVisibility(View.VISIBLE);
+	}
+
 	public class OnSwipeTouchListener implements OnTouchListener {
 
 		@SuppressWarnings("deprecation")

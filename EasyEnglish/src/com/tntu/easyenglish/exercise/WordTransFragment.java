@@ -3,11 +3,13 @@ package com.tntu.easyenglish.exercise;
 import java.util.HashMap;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -19,6 +21,7 @@ import android.widget.TextView;
 
 import com.koushikdutta.urlimageviewhelper.UrlImageViewCallback;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
+import com.tntu.easyenglish.ExercisesActivity;
 import com.tntu.easyenglish.R;
 import com.tntu.easyenglish.adapter.AnswersAdapter;
 import com.tntu.easyenglish.entity.WordTrans;
@@ -70,10 +73,19 @@ public class WordTransFragment extends Fragment implements OnItemClickListener {
 		origTv = (TextView) convertView.findViewById(R.id.origTv);
 		contextTv = (TextView) convertView.findViewById(R.id.contextTv);
 		answersLv = (ListView) convertView.findViewById(R.id.answersLv);
+		((ImageView) convertView.findViewById(R.id.rightArrowIv))
+				.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Activity activity = getActivity();
+						if (activity instanceof ExercisesActivity) {
+							((ExercisesActivity) activity).getNextWord();
+						}
+					}
+				});
 	}
 
 	private void setData() {
-
 
 		origTv.setText(mExercise.getPhrase());
 		contextTv.setText(mExercise.getContext());
@@ -95,23 +107,23 @@ public class WordTransFragment extends Fragment implements OnItemClickListener {
 							boolean loadedFromCache) {
 						if (!loadedFromCache) {
 							imageView.setVisibility(View.VISIBLE);
-							Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.fly_in_anim);
+							Animation anim = AnimationUtils.loadAnimation(
+									getActivity(), R.anim.fly_in_anim);
 							imageView.startAnimation(anim);
 						}
 					}
 				});
-		
-		
+
 		int correctAnswerId = mExercise.getCorrectAnswer();
 		boolean isCorrect = correctAnswerId == id ? true : false;
-		AnswersAdapter adapter = ((AnswersAdapter)answersLv.getAdapter());
+		AnswersAdapter adapter = ((AnswersAdapter) answersLv.getAdapter());
 		adapter.setCorrectAnswer(adapter.getItemPosition(correctAnswerId));
-		if(!isCorrect)
+		if (!isCorrect)
 			adapter.setWrongAnswer(position);
-		
-		((AnswersAdapter)answersLv.getAdapter()).notifyDataSetChanged();
+
+		adapter.notifyDataSetChanged();
 		answersLv.setClickable(false);
-		
+
 		listener.onTestCompleted(mExercise.getId(), isCorrect,
 				KeyUtils.WORD_TRANSLATION_KEY);
 	}
