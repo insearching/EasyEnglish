@@ -15,8 +15,7 @@
         android:inputType="textEmailAddress"
         android:paddingLeft="@dimen/edit_text_padding"
         android:singleLine="true"
-        android:textSize="@dimen/buttons_text_size"
-        android:text="insearching"/>
+        android:textSize="@dimen/buttons_text_size"/>
 
     <EditText
         android:id="@+id/passEt"
@@ -31,8 +30,7 @@
         android:hint="@string/password"
         android:inputType="textPassword"
         android:paddingLeft="@dimen/edit_text_padding"
-        android:textSize="@dimen/buttons_text_size"
-        android:text="130592"/>
+        android:textSize="@dimen/buttons_text_size"/>
 
     <TextView
         android:id="@+id/submitTv"

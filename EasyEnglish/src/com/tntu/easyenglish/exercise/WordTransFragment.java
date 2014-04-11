@@ -3,7 +3,6 @@ package com.tntu.easyenglish.exercise;
 import java.util.HashMap;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +11,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -21,7 +21,6 @@ import android.widget.TextView;
 
 import com.koushikdutta.urlimageviewhelper.UrlImageViewCallback;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
-import com.tntu.easyenglish.ExercisesActivity;
 import com.tntu.easyenglish.R;
 import com.tntu.easyenglish.adapter.AnswersAdapter;
 import com.tntu.easyenglish.entity.WordTrans;
@@ -36,13 +35,16 @@ public class WordTransFragment extends Fragment implements OnItemClickListener {
 	private TextView contextTv;
 	private ListView answersLv;
 	private WordTrans mExercise;
+	
+	private static final String mType = KeyUtils.WORD_TRANSLATION_KEY;
 
 	public static WordTransFragment newInstance(String apiKey,
-			WordTrans exercise) {
+			WordTrans exercise, boolean isLast) {
 		WordTransFragment fragment = new WordTransFragment();
 		Bundle args = new Bundle();
 		args.putString(KeyUtils.API_KEY, apiKey);
 		args.putSerializable(KeyUtils.EXERCISE_KEY, exercise);
+		args.putBoolean("isLast", isLast);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -73,20 +75,28 @@ public class WordTransFragment extends Fragment implements OnItemClickListener {
 		origTv = (TextView) convertView.findViewById(R.id.origTv);
 		contextTv = (TextView) convertView.findViewById(R.id.contextTv);
 		answersLv = (ListView) convertView.findViewById(R.id.answersLv);
-		((ImageView) convertView.findViewById(R.id.rightArrowIv))
+		((TextView) convertView.findViewById(R.id.dontKnowTv))
 				.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Activity activity = getActivity();
-						if (activity instanceof ExercisesActivity) {
-							((ExercisesActivity) activity).getNextWord();
-						}
+						listener.onTestCompleted(mExercise.getId(), false, mType);
+						
+						AnswersAdapter adapter = ((AnswersAdapter) answersLv.getAdapter());
+						adapter.setCorrectAnswer(adapter.getItemPosition(mExercise.getCorrectAnswer()));
+						adapter.notifyDataSetChanged();
 					}
 				});
+		
+		((TextView) convertView.findViewById(R.id.finishTv))
+		.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				listener.onExerciseCompleted(mType);
+			}
+		});
 	}
 
 	private void setData() {
-
 		origTv.setText(mExercise.getPhrase());
 		contextTv.setText(mExercise.getContext());
 
@@ -96,35 +106,62 @@ public class WordTransFragment extends Fragment implements OnItemClickListener {
 		answersLv.setOnItemClickListener(this);
 	}
 
+
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
-			long id) {
-		UrlImageViewHelper.setUrlDrawable(wordIv, mExercise.getPictureLink(),
-				R.drawable.ic_launcher, new UrlImageViewCallback() {
-					@Override
-					public void onLoaded(ImageView imageView,
-							Bitmap loadedBitmap, String url,
-							boolean loadedFromCache) {
-						if (!loadedFromCache) {
-							imageView.setVisibility(View.VISIBLE);
-							Animation anim = AnimationUtils.loadAnimation(
-									getActivity(), R.anim.fly_in_anim);
-							imageView.startAnimation(anim);
-						}
-					}
-				});
-
+			final long id) {
 		int correctAnswerId = mExercise.getCorrectAnswer();
-		boolean isCorrect = correctAnswerId == id ? true : false;
+		final boolean isCorrect = correctAnswerId == id ? true : false;
+		
+		answersLv.setFocusable(false);
+		Animation anim = AnimationUtils.loadAnimation(
+				getActivity(), R.anim.fly_in_anim);
+		String url = mExercise.getPictureLink();
+		if(url == null || url == ""){
+			listener.onTestCompleted(mExercise.getId(), isCorrect, KeyUtils.WORD_TRANSLATION_KEY);
+			return;
+		}
+		
+		UrlImageViewHelper.setUrlDrawable(wordIv, url,
+				R.drawable.ic_launcher, new UrlImageLoader(anim));
+
+		anim.setAnimationListener(new AnimationListener() {
+			@Override
+			public void onAnimationStart(Animation animation) {
+			}
+			
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+			}
+			
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				listener.onTestCompleted(mExercise.getId(), isCorrect, KeyUtils.WORD_TRANSLATION_KEY);
+			}
+		});
+		
 		AnswersAdapter adapter = ((AnswersAdapter) answersLv.getAdapter());
 		adapter.setCorrectAnswer(adapter.getItemPosition(correctAnswerId));
 		if (!isCorrect)
 			adapter.setWrongAnswer(position);
 
 		adapter.notifyDataSetChanged();
-		answersLv.setClickable(false);
+	}
+	
 
-		listener.onTestCompleted(mExercise.getId(), isCorrect,
-				KeyUtils.WORD_TRANSLATION_KEY);
+	class UrlImageLoader implements UrlImageViewCallback{
+		Animation anim;
+		public UrlImageLoader(Animation anim){
+			this.anim = anim;
+		}
+		@Override
+		public void onLoaded(ImageView imageView,
+				Bitmap loadedBitmap, String url,
+				boolean loadedFromCache) {
+			if (!loadedFromCache) {
+				imageView.setVisibility(View.VISIBLE);
+				imageView.startAnimation(anim);
+			}
+		}
 	}
 }

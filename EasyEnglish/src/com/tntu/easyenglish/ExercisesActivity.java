@@ -6,9 +6,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -99,11 +96,11 @@ public class ExercisesActivity extends ActionBarActivity implements
 		public Fragment getItem(int position) {
 			if (mType.equals(KeyUtils.WORD_TRANSLATION_KEY)
 					|| mType.equals(KeyUtils.TRANSLATION_WORD_KEY))
-				return WordTransFragment.newInstance(mApiKey,
-						data.get(position));
+				return WordTransFragment.newInstance(mApiKey, data
+						.get(position), position == data.size() - 1 ? true
+						: false);
 			else
-				return WordTransFragment.newInstance(mApiKey,
-						data.get(position));
+				return null;
 		}
 
 		@Override
@@ -149,26 +146,24 @@ public class ExercisesActivity extends ActionBarActivity implements
 		}
 		if (isCorrect)
 			counter++;
+	}
 
-		if (mPager.getCurrentItem() == mPagerAdapter.getCount() - 1) {
-			JSONObject entireObject = new JSONObject();
-			try {
-				entireObject.put(KeyUtils.RESULTS_KEY, results);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			Toast.makeText(this, "Your score is " + counter, Toast.LENGTH_SHORT)
-					.show();
-
-			RESTClient client = new RESTClient(this, KeyUtils.POST_RESULTS);
-			client.execute("http://easy-english.yzi.me/api/processResults?api_key="
-					+ mApiKey
-					+ "&type="
-					+ type
-					+ "&results="
-					+ entireObject.toString());
-			finish();
+	@Override
+	public void onExerciseCompleted(String type) {
+		JSONObject entireObject = new JSONObject();
+		try {
+			entireObject.put(KeyUtils.RESULTS_KEY, results);
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
+		Toast.makeText(this, "Your score is " + counter, Toast.LENGTH_SHORT)
+				.show();
+
+		RESTClient client = new RESTClient(this, KeyUtils.POST_RESULTS);
+		client.execute("http://easy-english.yzi.me/api/processResults?api_key="
+				+ mApiKey + "&type=" + type + "&results="
+				+ entireObject.toString());
+		finish();
 	}
 
 	private void hideView() {
@@ -250,4 +245,5 @@ public class ExercisesActivity extends ActionBarActivity implements
 		public void onSwipeBottom() {
 		}
 	}
+
 }
