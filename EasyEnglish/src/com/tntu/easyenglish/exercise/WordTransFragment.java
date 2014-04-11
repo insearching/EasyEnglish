@@ -75,25 +75,25 @@ public class WordTransFragment extends Fragment implements OnItemClickListener {
 		origTv = (TextView) convertView.findViewById(R.id.origTv);
 		contextTv = (TextView) convertView.findViewById(R.id.contextTv);
 		answersLv = (ListView) convertView.findViewById(R.id.answersLv);
-		((TextView) convertView.findViewById(R.id.dontKnowTv))
-				.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						listener.onTestCompleted(mExercise.getId(), false, mType);
-						
-						AnswersAdapter adapter = ((AnswersAdapter) answersLv.getAdapter());
-						adapter.setCorrectAnswer(adapter.getItemPosition(mExercise.getCorrectAnswer()));
-						adapter.notifyDataSetChanged();
-					}
-				});
-		
-		((TextView) convertView.findViewById(R.id.finishTv))
-		.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				listener.onExerciseCompleted(mType);
-			}
-		});
+//		((TextView) convertView.findViewById(R.id.dontKnowTv))
+//				.setOnClickListener(new OnClickListener() {
+//					@Override
+//					public void onClick(View v) {
+//						listener.onTestCompleted(mExercise.getId(), false, mType);
+//						
+//						AnswersAdapter adapter = ((AnswersAdapter) answersLv.getAdapter());
+//						adapter.setCorrectAnswer(adapter.getItemPosition(mExercise.getCorrectAnswer()));
+//						adapter.notifyDataSetChanged();
+//					}
+//				});
+//		
+//		((TextView) convertView.findViewById(R.id.finishTv))
+//		.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				listener.onExerciseCompleted(mType);
+//			}
+//		});data
 	}
 
 	private void setData() {

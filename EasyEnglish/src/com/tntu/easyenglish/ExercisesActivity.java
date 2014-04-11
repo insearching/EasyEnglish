@@ -95,10 +95,12 @@ public class ExercisesActivity extends ActionBarActivity implements
 		@Override
 		public Fragment getItem(int position) {
 			if (mType.equals(KeyUtils.WORD_TRANSLATION_KEY)
-					|| mType.equals(KeyUtils.TRANSLATION_WORD_KEY))
+					|| mType.equals(KeyUtils.TRANSLATION_WORD_KEY)){
+				
 				return WordTransFragment.newInstance(mApiKey, data
 						.get(position), position == data.size() - 1 ? true
 						: false);
+			}
 			else
 				return null;
 		}
