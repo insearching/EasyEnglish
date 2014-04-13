@@ -23,6 +23,9 @@ public class JSONUtils {
 	public static final String SUCCESS_FALSE = "false";
 
 	public static String getResponseStatus(String json) {
+		if (!isDataValid(json)){
+			return SUCCESS_FALSE;
+		}
 		String success = null;
 		JSONObject jsonObject = null;
 		try {
@@ -32,6 +35,15 @@ public class JSONUtils {
 			ex.printStackTrace();
 		}
 		return success;
+	}
+	
+	public static boolean isDataValid(String json){
+	    try {
+	        new JSONObject(json);
+	        return true;
+	    } catch(JSONException ex) { 
+	        return false;
+	    }
 	}
 
 	public static String getValue(String json, String key) {

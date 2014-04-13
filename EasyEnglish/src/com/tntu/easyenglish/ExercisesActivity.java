@@ -31,7 +31,7 @@ import com.tntu.easyenglish.utils.RESTClient;
 import com.tntu.easyenglish.utils.RESTClient.JSONCompleteListenerMethod;
 
 public class ExercisesActivity extends ActionBarActivity implements
-		JSONCompleteListenerMethod, ExerciseListener {
+		JSONCompleteListenerMethod, ExerciseListener{
 
 	private String mApiKey = null;
 	private String mType = null;
@@ -95,13 +95,12 @@ public class ExercisesActivity extends ActionBarActivity implements
 		@Override
 		public Fragment getItem(int position) {
 			if (mType.equals(KeyUtils.WORD_TRANSLATION_KEY)
-					|| mType.equals(KeyUtils.TRANSLATION_WORD_KEY)){
-				
+					|| mType.equals(KeyUtils.TRANSLATION_WORD_KEY)) {
+
 				return WordTransFragment.newInstance(mApiKey, data
 						.get(position), position == data.size() - 1 ? true
 						: false);
-			}
-			else
+			} else
 				return null;
 		}
 
@@ -132,6 +131,10 @@ public class ExercisesActivity extends ActionBarActivity implements
 					mPager.setCurrentItem(mPager.getCurrentItem() + 1, true);
 				}
 			});
+		}
+		else {
+			Toast.makeText(this, "Failed to retrieve data.", Toast.LENGTH_LONG).show();
+			finish();
 		}
 	}
 
@@ -247,5 +250,4 @@ public class ExercisesActivity extends ActionBarActivity implements
 		public void onSwipeBottom() {
 		}
 	}
-
 }
