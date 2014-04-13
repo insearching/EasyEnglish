@@ -2,14 +2,8 @@ package com.tntu.easyenglish.fragment;
 
 import java.util.ArrayList;
 
-import android.app.ProgressDialog;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,7 +56,6 @@ public class DictionaryFragment extends Fragment implements
 		});
 
 		contentLv.setOnLoadMoreListener(new OnLoadMoreListener() {
-
 			@Override
 			public void onLoadMore() {
 				loadMoreContent();

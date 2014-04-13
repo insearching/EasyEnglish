@@ -22,16 +22,18 @@ import android.view.View.OnTouchListener;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.tntu.easyenglish.entity.SoundToWord;
 import com.tntu.easyenglish.entity.WordTrans;
 import com.tntu.easyenglish.exercise.ExerciseListener;
+import com.tntu.easyenglish.exercise.SoundToWordFragment;
 import com.tntu.easyenglish.exercise.WordTransFragment;
 import com.tntu.easyenglish.utils.JSONUtils;
 import com.tntu.easyenglish.utils.KeyUtils;
 import com.tntu.easyenglish.utils.RESTClient;
-import com.tntu.easyenglish.utils.RESTClient.JSONCompleteListenerMethod;
+import com.tntu.easyenglish.utils.RESTClient.JSONCompleteListener;
 
 public class ExercisesActivity extends ActionBarActivity implements
-		JSONCompleteListenerMethod, ExerciseListener{
+		JSONCompleteListener, ExerciseListener {
 
 	private String mApiKey = null;
 	private String mType = null;
@@ -65,7 +67,7 @@ public class ExercisesActivity extends ActionBarActivity implements
 		}
 
 		hideView();
-		RESTClient client = new RESTClient(this, mType);
+		RESTClient client = new RESTClient(this);
 		client.execute("http://easy-english.yzi.me/api/getTraining?api_key="
 				+ mApiKey + "&type=" + mType);
 	}
@@ -80,60 +82,45 @@ public class ExercisesActivity extends ActionBarActivity implements
 		return true;
 	}
 
-	public void getNextWord() {
-		mPager.setCurrentItem(mPager.getCurrentItem() + 1, true);
-	}
-
-	private class ExercisesAdapter extends FragmentStatePagerAdapter {
-		ArrayList<WordTrans> data;
-
-		public ExercisesAdapter(FragmentManager fm, ArrayList<WordTrans> data) {
-			super(fm);
-			this.data = data;
-		}
-
-		@Override
-		public Fragment getItem(int position) {
-			if (mType.equals(KeyUtils.WORD_TRANSLATION_KEY)
-					|| mType.equals(KeyUtils.TRANSLATION_WORD_KEY)) {
-
-				return WordTransFragment.newInstance(mApiKey, data
-						.get(position), position == data.size() - 1 ? true
-						: false);
-			} else
-				return null;
-		}
-
-		@Override
-		public int getCount() {
-			return data.size();
-		}
-	}
 
 	@Override
-	public void onRemoteCallComplete(String json, String method) {
+	public void onRemoteCallComplete(String json) {
 		if (JSONUtils.getResponseStatus(json).equals(JSONUtils.SUCCESS_TRUE)) {
 			showView();
-			ArrayList<WordTrans> exercises = new ArrayList<WordTrans>();
-			if (method.equals(KeyUtils.WORD_TRANSLATION_KEY)) {
-				exercises = JSONUtils.getWordTransExercises(json);
-			} else if (method.equals(KeyUtils.TRANSLATION_WORD_KEY)) {
-				exercises = JSONUtils.getTransWordExercises(json);
-			}
-			if (exercises == null)
-				return;
-			mPagerAdapter = new ExercisesAdapter(getSupportFragmentManager(),
-					exercises);
-			mPager.setAdapter(mPagerAdapter);
 
-			mPager.setOnTouchListener(new OnSwipeTouchListener() {
-				public void onSwipeRight() {
-					mPager.setCurrentItem(mPager.getCurrentItem() + 1, true);
+			if (mType.equals(KeyUtils.WORD_TRANSLATION_KEY)
+					|| mType.equals(KeyUtils.TRANSLATION_WORD_KEY)) {
+				ArrayList<WordTrans> exercises = new ArrayList<WordTrans>();
+				if (mType.equals(KeyUtils.WORD_TRANSLATION_KEY)) {
+					exercises = JSONUtils.getWordTransExercises(json);
+				} else if (mType.equals(KeyUtils.TRANSLATION_WORD_KEY)) {
+					exercises = JSONUtils.getTransWordExercises(json);
 				}
-			});
-		}
-		else {
-			Toast.makeText(this, "Failed to retrieve data.", Toast.LENGTH_LONG).show();
+				
+				mPagerAdapter = new WordTransAdapter(
+						getSupportFragmentManager(), exercises);
+				mPager.setAdapter(mPagerAdapter);
+				mPager.setOnTouchListener(new OnSwipeTouchListener() {
+					public void onSwipeRight() {
+						mPager.setCurrentItem(mPager.getCurrentItem() + 1, true);
+					}
+				});
+			}
+			else if(mType.equals(KeyUtils.LISTENING_KEY)){
+				ArrayList<SoundToWord> exercises = JSONUtils.getSoundToWordExercise(json);
+				
+				mPagerAdapter = new SoundToWordAdapter(
+						getSupportFragmentManager(), exercises);
+				mPager.setAdapter(mPagerAdapter);
+				mPager.setOnTouchListener(new OnSwipeTouchListener() {
+					public void onSwipeRight() {
+						mPager.setCurrentItem(mPager.getCurrentItem() + 1, true);
+					}
+				});
+			}
+		} else {
+			Toast.makeText(this, "Failed to retrieve data.", Toast.LENGTH_LONG)
+					.show();
 			finish();
 		}
 	}
@@ -164,10 +151,11 @@ public class ExercisesActivity extends ActionBarActivity implements
 		Toast.makeText(this, "Your score is " + counter, Toast.LENGTH_SHORT)
 				.show();
 
-		RESTClient client = new RESTClient(this, KeyUtils.POST_RESULTS);
-		client.execute("http://easy-english.yzi.me/api/processResults?api_key="
-				+ mApiKey + "&type=" + type + "&results="
-				+ entireObject.toString());
+		RESTClient client = new RESTClient(this);
+		String results = "http://easy-english.yzi.me/api/processResults?api_key="
+		+ mApiKey + "&type=" + type + "&results="
+		+ entireObject.toString();
+		client.execute(results);
 		finish();
 	}
 
@@ -180,6 +168,47 @@ public class ExercisesActivity extends ActionBarActivity implements
 		loadPb.setVisibility(View.GONE);
 		mPager.setVisibility(View.VISIBLE);
 	}
+	
+	private class WordTransAdapter extends FragmentStatePagerAdapter {
+		ArrayList<WordTrans> data;
+
+		public WordTransAdapter(FragmentManager fm, ArrayList<WordTrans> data) {
+			super(fm);
+			this.data = data;
+		}
+
+		@Override
+		public Fragment getItem(int position) {
+
+			return WordTransFragment.newInstance(mApiKey, data.get(position));
+		}
+
+		@Override
+		public int getCount() {
+			return data.size();
+		}
+	}
+
+	private class SoundToWordAdapter extends FragmentStatePagerAdapter {
+		ArrayList<SoundToWord> data;
+
+		public SoundToWordAdapter(FragmentManager fm,
+				ArrayList<SoundToWord> data) {
+			super(fm);
+			this.data = data;
+		}
+
+		@Override
+		public Fragment getItem(int position) {
+			return SoundToWordFragment.newInstance(mApiKey, data.get(position));
+		}
+
+		@Override
+		public int getCount() {
+			return data.size();
+		}
+	}
+
 
 	public class OnSwipeTouchListener implements OnTouchListener {
 

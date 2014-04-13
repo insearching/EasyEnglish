@@ -41,12 +41,11 @@ public class WordTransFragment extends Fragment implements OnItemClickListener {
 	private static final String mType = KeyUtils.WORD_TRANSLATION_KEY;
 
 	public static WordTransFragment newInstance(String apiKey,
-			WordTrans exercise, boolean isLast) {
+			WordTrans exercise) {
 		WordTransFragment fragment = new WordTransFragment();
 		Bundle args = new Bundle();
 		args.putString(KeyUtils.API_KEY, apiKey);
 		args.putSerializable(KeyUtils.EXERCISE_KEY, exercise);
-		args.putBoolean("isLast", isLast);
 		fragment.setArguments(args);
 		return fragment;
 	}

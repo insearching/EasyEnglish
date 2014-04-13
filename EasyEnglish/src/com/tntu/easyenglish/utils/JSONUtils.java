@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import com.tntu.easyenglish.entity.Content;
 import com.tntu.easyenglish.entity.DictionaryWord;
+import com.tntu.easyenglish.entity.SoundToWord;
 import com.tntu.easyenglish.entity.Translation;
 import com.tntu.easyenglish.entity.User;
 import com.tntu.easyenglish.entity.WordTrans;
@@ -301,6 +302,28 @@ public class JSONUtils {
 					answers.put(answerPhrase, answerId);
 				}
 				WordTrans exercise = new WordTrans(id, phrase, pictureLink, context, voiceLink, correctAnswerId, answers);
+				exercises.add(exercise);
+			}
+		} catch (JSONException ex) {
+			ex.printStackTrace();
+		}
+		return exercises;
+	}
+	
+	public static ArrayList<SoundToWord> getSoundToWordExercise(String json){
+		JSONArray jsonArray = null;
+		ArrayList<SoundToWord> exercises = new ArrayList<SoundToWord>();
+		try {
+			jsonArray = new JSONObject(json).getJSONArray(KeyUtils.DATA_KEY);
+
+			for (int i = 0; i < jsonArray.length(); i++) {
+				JSONObject jsonObject = jsonArray.getJSONObject(i).getJSONObject(KeyUtils.QUESTION_KEY);
+				int id = jsonObject.getInt(KeyUtils.ID_KEY);
+				String phrase = jsonObject.getString(KeyUtils.PHRASE_KEY);
+				String pictureLink = jsonObject.getString(KeyUtils.PICTURE_LINK_KEY);
+				String voiceLink = jsonObject.getString(KeyUtils.VOICE_LINK_KEY);
+				
+				SoundToWord exercise = new SoundToWord(id, phrase, pictureLink, voiceLink);
 				exercises.add(exercise);
 			}
 		} catch (JSONException ex) {

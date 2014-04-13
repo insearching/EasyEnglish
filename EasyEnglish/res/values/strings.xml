@@ -60,5 +60,6 @@
     <string name="listening">Listening</string>
     <string name="dont_know">Don\'t know</string>
     <string name="finish">Finish</string>
+    <string name="done">Done</string>
 
 </resources>
