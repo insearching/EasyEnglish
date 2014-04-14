@@ -1,12 +1,15 @@
 package com.tntu.easyenglish.exercise;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,17 +17,19 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.Animation.AnimationListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.koushikdutta.urlimageviewhelper.UrlImageViewCallback;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 import com.tntu.easyenglish.R;
 import com.tntu.easyenglish.entity.SoundToWord;
 import com.tntu.easyenglish.utils.KeyUtils;
 
-public class SoundToWordFragment extends Fragment implements OnClickListener {
+public class WordConstructorFragment extends Fragment implements OnClickListener {
 
 	private ExerciseListener listener;
 	private View convertView;
@@ -42,9 +47,9 @@ public class SoundToWordFragment extends Fragment implements OnClickListener {
 
 	private static final String mType = KeyUtils.LISTENING_KEY;
 
-	public static SoundToWordFragment newInstance(String apiKey,
+	public static WordConstructorFragment newInstance(String apiKey,
 			SoundToWord exercise) {
-		SoundToWordFragment fragment = new SoundToWordFragment();
+		WordConstructorFragment fragment = new WordConstructorFragment();
 		Bundle args = new Bundle();
 		args.putString(KeyUtils.API_KEY, apiKey);
 		args.putSerializable(KeyUtils.EXERCISE_KEY, exercise);
@@ -57,11 +62,10 @@ public class SoundToWordFragment extends Fragment implements OnClickListener {
 		super.onAttach(activity);
 		this.listener = (ExerciseListener) activity;
 		setHasOptionsMenu(true);
-
+		
 		mediaPlayer = new MediaPlayer();
 		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		mediaPlayer.setVolume(1, 1);
-
 	}
 
 	@Override
@@ -71,7 +75,7 @@ public class SoundToWordFragment extends Fragment implements OnClickListener {
 
 		mExercise = (SoundToWord) getArguments().getSerializable(
 				KeyUtils.EXERCISE_KEY);
-
+		
 		setData();
 
 		return convertView;
@@ -84,14 +88,10 @@ public class SoundToWordFragment extends Fragment implements OnClickListener {
 		case R.id.menu_finish:
 			listener.onExerciseCompleted(mType);
 			return true;
-
-		case R.id.menu_next:
-			//listener.onTestCompleted(exerciseId, isCorrect, type)
-			return true;
 		}
 		return true;
 	}
-
+	
 	private void initView(LayoutInflater inflater) {
 		convertView = inflater.inflate(R.layout.sound_to_word_fragment, null,
 				false);
@@ -99,16 +99,33 @@ public class SoundToWordFragment extends Fragment implements OnClickListener {
 		audioIv = (ImageView) convertView.findViewById(R.id.audioIv);
 		origTv = (TextView) convertView.findViewById(R.id.origTv);
 		answerEt = (EditText) convertView.findViewById(R.id.answerEt);
-
+		
 		doneTv = (TextView) convertView.findViewById(R.id.doneTv);
 		dontKnowTv = (TextView) convertView.findViewById(R.id.dontKnowTv);
 	}
 
 	private void setData() {
-
+		
 		audioIv.setOnClickListener(pausePlayListener);
 		doneTv.setOnClickListener(this);
 		dontKnowTv.setOnClickListener(this);
+	}
+
+	class UrlImageLoader implements UrlImageViewCallback {
+		Animation anim;
+
+		public UrlImageLoader(Animation anim) {
+			this.anim = anim;
+		}
+
+		@Override
+		public void onLoaded(ImageView imageView, Bitmap loadedBitmap,
+				String url, boolean loadedFromCache) {
+			if (!loadedFromCache) {
+				imageView.setVisibility(View.VISIBLE);
+				imageView.startAnimation(anim);
+			}
+		}
 	}
 
 	private OnClickListener pausePlayListener = new OnClickListener() {
@@ -156,7 +173,7 @@ public class SoundToWordFragment extends Fragment implements OnClickListener {
 				prepared = true;
 			} catch (Exception e) {
 				prepared = false;
-
+				
 				e.printStackTrace();
 			}
 			return prepared;
@@ -166,44 +183,35 @@ public class SoundToWordFragment extends Fragment implements OnClickListener {
 		protected void onPostExecute(Boolean result) {
 			super.onPostExecute(result);
 			mediaPlayer.start();
-			if (!result)
-				Toast.makeText(getActivity(),
-						"Failed to load audio. Try again later.",
-						Toast.LENGTH_SHORT).show();
+			if(!result)
+				Toast.makeText(getActivity(), "Failed to load audio. Try again later.", Toast.LENGTH_SHORT).show();
 			intialStage = false;
 		}
 	}
 
+	
 	@Override
 	public void onClick(View v) {
 		String asnwer = answerEt.getText().toString();
 		origTv.setText(mExercise.getPhrase());
-		answerEt.setEnabled(false);
-		Animation anim = AnimationUtils.loadAnimation(getActivity(),
-				R.anim.fly_in_anim);
 		switch (v.getId()) {
 		case R.id.doneTv:
-
-			final boolean isCorrect = asnwer.equals(mExercise.getPhrase()) ? true
-					: false;
-
+			
+			final boolean isCorrect = asnwer.equals(mExercise.getPhrase()) ? true : false;
+			
 			listener.onTestCompleted(mExercise.getId(), isCorrect, mType);
+			Animation anim = AnimationUtils.loadAnimation(
+					getActivity(), R.anim.fly_in_anim);
+			UrlImageViewHelper.setUrlDrawable(wordIv, mExercise.getPictureLink(),
+					R.drawable.ic_launcher, new UrlImageLoader(anim));
 
-			UrlImageViewHelper.setUrlDrawable(wordIv,
-					mExercise.getPictureLink(), R.drawable.ic_launcher,
-					new UrlImageLoader(anim));
-
+			answerEt.setEnabled(false);
 			origTv.setVisibility(View.VISIBLE);
 			break;
-
+			
 		case R.id.dontKnowTv:
 			origTv.setVisibility(View.VISIBLE);
-
 			listener.onTestCompleted(mExercise.getId(), false, mType);
-
-			UrlImageViewHelper.setUrlDrawable(wordIv,
-					mExercise.getPictureLink(), R.drawable.ic_launcher,
-					new UrlImageLoader(anim));
 			break;
 
 		default:

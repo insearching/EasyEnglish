@@ -4,7 +4,9 @@
     <string name="app_name">EasyEnglish</string>
     <string name="app_id">591631684250216</string>
     <string name="failed_to_retrieve_data">Failed to retrieve data. Please try again later.</string>
-
+    
+    <!-- Menu -->
+     <string name="menu_finish">Finish</string>
     <!-- Facebook login -->
     <string name="get_started">To get started, log in using Facebook</string>
     <!-- Login -->
@@ -60,6 +62,7 @@
     <string name="listening">Listening</string>
     <string name="dont_know">Don\'t know</string>
     <string name="finish">Finish</string>
+    <string name="next">Next</string>
     <string name="done">Done</string>
 
 </resources>

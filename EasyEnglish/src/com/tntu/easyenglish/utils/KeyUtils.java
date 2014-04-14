@@ -2,6 +2,7 @@ package com.tntu.easyenglish.utils;
 
 public class KeyUtils {
 	public static final String TAG = "EASY ENGLISH";
+	public static final String BASE_URL = "http://easy-english.yzi.me";
 	
 	//Bundle keys
 	public static final String USER_KEY = "user";

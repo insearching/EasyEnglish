@@ -15,6 +15,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -73,15 +75,23 @@ public class ExercisesActivity extends ActionBarActivity implements
 	}
 
 	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.exercise_menu, menu);
+		return true;
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
 			return true;
-		}
-		return true;
-	}
 
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
 
 	@Override
 	public void onRemoteCallComplete(String json) {
@@ -96,7 +106,7 @@ public class ExercisesActivity extends ActionBarActivity implements
 				} else if (mType.equals(KeyUtils.TRANSLATION_WORD_KEY)) {
 					exercises = JSONUtils.getTransWordExercises(json);
 				}
-				
+
 				mPagerAdapter = new WordTransAdapter(
 						getSupportFragmentManager(), exercises);
 				mPager.setAdapter(mPagerAdapter);
@@ -105,10 +115,10 @@ public class ExercisesActivity extends ActionBarActivity implements
 						mPager.setCurrentItem(mPager.getCurrentItem() + 1, true);
 					}
 				});
-			}
-			else if(mType.equals(KeyUtils.LISTENING_KEY)){
-				ArrayList<SoundToWord> exercises = JSONUtils.getSoundToWordExercise(json);
-				
+			} else if (mType.equals(KeyUtils.LISTENING_KEY)) {
+				ArrayList<SoundToWord> exercises = JSONUtils
+						.getSoundToWordExercise(json);
+
 				mPagerAdapter = new SoundToWordAdapter(
 						getSupportFragmentManager(), exercises);
 				mPager.setAdapter(mPagerAdapter);
@@ -153,8 +163,11 @@ public class ExercisesActivity extends ActionBarActivity implements
 
 		RESTClient client = new RESTClient(this);
 		String results = "http://easy-english.yzi.me/api/processResults?api_key="
-		+ mApiKey + "&type=" + type + "&results="
-		+ entireObject.toString();
+				+ mApiKey
+				+ "&type="
+				+ type
+				+ "&results="
+				+ entireObject.toString();
 		client.execute(results);
 		finish();
 	}
@@ -168,7 +181,7 @@ public class ExercisesActivity extends ActionBarActivity implements
 		loadPb.setVisibility(View.GONE);
 		mPager.setVisibility(View.VISIBLE);
 	}
-	
+
 	private class WordTransAdapter extends FragmentStatePagerAdapter {
 		ArrayList<WordTrans> data;
 
@@ -179,7 +192,6 @@ public class ExercisesActivity extends ActionBarActivity implements
 
 		@Override
 		public Fragment getItem(int position) {
-
 			return WordTransFragment.newInstance(mApiKey, data.get(position));
 		}
 
@@ -208,7 +220,6 @@ public class ExercisesActivity extends ActionBarActivity implements
 			return data.size();
 		}
 	}
-
 
 	public class OnSwipeTouchListener implements OnTouchListener {
 

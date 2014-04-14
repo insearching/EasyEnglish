@@ -4,48 +4,54 @@
     android:orientation="vertical"
     android:padding="@dimen/default_padding" >
 
-    <TextView
-        android:id="@+id/wordTransTv"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/label_margin"
-        android:text="@string/word_trans"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:clickable="true"/>
+        android:layout_centerVertical="true">
 
-    <TextView
-        android:id="@+id/transWordTv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/wordTransTv"
-        android:layout_marginTop="@dimen/label_margin"
-        android:text="@string/trans_word"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:clickable="true"/>
+        <TextView
+            android:id="@+id/wordTransTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/label_margin"
+            android:clickable="true"
+            android:text="@string/word_trans"
+            style="@style/Widget.Button"/>
 
-    <TextView
-        android:id="@+id/wordConstrTv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/transWordTv"
-        android:layout_marginTop="@dimen/label_margin"
-        android:text="@string/word_constructor"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:clickable="true"/>
+        <TextView
+            android:id="@+id/transWordTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/wordTransTv"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/label_margin"
+            android:clickable="true"
+            android:text="@string/trans_word"
+            style="@style/Widget.Button"/>
 
-    <TextView
-        android:id="@+id/listeningTv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/wordConstrTv"
-        android:layout_marginTop="@dimen/label_margin"
-        android:text="@string/listening"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:clickable="true"/>
-    
+        <TextView
+            android:id="@+id/wordConstrTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/transWordTv"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/label_margin"
+            android:clickable="true"
+            android:text="@string/word_constructor"
+            style="@style/Widget.Button"/>
+
+        <TextView
+            android:id="@+id/listeningTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/wordConstrTv"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/label_margin"
+            android:clickable="true"
+            android:text="@string/listening"
+            style="@style/Widget.Button"/>
+    </RelativeLayout>
+
 </RelativeLayout>

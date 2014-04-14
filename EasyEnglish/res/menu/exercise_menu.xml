@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:appcompat="http://schemas.android.com/apk/res-auto" >
+
+    <item
+        android:id="@+id/menu_finish"
+        android:icon="@drawable/ic_finish"
+        android:title="@string/finish"
+        appcompat:showAsAction="ifRoom|collapseActionView">
+    </item>
+    <item
+        android:id="@+id/menu_next"
+        android:icon="@drawable/ic_menu_next"
+        android:title="@string/next"
+        appcompat:showAsAction="ifRoom|collapseActionView">
+    </item>
+
+</menu>

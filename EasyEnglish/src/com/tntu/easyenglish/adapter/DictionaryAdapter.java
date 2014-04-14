@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.tntu.easyenglish.R;
 import com.tntu.easyenglish.entity.DictionaryWord;
+import com.tntu.easyenglish.utils.KeyUtils;
 
 public class DictionaryAdapter extends BaseAdapter {
 
@@ -28,7 +29,6 @@ public class DictionaryAdapter extends BaseAdapter {
 	private boolean playPause;
 	private MediaPlayer mediaPlayer;
 	private boolean intialStage = true;
-	private final static String BASE_URL = "http://easy-english.yzi.me/api";
 
 	public DictionaryAdapter(Context context, ArrayList<DictionaryWord> data) {
 		this.data = data;
@@ -81,6 +81,7 @@ public class DictionaryAdapter extends BaseAdapter {
 		String translation = dicWord.getTranslations()[0];
 		String date = dicWord.getDate();
 
+		holder.soundIv.setTag(position);
 		holder.soundIv.setOnClickListener(pausePlay);
 		holder.wordTv.setText(word + " — " + translation);
 		holder.dateTv.setText(date);
@@ -100,7 +101,7 @@ public class DictionaryAdapter extends BaseAdapter {
 			String soundLink = data.get((Integer) v.getTag()).getSound();
 			if (soundLink == null || soundLink.equals(""))
 				return;
-			String url = new StringBuilder(BASE_URL).append(soundLink).toString();
+			String url = new StringBuilder(KeyUtils.BASE_URL).append(soundLink).toString();
 			if (!playPause) {
 				if (intialStage)
 					new Player().execute(url);
