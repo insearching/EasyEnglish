@@ -12,35 +12,32 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tntu.easyenglish.R;
 import com.tntu.easyenglish.entity.BuildWord;
-import com.tntu.easyenglish.utils.ImageLoader;
 import com.tntu.easyenglish.utils.KeyUtils;
 
-public class WordConstructorFragment extends Fragment implements OnClickListener {
+public class WordConstructorFragment extends Fragment {
 
 	private ExerciseListener listener;
 	private View convertView;
 	private ImageView wordIv;
-	private TextView origTv;
 	private ImageView audioIv;
 	private TextView doneTv;
 	private TextView dontKnowTv;
-	private EditText answerEt;
 	private BuildWord mExercise;
+	private LinearLayout answerLl;
+	private TextView letterTv;
 
 	private boolean playPause;
 	private MediaPlayer mediaPlayer;
 	private boolean intialStage = true;
 
-	private static final String mType = KeyUtils.LISTENING_KEY;
+	private static final String mType = KeyUtils.SOUND_TO_WORD_KEY;
 
 	public static WordConstructorFragment newInstance(String apiKey,
 			BuildWord exercise) {
@@ -71,7 +68,7 @@ public class WordConstructorFragment extends Fragment implements OnClickListener
 		mExercise = (BuildWord) getArguments().getSerializable(
 				KeyUtils.EXERCISE_KEY);
 		
-		setData();
+		setData(inflater);
 
 		return convertView;
 
@@ -92,18 +89,28 @@ public class WordConstructorFragment extends Fragment implements OnClickListener
 				false);
 		wordIv = (ImageView) convertView.findViewById(R.id.wordIv);
 		audioIv = (ImageView) convertView.findViewById(R.id.audioIv);
-		origTv = (TextView) convertView.findViewById(R.id.origTv);
-		answerEt = (EditText) convertView.findViewById(R.id.answerEt);
 		
 		doneTv = (TextView) convertView.findViewById(R.id.doneTv);
 		dontKnowTv = (TextView) convertView.findViewById(R.id.dontKnowTv);
+		
+		answerLl = (LinearLayout) convertView.findViewById(R.id.answerLl);
+		
+		
 	}
 
-	private void setData() {
+	private void setData(LayoutInflater inflater) {
 		
 		audioIv.setOnClickListener(pausePlayListener);
-		doneTv.setOnClickListener(this);
-		dontKnowTv.setOnClickListener(this);
+		
+		
+		char[] symbols = mExercise.getSymbols();
+		for(int i=0; i<symbols.length; i++){
+			letterTv = (TextView)inflater.inflate(R.layout.letter_view, null);
+			letterTv.setText(""+symbols[i]);
+			answerLl.addView(letterTv);
+		}
+//		doneTv.setOnClickListener(this);
+//		dontKnowTv.setOnClickListener(this);
 	}
 
 	private OnClickListener pausePlayListener = new OnClickListener() {
@@ -168,36 +175,36 @@ public class WordConstructorFragment extends Fragment implements OnClickListener
 	}
 
 	
-	@Override
-	public void onClick(View v) {
-		String asnwer = answerEt.getText().toString();
-		origTv.setText(mExercise.getPhrase());
-		
-		Animation anim = AnimationUtils.loadAnimation(getActivity(),
-				R.anim.fly_in_anim);
-		ImageLoader loader = new ImageLoader(getActivity(), anim);
-		
-		switch (v.getId()) {
-		case R.id.doneTv:
-			
-			final boolean isCorrect = asnwer.equals(mExercise.getPhrase()) ? true : false;
-			
-			listener.onTestCompleted(mExercise.getId(), isCorrect, mType);
-			loader.displayImage(mExercise.getPictureLink(), wordIv, false);
-
-			answerEt.setEnabled(false);
-			origTv.setVisibility(View.VISIBLE);
-			break;
-			
-		case R.id.dontKnowTv:
-			origTv.setVisibility(View.VISIBLE);
-			loader.displayImage(mExercise.getPictureLink(), wordIv, false);
-			listener.onTestCompleted(mExercise.getId(), false, mType);
-			break;
-
-		default:
-			break;
-		}
-
-	}
+//	@Override
+//	public void onClick(View v) {
+//		String asnwer = answerEt.getText().toString();
+//		origTv.setText(mExercise.getPhrase());
+//		
+//		Animation anim = AnimationUtils.loadAnimation(getActivity(),
+//				R.anim.fly_in_anim);
+//		ImageLoader loader = new ImageLoader(getActivity(), anim);
+//		
+//		switch (v.getId()) {
+//		case R.id.doneTv:
+//			
+//			final boolean isCorrect = asnwer.equals(mExercise.getPhrase()) ? true : false;
+//			
+//			listener.onTestCompleted(mExercise.getId(), isCorrect, mType);
+//			loader.displayImage(mExercise.getPictureLink(), wordIv, false);
+//
+//			answerEt.setEnabled(false);
+//			origTv.setVisibility(View.VISIBLE);
+//			break;
+//			
+//		case R.id.dontKnowTv:
+//			origTv.setVisibility(View.VISIBLE);
+//			loader.displayImage(mExercise.getPictureLink(), wordIv, false);
+//			listener.onTestCompleted(mExercise.getId(), false, mType);
+//			break;
+//
+//		default:
+//			break;
+//		}
+//
+//	}
 }

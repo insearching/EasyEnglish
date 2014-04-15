@@ -40,12 +40,14 @@ public class KeyUtils {
 	public static final String REG_DATE = "registration_date";
 	public static final String ERROR_KEY = "error";
 	public static final String MSG_KEY = "msg";
-	public static final String TRANSLATION_KEY = "translations";
+	public static final String TRANSLATIONS_KEY = "translations";
+	public static final String TRANSLATION_KEY = "translation";
 	public static final String IMAGE_KEY = "image";
-	public static final String WORD_TRANSLATION = "Word-Translation";
-	public static final String TRANSLATION_WORD = "Translation-Word";
-	public static final String BUILD_WORD = "BuildWord";
-	public static final String SOUND_TO_WORD ="SoundToWord";
+	public static final String WORD_TRANSLATION_KEY = "Word-Translation";
+	public static final String TRANSLATION_WORD_KEY = "Translation-Word";
+	public static final String BUILD_WORD_KEY = "BuildWord";
+	public static final String SOUND_TO_WORD_KEY ="SoundToWord";
+	public static final String SYMBOLS_KEY = "symbols";
 	
 	public static final String QUESTION_KEY = "question";
 	public static final String ANWERS_KEY = "answers";
@@ -73,10 +75,6 @@ public class KeyUtils {
 	public enum ExerciseType {
 		WORD_TRANSLATION, TRANSLATION_WORD, WORD_CONSTRUCTOR, LISTENING
 	}
-	public static final String WORD_TRANSLATION_KEY = "Word-Translation";
-	public static final String TRANSLATION_WORD_KEY = "Translation-Word";
-	public static final String WORD_CONSTRUCTOR_KEY = "BuildWord";
-	public static final String LISTENING_KEY = "SoundToWord";
 	public static final String CORRECT_KEY = "correct";
 	public static final String RESULTS_KEY = "results";
 	public static final String POST_RESULTS = "post_results";

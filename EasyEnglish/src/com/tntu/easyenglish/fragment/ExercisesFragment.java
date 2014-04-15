@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.tntu.easyenglish.ExercisesActivity;
 import com.tntu.easyenglish.R;
 import com.tntu.easyenglish.utils.KeyUtils;
-import com.tntu.easyenglish.utils.KeyUtils.ExerciseType;
 
 public class ExercisesFragment extends Fragment implements OnClickListener{
 	private View convertView;
@@ -52,11 +51,11 @@ public class ExercisesFragment extends Fragment implements OnClickListener{
 			break;
 			
 		case R.id.wordConstrTv:
-			type = KeyUtils.WORD_CONSTRUCTOR_KEY;
+			type = KeyUtils.BUILD_WORD_KEY;
 			break;
 			
 		case R.id.listeningTv:
-			type = KeyUtils.LISTENING_KEY;
+			type = KeyUtils.SOUND_TO_WORD_KEY;
 			break;
 		default:
 			break;

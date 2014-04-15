@@ -40,7 +40,7 @@ public class SoundToWordFragment extends Fragment implements OnClickListener {
 	private MediaPlayer mediaPlayer;
 	private boolean intialStage = true;
 
-	private static final String mType = KeyUtils.LISTENING_KEY;
+	private static final String mType = KeyUtils.SOUND_TO_WORD_KEY;
 
 	public static SoundToWordFragment newInstance(String apiKey,
 			SoundToWord exercise) {

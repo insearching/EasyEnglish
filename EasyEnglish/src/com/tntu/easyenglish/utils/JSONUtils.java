@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.tntu.easyenglish.entity.BuildWord;
 import com.tntu.easyenglish.entity.Content;
 import com.tntu.easyenglish.entity.DictionaryWord;
 import com.tntu.easyenglish.entity.SoundToWord;
@@ -226,7 +227,7 @@ public class JSONUtils {
 				int dictionaryId = jsonObject.getInt(KeyUtils.DICT_ID_KEY);
 				int wordId = jsonObject.getInt(KeyUtils.WORD_ID_KEY);
 				String word = jsonObject.getString(KeyUtils.WORD_KEY);
-				String[] translations = getArray(jsonObject, KeyUtils.TRANSLATION_KEY);
+				String[] translations = getArray(jsonObject, KeyUtils.TRANSLATIONS_KEY);
 				String[] contexts = getArray(jsonObject, KeyUtils.CONTEXTS_KEY);
 				String[] images = getArray(jsonObject, KeyUtils.IMAGE_KEY);
 				String sound = jsonObject.getString(KeyUtils.SOUND_KEY);
@@ -310,7 +311,7 @@ public class JSONUtils {
 		return exercises;
 	}
 	
-	public static ArrayList<SoundToWord> getSoundToWordExercise(String json){
+	public static ArrayList<SoundToWord> getSoundToWordExercises(String json){
 		JSONArray jsonArray = null;
 		ArrayList<SoundToWord> exercises = new ArrayList<SoundToWord>();
 		try {
@@ -324,6 +325,36 @@ public class JSONUtils {
 				String voiceLink = jsonObject.getString(KeyUtils.VOICE_LINK_KEY);
 				
 				SoundToWord exercise = new SoundToWord(id, phrase, pictureLink, voiceLink);
+				exercises.add(exercise);
+			}
+		} catch (JSONException ex) {
+			ex.printStackTrace();
+		}
+		return exercises;
+	}
+	
+	public static ArrayList<BuildWord> getBuildWordExercises(String json){
+		JSONArray jsonArray = null;
+		ArrayList<BuildWord> exercises = new ArrayList<BuildWord>();
+		try {
+			jsonArray = new JSONObject(json).getJSONArray(KeyUtils.DATA_KEY);
+
+			for (int i = 0; i < jsonArray.length(); i++) {
+				JSONObject jsonObject = jsonArray.getJSONObject(i);
+				JSONObject qustionObject = jsonObject.getJSONObject(KeyUtils.QUESTION_KEY);
+				int id = qustionObject.getInt(KeyUtils.ID_KEY);
+				String phrase = qustionObject.getString(KeyUtils.PHRASE_KEY);
+				String translation = qustionObject.getString(KeyUtils.TRANSLATION_KEY);
+				String pictureLink = qustionObject.getString(KeyUtils.PICTURE_LINK_KEY);
+				String voiceLink = qustionObject.getString(KeyUtils.VOICE_LINK_KEY);
+				
+				JSONArray symbolsJson = jsonObject.getJSONArray(KeyUtils.SYMBOLS_KEY);
+				char[] symbols = new char[symbolsJson.length()];
+				for(int j=0; j<symbols.length; j++){
+					symbols[j] = symbolsJson.get(j).toString().charAt(0);
+				}
+				
+				BuildWord exercise = new BuildWord(id, phrase, translation, pictureLink, voiceLink, symbols);
 				exercises.add(exercise);
 			}
 		} catch (JSONException ex) {

@@ -121,9 +121,21 @@ public class ExercisesActivity extends ActionBarActivity implements
 						mPager.setCurrentItem(mPager.getCurrentItem() + 1, true);
 					}
 				});
-			} else if (mType.equals(KeyUtils.LISTENING_KEY)) {
+			} else if (mType.equals(KeyUtils.BUILD_WORD_KEY)) {
+				ArrayList<BuildWord> exercises = JSONUtils
+						.getBuildWordExercises(json);
+
+				mPagerAdapter = new BuildWordAdapter(
+						getSupportFragmentManager(), exercises);
+				mPager.setAdapter(mPagerAdapter);
+				mPager.setOnTouchListener(new OnSwipeTouchListener() {
+					public void onSwipeRight() {
+						mPager.setCurrentItem(mPager.getCurrentItem() + 1, true);
+					}
+				});
+			} else if (mType.equals(KeyUtils.SOUND_TO_WORD_KEY)) {
 				ArrayList<SoundToWord> exercises = JSONUtils
-						.getSoundToWordExercise(json);
+						.getSoundToWordExercises(json);
 
 				mPagerAdapter = new SoundToWordAdapter(
 						getSupportFragmentManager(), exercises);
