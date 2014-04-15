@@ -18,10 +18,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 import com.tntu.easyenglish.R;
 import com.tntu.easyenglish.adapter.AnswersAdapter;
 import com.tntu.easyenglish.entity.WordTrans;
+import com.tntu.easyenglish.utils.ImageLoader;
 import com.tntu.easyenglish.utils.KeyUtils;
 
 public class WordTransFragment extends Fragment implements OnItemClickListener {
@@ -131,8 +131,8 @@ public class WordTransFragment extends Fragment implements OnItemClickListener {
 
 		Animation anim = AnimationUtils.loadAnimation(getActivity(),
 				R.anim.fly_in_anim);
-		UrlImageViewHelper.setUrlDrawable(wordIv, url, R.drawable.ic_launcher,
-				new UrlImageLoader(anim));
+		ImageLoader loader = new ImageLoader(getActivity(), anim);
+		loader.displayImage(mExercise.getPictureLink(), wordIv, false);
 		listener.onTestCompleted(mExercise.getId(), isCorrect, mType);
 
 		showAnswers(correctAnswerId, isCorrect, position);

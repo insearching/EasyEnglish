@@ -6,7 +6,6 @@ import java.util.Locale;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.text.Spannable;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
@@ -15,21 +14,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.view.animation.OvershootInterpolator;
-import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
 import android.widget.Toast;
 
-import com.koushikdutta.urlimageviewhelper.UrlImageViewCallback;
-import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 import com.tntu.easyenglish.R;
 import com.tntu.easyenglish.entity.Translation;
+import com.tntu.easyenglish.utils.ImageLoader;
 import com.tntu.easyenglish.utils.JSONUtils;
 import com.tntu.easyenglish.utils.RESTClient;
 import com.tntu.easyenglish.utils.RESTClient.JSONCompleteListenerMethod;
@@ -147,31 +142,10 @@ public class TranslationDialog implements JSONCompleteListenerMethod {
 				for (int i = 0; i < data.size(); i++) {
 					Translation tr = data.get(i);
 					final String translation = tr.getText();
-					final String imageUrl = tr.getImageUrl();
-
-					UrlImageViewHelper.setUrlDrawable(wordIv, imageUrl,
-							R.drawable.ic_launcher, new UrlImageViewCallback() {
-								@Override
-								public void onLoaded(ImageView imageView,
-										Bitmap loadedBitmap, String url,
-										boolean loadedFromCache) {
-
-									if (!loadedFromCache) {
-										ScaleAnimation scale = new ScaleAnimation(
-												0,
-												1,
-												0,
-												1,
-												ScaleAnimation.RELATIVE_TO_SELF,
-												.5f,
-												ScaleAnimation.RELATIVE_TO_SELF,
-												.5f);
-										scale.setDuration(500);
-										scale.setInterpolator(new OvershootInterpolator());
-										imageView.startAnimation(scale);
-									}
-								}
-							});
+					final String url = tr.getImageUrl();
+					
+					ImageLoader loader = new ImageLoader(context);
+					loader.displayImage(url, wordIv, false);
 
 					TextView transTv = (TextView)LayoutInflater.from(context).inflate(R.layout.word_cell_layout, null);
 					transTv.setText(i + 1 + ". " + translation);

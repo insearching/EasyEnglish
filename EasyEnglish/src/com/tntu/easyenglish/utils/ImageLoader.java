@@ -26,9 +26,11 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Shader;
 import android.graphics.drawable.AnimationDrawable;
+import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
@@ -41,11 +43,19 @@ public class ImageLoader implements Serializable {
 	MemoryCache memoryCache = new MemoryCache();
 	FileCache fileCache;
 
+	private Animation anim;
 	private Map<ImageView, String> imageViews = Collections
 			.synchronizedMap(new WeakHashMap<ImageView, String>());
 	ExecutorService executorService;
 
 	public ImageLoader(Context context) {
+		anim = new AlphaAnimation(0.0f, 1.0f);
+		fileCache = new FileCache(context);
+		executorService = Executors.newFixedThreadPool(5);
+	}
+	
+	public ImageLoader(Context context, Animation anim) {
+		this.anim = anim;
 		fileCache = new FileCache(context);
 		executorService = Executors.newFixedThreadPool(5);
 	}
@@ -63,15 +73,11 @@ public class ImageLoader implements Serializable {
 		imageViews.put(imageView, url);
 		Bitmap bitmap = memoryCache.get(url);
 
-		final Animation in = new AlphaAnimation(0.0f, 1.0f);
-		in.setDuration(100);
-		AnimationSet as = new AnimationSet(true);
-		as.addAnimation(in);
-
 		imageScaleType = imageView.getScaleType();
 		if (bitmap != null) {
+			imageView.setVisibility(View.VISIBLE);
 			imageView.setImageBitmap(bitmap);
-			imageView.startAnimation(as);
+			imageView.startAnimation(anim);
 		} else {
 			queuePhoto(url, imageView, isRounded);
 		}
@@ -186,7 +192,7 @@ public class ImageLoader implements Serializable {
 			if (imageViewReused(photoToLoad))
 				return;
 			Bitmap bmp = getBitmap(photoToLoad.url);
-			if(photoToLoad.isRounded)
+			if (photoToLoad.isRounded)
 				bmp = getRoundedShape(bmp);
 			memoryCache.put(photoToLoad.url, bmp);
 			if (imageViewReused(photoToLoad))
@@ -218,10 +224,10 @@ public class ImageLoader implements Serializable {
 			if (imageViewReused(photoToLoad))
 				return;
 			if (bitmap != null) {
-				// final Animation in = new AlphaAnimation(0.0f, 1.0f);
-				// in.setDuration(500);
-				// AnimationSet as = new AnimationSet(true);
-				// as.addAnimation(in);
+//				final Animation in = new AlphaAnimation(0.0f, 1.0f);
+//				in.setDuration(500);
+//				AnimationSet as = new AnimationSet(true);
+//				as.addAnimation(in);
 
 				photoToLoad.imageView.setScaleType(imageScaleType);
 				// if
@@ -233,8 +239,9 @@ public class ImageLoader implements Serializable {
 				// photoToLoad.imageView.getLayoutParams().height = (int)
 				// (bitmap.getHeight() * viewWidthToBitmapWidthRatio);
 				// }
+				photoToLoad.imageView.setVisibility(View.VISIBLE);
 				photoToLoad.imageView.setImageBitmap(bitmap);
-				// photoToLoad.imageView.startAnimation(as);
+				photoToLoad.imageView.startAnimation(anim);
 
 			} else {
 				// photoToLoad.imageView.setImageResource(stub_id);

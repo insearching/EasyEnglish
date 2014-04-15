@@ -19,9 +19,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 import com.tntu.easyenglish.R;
 import com.tntu.easyenglish.entity.SoundToWord;
+import com.tntu.easyenglish.utils.ImageLoader;
 import com.tntu.easyenglish.utils.KeyUtils;
 
 public class SoundToWordFragment extends Fragment implements OnClickListener {
@@ -81,13 +81,11 @@ public class SoundToWordFragment extends Fragment implements OnClickListener {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+
 		case R.id.menu_finish:
 			listener.onExerciseCompleted(mType);
 			return true;
 
-		case R.id.menu_next:
-			//listener.onTestCompleted(exerciseId, isCorrect, type)
-			return true;
 		}
 		return true;
 	}
@@ -105,7 +103,6 @@ public class SoundToWordFragment extends Fragment implements OnClickListener {
 	}
 
 	private void setData() {
-
 		audioIv.setOnClickListener(pausePlayListener);
 		doneTv.setOnClickListener(this);
 		dontKnowTv.setOnClickListener(this);
@@ -179,31 +176,24 @@ public class SoundToWordFragment extends Fragment implements OnClickListener {
 		String asnwer = answerEt.getText().toString();
 		origTv.setText(mExercise.getPhrase());
 		answerEt.setEnabled(false);
+
 		Animation anim = AnimationUtils.loadAnimation(getActivity(),
 				R.anim.fly_in_anim);
+		ImageLoader loader = new ImageLoader(getActivity(), anim);
+
 		switch (v.getId()) {
 		case R.id.doneTv:
-
 			final boolean isCorrect = asnwer.equals(mExercise.getPhrase()) ? true
 					: false;
-
 			listener.onTestCompleted(mExercise.getId(), isCorrect, mType);
-
-			UrlImageViewHelper.setUrlDrawable(wordIv,
-					mExercise.getPictureLink(), R.drawable.ic_launcher,
-					new UrlImageLoader(anim));
-
+			loader.displayImage(mExercise.getPictureLink(), wordIv, false);
 			origTv.setVisibility(View.VISIBLE);
 			break;
 
 		case R.id.dontKnowTv:
-			origTv.setVisibility(View.VISIBLE);
-
 			listener.onTestCompleted(mExercise.getId(), false, mType);
-
-			UrlImageViewHelper.setUrlDrawable(wordIv,
-					mExercise.getPictureLink(), R.drawable.ic_launcher,
-					new UrlImageLoader(anim));
+			loader.displayImage(mExercise.getPictureLink(), wordIv, false);
+			origTv.setVisibility(View.VISIBLE);
 			break;
 
 		default:

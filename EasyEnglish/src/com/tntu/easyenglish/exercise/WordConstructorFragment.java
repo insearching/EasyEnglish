@@ -1,15 +1,12 @@
 package com.tntu.easyenglish.exercise;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,16 +14,14 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.Animation.AnimationListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.koushikdutta.urlimageviewhelper.UrlImageViewCallback;
-import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 import com.tntu.easyenglish.R;
-import com.tntu.easyenglish.entity.SoundToWord;
+import com.tntu.easyenglish.entity.BuildWord;
+import com.tntu.easyenglish.utils.ImageLoader;
 import com.tntu.easyenglish.utils.KeyUtils;
 
 public class WordConstructorFragment extends Fragment implements OnClickListener {
@@ -39,7 +34,7 @@ public class WordConstructorFragment extends Fragment implements OnClickListener
 	private TextView doneTv;
 	private TextView dontKnowTv;
 	private EditText answerEt;
-	private SoundToWord mExercise;
+	private BuildWord mExercise;
 
 	private boolean playPause;
 	private MediaPlayer mediaPlayer;
@@ -48,7 +43,7 @@ public class WordConstructorFragment extends Fragment implements OnClickListener
 	private static final String mType = KeyUtils.LISTENING_KEY;
 
 	public static WordConstructorFragment newInstance(String apiKey,
-			SoundToWord exercise) {
+			BuildWord exercise) {
 		WordConstructorFragment fragment = new WordConstructorFragment();
 		Bundle args = new Bundle();
 		args.putString(KeyUtils.API_KEY, apiKey);
@@ -73,7 +68,7 @@ public class WordConstructorFragment extends Fragment implements OnClickListener
 			Bundle savedInstanceState) {
 		initView(inflater);
 
-		mExercise = (SoundToWord) getArguments().getSerializable(
+		mExercise = (BuildWord) getArguments().getSerializable(
 				KeyUtils.EXERCISE_KEY);
 		
 		setData();
@@ -93,7 +88,7 @@ public class WordConstructorFragment extends Fragment implements OnClickListener
 	}
 	
 	private void initView(LayoutInflater inflater) {
-		convertView = inflater.inflate(R.layout.sound_to_word_fragment, null,
+		convertView = inflater.inflate(R.layout.constructor_fragment, null,
 				false);
 		wordIv = (ImageView) convertView.findViewById(R.id.wordIv);
 		audioIv = (ImageView) convertView.findViewById(R.id.audioIv);
@@ -109,23 +104,6 @@ public class WordConstructorFragment extends Fragment implements OnClickListener
 		audioIv.setOnClickListener(pausePlayListener);
 		doneTv.setOnClickListener(this);
 		dontKnowTv.setOnClickListener(this);
-	}
-
-	class UrlImageLoader implements UrlImageViewCallback {
-		Animation anim;
-
-		public UrlImageLoader(Animation anim) {
-			this.anim = anim;
-		}
-
-		@Override
-		public void onLoaded(ImageView imageView, Bitmap loadedBitmap,
-				String url, boolean loadedFromCache) {
-			if (!loadedFromCache) {
-				imageView.setVisibility(View.VISIBLE);
-				imageView.startAnimation(anim);
-			}
-		}
 	}
 
 	private OnClickListener pausePlayListener = new OnClickListener() {
@@ -194,16 +172,18 @@ public class WordConstructorFragment extends Fragment implements OnClickListener
 	public void onClick(View v) {
 		String asnwer = answerEt.getText().toString();
 		origTv.setText(mExercise.getPhrase());
+		
+		Animation anim = AnimationUtils.loadAnimation(getActivity(),
+				R.anim.fly_in_anim);
+		ImageLoader loader = new ImageLoader(getActivity(), anim);
+		
 		switch (v.getId()) {
 		case R.id.doneTv:
 			
 			final boolean isCorrect = asnwer.equals(mExercise.getPhrase()) ? true : false;
 			
 			listener.onTestCompleted(mExercise.getId(), isCorrect, mType);
-			Animation anim = AnimationUtils.loadAnimation(
-					getActivity(), R.anim.fly_in_anim);
-			UrlImageViewHelper.setUrlDrawable(wordIv, mExercise.getPictureLink(),
-					R.drawable.ic_launcher, new UrlImageLoader(anim));
+			loader.displayImage(mExercise.getPictureLink(), wordIv, false);
 
 			answerEt.setEnabled(false);
 			origTv.setVisibility(View.VISIBLE);
@@ -211,6 +191,7 @@ public class WordConstructorFragment extends Fragment implements OnClickListener
 			
 		case R.id.dontKnowTv:
 			origTv.setVisibility(View.VISIBLE);
+			loader.displayImage(mExercise.getPictureLink(), wordIv, false);
 			listener.onTestCompleted(mExercise.getId(), false, mType);
 			break;
 

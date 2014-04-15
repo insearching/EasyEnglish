@@ -24,10 +24,12 @@ import android.view.View.OnTouchListener;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.tntu.easyenglish.entity.BuildWord;
 import com.tntu.easyenglish.entity.SoundToWord;
 import com.tntu.easyenglish.entity.WordTrans;
 import com.tntu.easyenglish.exercise.ExerciseListener;
 import com.tntu.easyenglish.exercise.SoundToWordFragment;
+import com.tntu.easyenglish.exercise.WordConstructorFragment;
 import com.tntu.easyenglish.exercise.WordTransFragment;
 import com.tntu.easyenglish.utils.JSONUtils;
 import com.tntu.easyenglish.utils.KeyUtils;
@@ -51,7 +53,7 @@ public class ExercisesActivity extends ActionBarActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.exercises_layout);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeButtonEnabled(true);
 
 		mPager = (ViewPager) findViewById(R.id.pager);
 		loadPb = (ProgressBar) findViewById(R.id.loadPb);
@@ -85,9 +87,13 @@ public class ExercisesActivity extends ActionBarActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			finish();
+			onExerciseCompleted(mType);
 			return true;
 
+		case R.id.menu_next:
+			mPager.setCurrentItem(mPager.getCurrentItem()+1, true);
+			return true;
+			
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -213,6 +219,26 @@ public class ExercisesActivity extends ActionBarActivity implements
 		@Override
 		public Fragment getItem(int position) {
 			return SoundToWordFragment.newInstance(mApiKey, data.get(position));
+		}
+
+		@Override
+		public int getCount() {
+			return data.size();
+		}
+	}
+	
+	private class BuildWordAdapter extends FragmentStatePagerAdapter {
+		ArrayList<BuildWord> data;
+
+		public BuildWordAdapter(FragmentManager fm,
+				ArrayList<BuildWord> data) {
+			super(fm);
+			this.data = data;
+		}
+
+		@Override
+		public Fragment getItem(int position) {
+			return WordConstructorFragment.newInstance(mApiKey, data.get(position));
 		}
 
 		@Override

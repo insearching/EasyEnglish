@@ -23,5 +23,8 @@
     <!-- Content -->
     <color name="content_description">#ff999999</color>
     <color name="transparent">#00000000</color>
-
+    
+    <!-- Exercises -->
+    <color name="empty_letter_bg">#FFd5d5d5</color>
+    <color name="empty_letter_stroke">#FF787878</color>
 </resources>

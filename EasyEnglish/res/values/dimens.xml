@@ -29,4 +29,6 @@
     <dimen name="answers_text_size">18sp</dimen>
     <dimen name="exercise_button_width">100dp</dimen>
     <dimen name="exercise_button_height">40dp</dimen>
+    <dimen name="letter_width">30dp</dimen>
+    <dimen name="letter_text_size">22sp</dimen>
 </resources>
