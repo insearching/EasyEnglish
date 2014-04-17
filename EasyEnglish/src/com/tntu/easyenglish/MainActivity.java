@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -109,8 +108,6 @@ public class MainActivity extends ActionBarActivity implements
 
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		// actionBar.setHomeButtonEnabled(true);
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		actionBar.setDisplayShowHomeEnabled(true);
 	}
 
@@ -171,8 +168,8 @@ public class MainActivity extends ActionBarActivity implements
 				.getSearchableInfo(getComponentName()));
 		EditText searchEditText = (EditText) searchView
 				.findViewById(android.support.v7.appcompat.R.id.search_src_text);
-		searchEditText.setTextColor(Color.WHITE);
-		searchEditText.setHintTextColor(Color.WHITE);
+		searchEditText.setTextColor(getResources().getColor(R.color.white));
+		searchEditText.setHintTextColor(getResources().getColor(R.color.white));
 
 		View searchplate = (View) searchView
 				.findViewById(android.support.v7.appcompat.R.id.search_plate);

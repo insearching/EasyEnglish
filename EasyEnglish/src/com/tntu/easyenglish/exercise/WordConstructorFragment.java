@@ -1,7 +1,6 @@
 package com.tntu.easyenglish.exercise;
 
 import android.app.Activity;
-import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -24,8 +23,7 @@ import com.tntu.easyenglish.entity.BuildWord;
 import com.tntu.easyenglish.utils.ImageLoader;
 import com.tntu.easyenglish.utils.KeyUtils;
 
-public class WordConstructorFragment extends Fragment implements
-		OnClickListener {
+public class WordConstructorFragment extends Fragment {
 
 	private ExerciseListener listener;
 	private View convertView;
@@ -45,9 +43,14 @@ public class WordConstructorFragment extends Fragment implements
 	private boolean intialStage = true;
 
 	private int currentLetter = 0;
-	private boolean result = false;
-
+	private int blinkCount = 3;
 	private static final String mType = KeyUtils.SOUND_TO_WORD_KEY;
+
+	enum ExerciseStatus {
+		NONE, CORRECT, INCORRECT
+	}
+
+	ExerciseStatus status = ExerciseStatus.NONE;
 
 	public static WordConstructorFragment newInstance(String apiKey,
 			BuildWord exercise) {
@@ -73,11 +76,11 @@ public class WordConstructorFragment extends Fragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		initView(inflater);
 
 		mExercise = (BuildWord) getArguments().getSerializable(
 				KeyUtils.EXERCISE_KEY);
 
+		initView(inflater);
 		setData(inflater);
 
 		return convertView;
@@ -105,13 +108,9 @@ public class WordConstructorFragment extends Fragment implements
 
 		origLl = (LinearLayout) convertView.findViewById(R.id.origLl);
 		answerLl = (LinearLayout) convertView.findViewById(R.id.answerLl);
-
 	}
 
 	private void setData(LayoutInflater inflater) {
-
-		audioIv.setOnClickListener(pausePlayListener);
-
 		char[] symbols = mExercise.getSymbols();
 		for (int i = 0; i < symbols.length; i++) {
 			letterTv = (TextView) inflater.inflate(R.layout.letter_view,
@@ -126,50 +125,75 @@ public class WordConstructorFragment extends Fragment implements
 		}
 
 		transTv.setText(mExercise.getTranslation());
-		dontKnowTv.setOnClickListener(this);
+		dontKnowTv.setOnClickListener(OnDontKnowClickListener);
 	}
 
 	private OnClickListener onLetterClickListener = new OnClickListener() {
-		public void onClick(View v) {
-
-			View curEmptyView = origLl.getChildAt(currentLetter);
+		public void onClick(final View v) {
+			final View curEmptyView = origLl.getChildAt(currentLetter);
 			String phrase = mExercise.getPhrase();
 			char c1 = ((TextView) v).getText().toString().charAt(0);
 			char c2 = phrase.charAt(currentLetter);
 
 			if (c1 != c2) {
-				for (int i = 0; i < 3; i++) {
-					new BlinkBackground(curEmptyView, getResources()
-							.getDrawable(R.drawable.wrong_letter_bg)).execute(true);
-				}
+				status = ExerciseStatus.INCORRECT;
+				new BlinkBackground(curEmptyView, R.drawable.wrong_letter_bg)
+						.execute(true);
 				return;
 			}
 
-			
 			answerLl.removeView(v);
 			origLl.removeView(curEmptyView);
 			origLl.addView(v, currentLetter);
 
-			currentLetter++;
-			
-			if(c2 == phrase.charAt(phrase.length()-1)){
-				result = true;
-				ImageLoader loader = new ImageLoader(getActivity(), AnimationUtils.loadAnimation(getActivity(), R.anim.fly_in_anim));
+			if (currentLetter == phrase.length() - 1) {
+				if (status == ExerciseStatus.NONE)
+					status = ExerciseStatus.CORRECT;
+
+				ImageLoader loader = new ImageLoader(getActivity(),
+						AnimationUtils.loadAnimation(getActivity(),
+								R.anim.fly_in_anim));
 				loader.displayImage(mExercise.getPictureLink(), wordIv, false);
+
+				audioIv.setOnClickListener(pausePlayListener);
+				listener.onTestCompleted(mExercise.getId(),
+						status == ExerciseStatus.CORRECT ? true : false, mType);
 			}
-			
-			listener.onTestCompleted(mExercise.getId(), result, mType);
+
+			currentLetter++;
+
 		};
 	};
 
-	private int blinkCount = 4;
+	private OnClickListener OnDontKnowClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			String phrase = mExercise.getPhrase();
+			origLl.removeAllViews();
+			answerLl.removeAllViews();
+
+			for (int i = 0; i < phrase.length(); i++) {
+				letterTv = (TextView) getActivity().getLayoutInflater()
+						.inflate(R.layout.letter_view, origLl, false);
+				letterTv.setText("" + phrase.charAt(i));
+				origLl.addView(letterTv);
+			}
+
+			ImageLoader loader = new ImageLoader(getActivity(),
+					AnimationUtils.loadAnimation(getActivity(),
+							R.anim.fly_in_anim));
+			loader.displayImage(mExercise.getPictureLink(), wordIv, false);
+			listener.onTestCompleted(mExercise.getId(), false, mType);
+		}
+	};
+
 	class BlinkBackground extends AsyncTask<Boolean, Void, Boolean> {
 		View v;
-		Drawable dr;
+		int drawable;
 
-		public BlinkBackground(View v, Drawable dr) {
+		public BlinkBackground(View v, int drawable) {
 			this.v = v;
-			this.dr = dr;
+			this.drawable = drawable;
 		}
 
 		@Override
@@ -185,19 +209,19 @@ public class WordConstructorFragment extends Fragment implements
 		@Override
 		protected void onPostExecute(Boolean result) {
 			super.onPostExecute(result);
-			v.setBackground(dr);
+			v.setBackgroundResource(drawable);
 
-			if(blinkCount > 0) {
+			if (blinkCount > 0) {
 				blinkCount--;
 				if (result) {
-					new BlinkBackground(v, getResources().getDrawable(
-							R.drawable.empty_letter_bg)).execute(false);
+					new BlinkBackground(v, R.drawable.empty_letter_bg)
+							.execute(false);
 				} else {
-					new BlinkBackground(v, getResources().getDrawable(
-							R.drawable.wrong_letter_bg)).execute(true);
+					new BlinkBackground(v, R.drawable.wrong_letter_bg)
+							.execute(true);
 				}
-			}
-			else blinkCount = 3;
+			} else
+				blinkCount = 3;
 		}
 	}
 
@@ -262,39 +286,5 @@ public class WordConstructorFragment extends Fragment implements
 						Toast.LENGTH_SHORT).show();
 			intialStage = false;
 		}
-	}
-
-	@Override
-	public void onClick(View v) {
-		// String asnwer = answerEt.getText().toString();
-		// origTv.setText(mExercise.getPhrase());
-		//
-		// Animation anim = AnimationUtils.loadAnimation(getActivity(),
-		// R.anim.fly_in_anim);
-		// ImageLoader loader = new ImageLoader(getActivity(), anim);
-		//
-		// switch (v.getId()) {
-		// case R.id.doneTv:
-		//
-		// final boolean isCorrect = asnwer.equals(mExercise.getPhrase()) ? true
-		// : false;
-		//
-		// listener.onTestCompleted(mExercise.getId(), isCorrect, mType);
-		// loader.displayImage(mExercise.getPictureLink(), wordIv, false);
-		//
-		// answerEt.setEnabled(false);
-		// origTv.setVisibility(View.VISIBLE);
-		// break;
-		//
-		// case R.id.dontKnowTv:
-		// origTv.setVisibility(View.VISIBLE);
-		// loader.displayImage(mExercise.getPictureLink(), wordIv, false);
-		// listener.onTestCompleted(mExercise.getId(), false, mType);
-		// break;
-		//
-		// default:
-		// break;
-		// }
-
 	}
 }

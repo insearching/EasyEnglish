@@ -1,27 +1,99 @@
 package com.tntu.easyenglish;
 
+import java.util.ArrayList;
+
 import android.app.SearchManager;
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
-public class SearchResultsActivity extends ActionBarActivity {
+import com.tntu.easyenglish.adapter.TranslationAdatper;
+import com.tntu.easyenglish.entity.Translation;
+import com.tntu.easyenglish.utils.JSONUtils;
+import com.tntu.easyenglish.utils.RESTClient;
+import com.tntu.easyenglish.utils.RESTClient.JSONCompleteListener;
+
+public class SearchResultsActivity extends ActionBarActivity implements
+		JSONCompleteListener {
+
+	private ListView searchLv;
+	private ProgressBar loadPb;
+
+	private String mQuery = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		handleIntent(getIntent());
+		setContentView(R.layout.search_result_layout);
+		
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setHomeButtonEnabled(true);
+
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			if (extras.containsKey(SearchManager.QUERY))
+				mQuery = extras.getString(SearchManager.QUERY);
+		}
+
+		initViews();
+		setData();
 	}
 
 	@Override
-	protected void onNewIntent(Intent intent) {
-		handleIntent(intent);
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			return true;
+
+		default:
+			return true;
+		}
 	}
 
-	private void handleIntent(Intent intent) {
-		String query = intent.getStringExtra(SearchManager.QUERY);
-		Toast.makeText(this, query, Toast.LENGTH_LONG).show();
+	private void initViews() {
+		searchLv = (ListView) findViewById(R.id.searchLv);
+		loadPb = (ProgressBar) findViewById(R.id.loadPb);
 	}
+
+	private void setData() {
+		if (mQuery == null)
+			return;
+		hideView();
+		RESTClient client = new RESTClient(this);
+		client.execute("http://easy-english.yzi.me/api/translate?api_key=rakivatake&text="
+				+ mQuery);
+	}
+
+	@Override
+	public void onRemoteCallComplete(String json) {
+		if (JSONUtils.getResponseStatus(json).equals(JSONUtils.SUCCESS_TRUE)) {
+			ArrayList<Translation> data = JSONUtils.getTranslation(json);
+			TranslationAdatper adapter = new TranslationAdatper(this, data);
+			searchLv.setAdapter(adapter);
+		} else {
+			Toast.makeText(this, getString(R.string.failed_to_retrieve_data),
+					Toast.LENGTH_SHORT).show();
+		}
+
+		showView();
+	}
+
+	private void showView() {
+		loadPb.setVisibility(View.INVISIBLE);
+		searchLv.setVisibility(View.VISIBLE);
+	}
+
+	private void hideView() {
+		loadPb.setVisibility(View.VISIBLE);
+		searchLv.setVisibility(View.INVISIBLE);
+	}
+
 }

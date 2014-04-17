@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="white">#ffffffff</color>
+    <color name="white">#ffefefef</color>
     <color name="black">#ff000000</color>
     <color name="orange">#ffdb5800</color>
     <color name="light_orange">#ffff9000</color>
@@ -10,7 +10,6 @@
     <color name="dark_green">#ff59631E</color>
     <color name="ligh_yellow">#fff6ca90</color>
     
-    <color name="listview_bg">#ffefefef</color>
     <color name="listview_text_color">#ff3e3e3e</color>
     <!-- Login -->
     <color name="dark_orange">#ffc75a1e</color>
