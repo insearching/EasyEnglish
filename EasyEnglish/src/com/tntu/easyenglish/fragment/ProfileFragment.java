@@ -28,6 +28,7 @@ import com.tntu.easyenglish.utils.ImageLoader;
 import com.tntu.easyenglish.utils.JSONUtils;
 import com.tntu.easyenglish.utils.KeyUtils;
 import com.tntu.easyenglish.utils.RESTClient;
+import com.tntu.easyenglish.utils.KeyUtils.AuthType;
 import com.tntu.easyenglish.utils.RESTClient.JSONCompleteListener;
 
 public class ProfileFragment extends Fragment implements JSONCompleteListener {
@@ -35,13 +36,16 @@ public class ProfileFragment extends Fragment implements JSONCompleteListener {
 	private TextView nameTv;
 	private ImageView profileIv;
 
-	private String url = null;
+	String url = null;
 	private String id = null;
 	private String apiKey = null;
 	private KeyUtils.AuthType authType = KeyUtils.AuthType.NONE;
 
-	public static ProfileFragment newInstance(Bundle bundle) {
+	public static ProfileFragment newInstance(String apiKey, AuthType authType) {
 		ProfileFragment fragment = new ProfileFragment();
+		Bundle bundle = new Bundle();
+		bundle.putString(KeyUtils.API_KEY, apiKey);
+		bundle.putSerializable(KeyUtils.AUTH_KEY, authType);
 		fragment.setArguments(bundle);
 		return fragment;
 	}

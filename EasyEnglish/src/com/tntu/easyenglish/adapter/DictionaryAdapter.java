@@ -20,6 +20,8 @@ import android.widget.TextView;
 import com.tntu.easyenglish.R;
 import com.tntu.easyenglish.entity.DictionaryWord;
 import com.tntu.easyenglish.utils.KeyUtils;
+import com.tntu.easyenglish.utils.OnPlayClickListener;
+import com.tntu.easyenglish.utils.SoundCacher;
 
 public class DictionaryAdapter extends BaseAdapter {
 
@@ -65,7 +67,7 @@ public class DictionaryAdapter extends BaseAdapter {
 		if (convertView == null) {
 			holder = new ViewHolder();
 			convertView = inflater.inflate(R.layout.dictionary_row, null);
-			
+
 			holder.soundIv = (ImageView) convertView.findViewById(R.id.soundIv);
 			holder.wordTv = (TextView) convertView.findViewById(R.id.wordTv);
 			holder.dateTv = (TextView) convertView.findViewById(R.id.dateTv);
@@ -74,15 +76,26 @@ public class DictionaryAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		
+
 		DictionaryWord dicWord = data.get(position);
 		
 		String word = dicWord.getWord();
 		String translation = dicWord.getTranslations()[0];
 		String date = dicWord.getDate();
-
+		
 		holder.soundIv.setTag(position);
-		holder.soundIv.setOnClickListener(pausePlay);
+
+
+//		holder.soundIv.setOnClickListener(new OnPlayClickListener(data.get(
+//				position).getSound()));
+		holder.soundIv.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				String soundLink = data.get((Integer) v.getTag()).getSound();
+				SoundCacher cacher = new SoundCacher(context);
+				cacher.play(soundLink);
+			}
+		});
 		holder.wordTv.setText(word + " — " + translation);
 		holder.dateTv.setText(date);
 
@@ -94,79 +107,4 @@ public class DictionaryAdapter extends BaseAdapter {
 		TextView dateTv;
 		ImageView soundIv;
 	}
-
-	private OnClickListener pausePlay = new OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			String soundLink = data.get((Integer) v.getTag()).getSound();
-			if (soundLink == null || soundLink.equals(""))
-				return;
-			String url = new StringBuilder(KeyUtils.BASE_URL).append(soundLink).toString();
-			if (!playPause) {
-				if (intialStage)
-					new Player().execute(url);
-				else {
-					if (!mediaPlayer.isPlaying())
-						mediaPlayer.start();
-				}
-				playPause = true;
-			} else {
-				if (mediaPlayer.isPlaying())
-					mediaPlayer.pause();
-				playPause = false;
-			}
-		}
-	};
-
-	class Player extends AsyncTask<String, Void, Boolean> {
-		private ProgressDialog progress;
-
-		@Override
-		protected Boolean doInBackground(String... params) {
-			Boolean prepared;
-			try {
-				mediaPlayer.setDataSource(params[0]);
-				mediaPlayer.setOnCompletionListener(new OnCompletionListener() {
-
-					@Override
-					public void onCompletion(MediaPlayer mp) {
-						intialStage = true;
-						playPause = false;
-						mediaPlayer.stop();
-						mediaPlayer.reset();
-					}
-				});
-				mediaPlayer.prepare();
-				prepared = true;
-			} catch (Exception e) {
-				prepared = false;
-				e.printStackTrace();
-			}
-			return prepared;
-		}
-
-		@Override
-		protected void onPostExecute(Boolean result) {
-			super.onPostExecute(result);
-			if (progress.isShowing()) {
-				progress.cancel();
-			}
-			Log.d("Prepared", "//" + result);
-			mediaPlayer.start();
-
-			intialStage = false;
-		}
-
-		public Player() {
-			progress = new ProgressDialog(context);
-		}
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			this.progress.setMessage("Buffering...");
-			this.progress.show();
-		}
-	}
-
 }

@@ -18,7 +18,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -56,8 +55,6 @@ public class MainActivity extends ActionBarActivity implements
 	private static final int ABOUT = 5;
 	private static final int LOGOUT = 6;
 
-	private static final String TAG = "EASYENGLISH";
-
 	// private static String backStackTag = "main";
 
 	private int mPosition = PROFILE;
@@ -67,7 +64,6 @@ public class MainActivity extends ActionBarActivity implements
 	private ActionBarDrawerToggle mDrawerToggle;
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
-	// private Bundle mArgs = null;
 	private boolean isLogedOut = false;
 	private PlusClient mPlusClient;
 	private String mApiKey;
@@ -81,13 +77,14 @@ public class MainActivity extends ActionBarActivity implements
 		setContentView(R.layout.activity_main);
 
 		if (savedInstanceState != null) {
-			if (savedInstanceState.containsKey(KeyUtils.API_KEY))
-				mApiKey = savedInstanceState.getString(KeyUtils.API_KEY);
-			if (savedInstanceState.containsKey(KeyUtils.ARGS_KEY))
-				extras = savedInstanceState.getBundle(KeyUtils.ARGS_KEY);
+			mApiKey = savedInstanceState.getString(KeyUtils.API_KEY);
+			authType = (KeyUtils.AuthType) extras
+					.getSerializable(KeyUtils.AUTH_KEY);
 		}
 
-		extras = getIntent().getExtras();
+		if (extras == null && getIntent().getExtras() != null)
+			extras = getIntent().getExtras();
+
 		if (extras != null) {
 			if (extras.containsKey(KeyUtils.AUTH_KEY)) {
 				authType = (KeyUtils.AuthType) extras
@@ -104,7 +101,7 @@ public class MainActivity extends ActionBarActivity implements
 				.setCustomAnimations(R.anim.float_left_to_right_in_anim,
 						R.anim.float_left_to_right_out_anim)
 				.replace(R.id.content_frame,
-						ProfileFragment.newInstance(extras)).commit();
+						ProfileFragment.newInstance(mApiKey, authType)).commit();
 
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
@@ -151,7 +148,7 @@ public class MainActivity extends ActionBarActivity implements
 		super.onSaveInstanceState(outState);
 		outState.putInt(POSITION_KEY, mPosition);
 		outState.putString(KeyUtils.API_KEY, mApiKey);
-		outState.putBundle(KeyUtils.ARGS_KEY, extras);
+		outState.putSerializable(KeyUtils.AUTH_KEY, authType);
 	}
 
 	@Override
@@ -257,7 +254,7 @@ public class MainActivity extends ActionBarActivity implements
 				&& authType == KeyUtils.AuthType.NATIVE) {
 			switch (position) {
 			case PROFILE:
-				fragment = ProfileFragment.newInstance(extras);
+				fragment = ProfileFragment.newInstance(mApiKey, authType);
 				break;
 			case EXERCISES:
 				fragment = ExercisesFragment.newInstance(mApiKey);
@@ -286,12 +283,6 @@ public class MainActivity extends ActionBarActivity implements
 					editor.commit();
 				}
 
-				if (prefs.contains(KeyUtils.API_KEY)) {
-					Log.d(TAG, "Still here");
-				} else {
-					Log.d(TAG, "Deleted");
-				}
-
 				Intent intent = new Intent(this, LoginActivity.class);
 				intent.putExtra(KeyUtils.LOGOUT_KEY, true);
 				startActivity(intent);
@@ -299,7 +290,7 @@ public class MainActivity extends ActionBarActivity implements
 				return;
 
 			default:
-				fragment = ProfileFragment.newInstance(extras);
+				fragment = ProfileFragment.newInstance(mApiKey, authType);
 			}
 
 			if (fragment != null) {

@@ -43,9 +43,10 @@ public class DownloadService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.d(TAG, "onStartCommand");
 		String requestUrl = intent.getStringExtra(KeyUtils.AUDIO_KEY);
+		String fileName = intent.getStringExtra(KeyUtils.FILE_NAME_KEY);
 
 		DownloadData downloadTask = new DownloadData(startId);
-		downloadTask.execute(requestUrl);
+		downloadTask.execute(requestUrl, fileName);
 		return super.onStartCommand(intent, flags, startId);
 	}
 
@@ -74,8 +75,6 @@ public class DownloadService extends Service {
 		protected Integer doInBackground(String... param) {
 			requestUrl = param[0];
 			fileName = param[1];
-			if (downloadListener != null)
-				downloadListener.onDownloadStarted(fileName);
 			Integer count, result = null;
 			try {
 

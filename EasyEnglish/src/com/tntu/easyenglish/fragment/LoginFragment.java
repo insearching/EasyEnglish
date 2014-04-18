@@ -1,6 +1,5 @@
 package com.tntu.easyenglish.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -125,8 +124,7 @@ public class LoginFragment extends Fragment implements JSONCompleteListener {
 	@Override
 	public void onRemoteCallComplete(String json) {
 		String apiKey = null;
-		String status = JSONUtils.getResponseStatus(json);
-		if (status.equals(JSONUtils.SUCCESS_TRUE)) {
+		if (JSONUtils.getResponseStatus(json).equals(JSONUtils.SUCCESS_TRUE)) {
 			loginEt.requestFocus();
 			loginEt.setText("");
 			passEt.setText("");
@@ -144,7 +142,7 @@ public class LoginFragment extends Fragment implements JSONCompleteListener {
 			
 			login(apiKey);
 			
-		} else if (status.equals(JSONUtils.SUCCESS_FALSE)) {
+		} else {
 			loginEt.requestFocus();
 			passEt.setText("");
 			Toast.makeText(getActivity(),
