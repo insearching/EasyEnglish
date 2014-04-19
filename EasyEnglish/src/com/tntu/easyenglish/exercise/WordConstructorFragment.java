@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +35,8 @@ public class WordConstructorFragment extends Fragment {
 	private TextView transTv;
 	private BuildWord mExercise;
 
-	private LinearLayout origLl;
+	private TableLayout origTl;
+	private TableRow contentRow;
 	private LinearLayout answerLl;
 	private TextView emptyLetterTv;
 	private TextView letterTv;
@@ -106,22 +109,23 @@ public class WordConstructorFragment extends Fragment {
 
 		dontKnowTv = (TextView) convertView.findViewById(R.id.dontKnowTv);
 
-		origLl = (LinearLayout) convertView.findViewById(R.id.origLl);
+		origTl = (TableLayout) convertView.findViewById(R.id.origTl);
 		answerLl = (LinearLayout) convertView.findViewById(R.id.answerLl);
+		contentRow = (TableRow) convertView.findViewById(R.id.contentRow);
 	}
 
 	private void setData(LayoutInflater inflater) {
 		char[] symbols = mExercise.getSymbols();
 		for (int i = 0; i < symbols.length; i++) {
 			letterTv = (TextView) inflater.inflate(R.layout.letter_view,
-					answerLl, false);
+					contentRow, false);
 			letterTv.setText("" + symbols[i]);
 			letterTv.setOnClickListener(onLetterClickListener);
-			answerLl.addView(letterTv);
+			contentRow.addView(letterTv);
 
 			emptyLetterTv = (TextView) inflater.inflate(
-					R.layout.empty_letter_view, origLl, false);
-			origLl.addView(emptyLetterTv);
+					R.layout.empty_letter_view, origTl, false);
+			origTl.addView(emptyLetterTv);
 		}
 
 		transTv.setText(mExercise.getTranslation());
@@ -130,7 +134,7 @@ public class WordConstructorFragment extends Fragment {
 
 	private OnClickListener onLetterClickListener = new OnClickListener() {
 		public void onClick(final View v) {
-			final View curEmptyView = origLl.getChildAt(currentLetter);
+			final View curEmptyView = origTl.getChildAt(currentLetter);
 			String phrase = mExercise.getPhrase();
 			char c1 = ((TextView) v).getText().toString().charAt(0);
 			char c2 = phrase.charAt(currentLetter);
@@ -143,8 +147,8 @@ public class WordConstructorFragment extends Fragment {
 			}
 
 			answerLl.removeView(v);
-			origLl.removeView(curEmptyView);
-			origLl.addView(v, currentLetter);
+			origTl.removeView(curEmptyView);
+			origTl.addView(v, currentLetter);
 
 			if (currentLetter == phrase.length() - 1) {
 				if (status == ExerciseStatus.NONE)
@@ -169,14 +173,14 @@ public class WordConstructorFragment extends Fragment {
 		@Override
 		public void onClick(View v) {
 			String phrase = mExercise.getPhrase();
-			origLl.removeAllViews();
+			origTl.removeAllViews();
 			answerLl.removeAllViews();
 
 			for (int i = 0; i < phrase.length(); i++) {
 				letterTv = (TextView) getActivity().getLayoutInflater()
-						.inflate(R.layout.letter_view, origLl, false);
+						.inflate(R.layout.letter_view, origTl, false);
 				letterTv.setText("" + phrase.charAt(i));
-				origLl.addView(letterTv);
+				origTl.addView(letterTv);
 			}
 
 			ImageLoader loader = new ImageLoader(getActivity(),

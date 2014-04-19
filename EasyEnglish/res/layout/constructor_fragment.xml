@@ -35,26 +35,30 @@
         android:textSize="@dimen/answers_text_size"
         android:textStyle="bold" />
 
-    <LinearLayout
-        android:id="@+id/origLl"
+    <TableLayout
+        android:id="@+id/origTl"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/letter_width"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/transTv"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:orientation="horizontal" >
-    </LinearLayout>
+        android:gravity="center" >
+
+        <TableRow
+            android:id="@+id/contentRow"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/letter_width" >
+        </TableRow>
+    </TableLayout>
 
     <LinearLayout
         android:id="@+id/answerLl"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/letter_width"
-        android:layout_below="@+id/origLl"
+        android:layout_below="@+id/origTl"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:orientation="horizontal" >
-    </LinearLayout>
+        android:orientation="horizontal" />
 
     <TextView
         android:id="@+id/dontKnowTv"
