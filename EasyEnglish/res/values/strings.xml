@@ -4,6 +4,8 @@
     <string name="app_name">EasyEnglish</string>
     <string name="app_id">591631684250216</string>
     <string name="failed_to_retrieve_data">Failed to retrieve data. Please try again later.</string>
+    <string name="failed_to_load_sound">Failed to load sound. Please try again later.</string>
+    <string name="no_internet">No internet connection. Please check your network state and try again.</string>
     
     <!-- Menu -->
      <string name="menu_finish">Finish</string>

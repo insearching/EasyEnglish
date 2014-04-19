@@ -2,13 +2,7 @@ package com.tntu.easyenglish.adapter;
 
 import java.util.ArrayList;
 
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
-import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,8 +13,6 @@ import android.widget.TextView;
 
 import com.tntu.easyenglish.R;
 import com.tntu.easyenglish.entity.DictionaryWord;
-import com.tntu.easyenglish.utils.KeyUtils;
-import com.tntu.easyenglish.utils.OnPlayClickListener;
 import com.tntu.easyenglish.utils.SoundCacher;
 
 public class DictionaryAdapter extends BaseAdapter {
@@ -28,16 +20,9 @@ public class DictionaryAdapter extends BaseAdapter {
 	private Context context;
 	private ArrayList<DictionaryWord> data;
 
-	private boolean playPause;
-	private MediaPlayer mediaPlayer;
-	private boolean intialStage = true;
-
 	public DictionaryAdapter(Context context, ArrayList<DictionaryWord> data) {
 		this.data = data;
 		this.context = context;
-
-		mediaPlayer = new MediaPlayer();
-		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 	}
 
 	@Override
@@ -85,15 +70,12 @@ public class DictionaryAdapter extends BaseAdapter {
 		
 		holder.soundIv.setTag(position);
 
-
-//		holder.soundIv.setOnClickListener(new OnPlayClickListener(data.get(
-//				position).getSound()));
 		holder.soundIv.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				String soundLink = data.get((Integer) v.getTag()).getSound();
-				SoundCacher cacher = new SoundCacher(context);
-				cacher.play(soundLink);
+				SoundCacher cacher = new SoundCacher(context, soundLink);
+				cacher.play();
 			}
 		});
 		holder.wordTv.setText(word + " — " + translation);

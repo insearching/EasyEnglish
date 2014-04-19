@@ -7,16 +7,20 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
+import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
+
+import com.tntu.easyenglish.R;
 
 public class RESTClient extends AsyncTask<String, Void, String> {
 
-	private JSONCompleteListener listner;
+	private JSONCompleteListener listener;
 	private JSONCompleteListenerMethod methodListner;
 	private String method = null;
 
 	public RESTClient (JSONCompleteListener listener){
-		this.listner = listener;
+		this.listener = listener;
 	}
 	
 	public RESTClient (JSONCompleteListenerMethod listener, String method){
@@ -38,7 +42,7 @@ public class RESTClient extends AsyncTask<String, Void, String> {
 			}
 
 		} catch (Exception e) {
-			//Log.e(TAG, e.getMessage());
+			Log.e("REST", e.getMessage());
 		}
 		return responseStr;
 	}
@@ -46,11 +50,12 @@ public class RESTClient extends AsyncTask<String, Void, String> {
 	@Override
 	protected void onPostExecute(String result) {
 		super.onPostExecute(result);
-		if (result == null || result.equals(""))
-			return;
+		if (result == null || result.equals("")){
+			result = "null";
+		}
 		
 		if(method == null)
-			listner.onRemoteCallComplete(result);
+			listener.onRemoteCallComplete(result);
 		else
 			methodListner.onRemoteCallComplete(result, method);
 		

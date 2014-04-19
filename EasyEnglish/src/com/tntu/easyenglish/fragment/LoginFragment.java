@@ -26,7 +26,6 @@ import com.tntu.easyenglish.utils.RESTClient.JSONCompleteListener;
 
 public class LoginFragment extends Fragment implements JSONCompleteListener {
 
-	private RESTClient client;
 	private View convertView;
 
 	private EditText loginEt;
@@ -40,8 +39,7 @@ public class LoginFragment extends Fragment implements JSONCompleteListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		convertView = inflater.inflate(R.layout.login_fragment, null);
-		client = new RESTClient(this);
-		
+
 		initViews();
 		
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -67,6 +65,7 @@ public class LoginFragment extends Fragment implements JSONCompleteListener {
 				if (username.length() != 0 && password.length() != 0) {
 					String requestUrl = "http://easy-english.yzi.me/api/getApiKey?login="
 							+ username + "&password=" + password;
+					RESTClient client = new RESTClient(LoginFragment.this);
 					client.execute(requestUrl);
 					
 					((LoginActivity)getActivity()).onLoginStarted();
@@ -124,6 +123,11 @@ public class LoginFragment extends Fragment implements JSONCompleteListener {
 	@Override
 	public void onRemoteCallComplete(String json) {
 		String apiKey = null;
+		if(json.equals("null")){
+			Toast.makeText(getActivity(), getActivity().getString(R.string.no_internet), Toast.LENGTH_LONG).show();
+			((LoginActivity)getActivity()).onLoginCompleted();
+			return;
+		}
 		if (JSONUtils.getResponseStatus(json).equals(JSONUtils.SUCCESS_TRUE)) {
 			loginEt.requestFocus();
 			loginEt.setText("");
@@ -151,7 +155,6 @@ public class LoginFragment extends Fragment implements JSONCompleteListener {
 		}
 
 		((LoginActivity)getActivity()).onLoginCompleted();
-		client = new RESTClient(this);
 	}
 	
 	private void login(String apiKey){
