@@ -15,7 +15,6 @@ import java.util.WeakHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import android.R.bool;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -29,8 +28,6 @@ import android.graphics.drawable.AnimationDrawable;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 

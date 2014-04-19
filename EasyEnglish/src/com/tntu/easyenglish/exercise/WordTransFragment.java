@@ -72,10 +72,6 @@ public class WordTransFragment extends Fragment implements OnItemClickListener {
 		case R.id.menu_finish:
 			listener.onExerciseCompleted(mType);
 			return true;
-
-		case R.id.menu_next:
-			// listener.onTestCompleted(exerciseId, isCorrect, type)
-			return true;
 		}
 		return true;
 	}

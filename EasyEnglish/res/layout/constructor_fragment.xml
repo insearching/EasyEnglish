@@ -31,7 +31,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:text="@string/app_name"
-        android:textSize="@dimen/answers_text_size"/>
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="@dimen/answers_text_size"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:id="@+id/origLl"
