@@ -8,10 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import com.tntu.easyenglish.R;
-
 import android.content.Context;
-import android.os.Environment;
 import android.util.Log;
 
 public class ContentCacheLoader {
@@ -22,43 +19,18 @@ public class ContentCacheLoader {
 
 	public ContentCacheLoader(Context context) {
 		this.context = context;
-//		filePath = Environment.getExternalStorageDirectory().getPath() + "/"
-//				+ context.getString(R.string.app_name) + "/cache";
 	}
 
 	public void writeToFile(String filename, String data) {
 		try {
 //			File file = createFile(filename);
-			FileOutputStream stream = new FileOutputStream(filename);
+			FileOutputStream stream = context.openFileOutput(filename, Context.MODE_PRIVATE);
 			stream.write(data.getBytes());
 			stream.close();
 		} catch (IOException e) {
 			Log.e("Write Exception", "File write failed: " + e.toString());
 		}
 	}
-
-//	private File createFile(String fileName) {
-//		String sFolder = filePath + "/";
-//		File file = new File(sFolder);
-//		if (!file.exists())
-//			file.mkdirs();
-//
-//		file = null;
-//		try {
-//			// Create file or re-download if needest
-//			file = new File(sFolder + fileName);
-//
-//			if (!file.createNewFile()) {
-//				file.delete();
-//				if (!file.createNewFile()) {
-//					return null;
-//				}
-//			}
-//		} catch (Exception e) {
-//			return null;
-//		}
-//		return file;
-//	}
 
 	public String readFromFile(String fileName) {
 		String info = "";
@@ -92,5 +64,10 @@ public class ContentCacheLoader {
 
 	public void deleteFile(String fileName) {
 		context.deleteFile(fileName);
+	}
+	
+	public boolean isFileExists(String fileName){
+		File f = new File(fileName);
+		return f.exists();
 	}
 }

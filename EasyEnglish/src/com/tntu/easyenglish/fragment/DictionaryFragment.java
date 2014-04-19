@@ -30,7 +30,7 @@ public class DictionaryFragment extends Fragment implements
 	private ContentCacheLoader loader;
 	private static final int COUNT = 10;
 	private static int offset = 0;
-	private static final String bufferFileName = "dictionary.txt";
+	private String bufferFileName = "dictionary.txt";
 
 	public static DictionaryFragment newInstance(String apiKey) {
 		DictionaryFragment fragment = new DictionaryFragment();
@@ -45,7 +45,7 @@ public class DictionaryFragment extends Fragment implements
 			Bundle savedInstanceState) {
 		convertView = inflater.inflate(R.layout.dictionary_fragment, null);
 		setHasOptionsMenu(true);
-
+		
 		contentLv = (PullAndLoadListView) convertView
 				.findViewById(R.id.contentLv);
 		contentLv.setOnRefreshListener(new OnRefreshListener() {

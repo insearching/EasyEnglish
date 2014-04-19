@@ -27,7 +27,7 @@ public class ContentFragment extends Fragment implements JSONCompleteListener {
 	private RESTClient client;
 	private String requestUrl;
 	private ContentCacheLoader loader;
-	private static final String fileName = "content.txt";
+	private String bufferFileName = "content.txt";
 
 	public static ContentFragment newInstance(String apiKey, int id) {
 		ContentFragment fragment = new ContentFragment();
@@ -48,8 +48,9 @@ public class ContentFragment extends Fragment implements JSONCompleteListener {
 		loadPb = (ProgressBar) convertView.findViewById(R.id.loadPb);
 		loader = new ContentCacheLoader(getActivity());
 		
-
-		String info = loader.readFromFile(fileName);
+		String info = null;
+		if(loader.isFileExists(bufferFileName))
+			info = loader.readFromFile(bufferFileName);
 		int id = getArguments().getInt(KeyUtils.ID_KEY);
 		if (!info.equals("") && JSONUtils.getContentId(info) == id) {
 			showData(info);
@@ -69,7 +70,7 @@ public class ContentFragment extends Fragment implements JSONCompleteListener {
 		client = new RESTClient(this);
 		showData(json);
 		showView();
-		loader.writeToFile(fileName, json);
+		loader.writeToFile(bufferFileName, json);
 	}
 
 	private void showData(String json) {
@@ -85,7 +86,7 @@ public class ContentFragment extends Fragment implements JSONCompleteListener {
 	public void refreshContentList() {
 		if (loader == null)
 			return;
-		loader.deleteFile(fileName);
+		loader.deleteFile(bufferFileName);
 		String apiKey = getArguments().getString(KeyUtils.API_KEY);
 		int id = getArguments().getInt(KeyUtils.ID_KEY);
 		String requestUrl = "http://easy-english.yzi.me/api/getContentData?api_key="

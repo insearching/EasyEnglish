@@ -129,10 +129,7 @@ public class WordTransFragment extends Fragment implements OnItemClickListener {
 			return;
 		}
 
-		Animation anim = AnimationUtils.loadAnimation(getActivity(),
-				R.anim.fly_in_anim);
-		ImageLoader loader = new ImageLoader(getActivity(), anim);
-		loader.displayImage(mExercise.getPictureLink(), wordIv, false);
+		
 		listener.onTestCompleted(mExercise.getId(), isCorrect, mType);
 
 		showAnswers(correctAnswerId, isCorrect, position);
@@ -140,6 +137,11 @@ public class WordTransFragment extends Fragment implements OnItemClickListener {
 
 	private void showAnswers(int correctAnswerId, boolean isCorrect,
 			int position) {
+		Animation anim = AnimationUtils.loadAnimation(getActivity(),
+				R.anim.fly_in_anim);
+		ImageLoader loader = new ImageLoader(getActivity(), anim);
+		loader.displayImage(mExercise.getPictureLink(), wordIv, false);
+		
 		AnswersAdapter adapter = ((AnswersAdapter) answersLv.getAdapter());
 		adapter.setCorrectAnswer(adapter.getItemPosition(correctAnswerId));
 		if (!isCorrect)

@@ -7,11 +7,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-
-import com.tntu.easyenglish.R;
 
 public class RESTClient extends AsyncTask<String, Void, String> {
 

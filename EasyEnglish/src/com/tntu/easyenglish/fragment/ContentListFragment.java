@@ -60,18 +60,21 @@ public class ContentListFragment extends Fragment implements
 				refreshContentList();
 			}
 		});
-		
+
 		contentLv.setOnLoadMoreListener(new OnLoadMoreListener() {
-			
 			@Override
 			public void onLoadMore() {
-				
+
 			}
 		});
 
 		loader = new ContentCacheLoader(getActivity());
-		String info = loader.readFromFile(bufferFileName);
-		if (!info.equals("")) {
+
+		String info = null;
+		if (loader.isFileExists(bufferFileName))
+			info = loader.readFromFile(bufferFileName);
+
+		if (info != null && !info.equals("")) {
 			setData(info);
 		} else {
 			refreshContentList();
@@ -141,21 +144,21 @@ public class ContentListFragment extends Fragment implements
 			return;
 		loader.deleteFile(bufferFileName);
 		String apiKey = getArguments().getString(KeyUtils.API_KEY);
+		
 		RESTClient client = new RESTClient(this, GET_LIST_METHOD);
-		client.execute(getQuery(getArguments().getString(KeyUtils.API_KEY),
-				0));
+		client.execute(getQuery(apiKey, 0));
 		offset = COUNT;
 	}
-	
+
 	public void loadMoreContent() {
 		RESTClient client = new RESTClient(this, GET_LIST_METHOD);
 		client.execute(getQuery(getArguments().getString(KeyUtils.API_KEY),
 				offset));
 		offset += COUNT;
 	}
-	
+
 	private String getQuery(String apiKey, int offset) {
-		return  "http://easy-english.yzi.me/api/getContentsList?api_key="
+		return "http://easy-english.yzi.me/api/getContentsList?api_key="
 				+ apiKey + "&count=" + COUNT + "&offset=" + offset;
 	}
 

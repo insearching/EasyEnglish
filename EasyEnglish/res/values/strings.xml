@@ -6,6 +6,8 @@
     <string name="failed_to_retrieve_data">Failed to retrieve data. Please try again later.</string>
     <string name="failed_to_load_sound">Failed to load sound. Please try again later.</string>
     <string name="no_internet">No internet connection. Please check your network state and try again.</string>
+    <string name="about">This app was created by Serhii Hrabas for educational reasons. API side was provided from service 
+        <u>http://easy-english.yzi.me</u> developed by Igor Kordiak.</string>
     
     <!-- Menu -->
      <string name="menu_finish">Finish</string>
