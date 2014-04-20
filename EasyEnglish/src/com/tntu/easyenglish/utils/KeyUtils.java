@@ -44,6 +44,7 @@ public class KeyUtils {
 	public static final String TRANSLATIONS_KEY = "translations";
 	public static final String TRANSLATION_KEY = "translation";
 	public static final String IMAGE_KEY = "image";
+	public static final String IMAGES_KEY = "images";
 	public static final String WORD_TRANSLATION_KEY = "Word-Translation";
 	public static final String TRANSLATION_WORD_KEY = "Translation-Word";
 	public static final String BUILD_WORD_KEY = "BuildWord";

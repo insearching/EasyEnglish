@@ -7,7 +7,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.costum.android.widget.PullAndLoadListView;
@@ -21,9 +23,10 @@ import com.tntu.easyenglish.utils.JSONUtils;
 import com.tntu.easyenglish.utils.KeyUtils;
 import com.tntu.easyenglish.utils.RESTClient;
 import com.tntu.easyenglish.utils.RESTClient.JSONCompleteListener;
+import com.tntu.easyenglish.utils.SoundCacher;
 
 public class DictionaryFragment extends Fragment implements
-		JSONCompleteListener, OnItemClickListener {
+		JSONCompleteListener, OnItemClickListener, OnScrollListener {
 	private View convertView;
 	private PullAndLoadListView contentLv;
 	private DictionaryAdapter mAdapter;
@@ -45,7 +48,7 @@ public class DictionaryFragment extends Fragment implements
 			Bundle savedInstanceState) {
 		convertView = inflater.inflate(R.layout.dictionary_fragment, null);
 		setHasOptionsMenu(true);
-		
+
 		contentLv = (PullAndLoadListView) convertView
 				.findViewById(R.id.contentLv);
 		contentLv.setOnRefreshListener(new OnRefreshListener() {
@@ -63,6 +66,7 @@ public class DictionaryFragment extends Fragment implements
 		});
 
 		contentLv.setOnItemClickListener(this);
+		contentLv.setOnScrollListener(this);
 
 		loader = new ContentCacheLoader(getActivity());
 		String json = loader.readFromFile(bufferFileName);
@@ -124,10 +128,37 @@ public class DictionaryFragment extends Fragment implements
 			if (dictionary.size() == 0) {
 				contentLv.setSelectionFromTop(savedPosition - 1, savedListTop);
 			}
-
 		}
 	}
 
+	private boolean mBusy;
+
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
+		switch (scrollState) {
+		case OnScrollListener.SCROLL_STATE_IDLE:
+			mBusy = false;
+//			if (mAdapter != null)
+//			mAdapter.notifyDataSetChanged();
+			break;
+		case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+			mBusy = true;
+			break;
+		case OnScrollListener.SCROLL_STATE_FLING:
+			mBusy = true;
+			break;
+
+		default:
+			mBusy = false;
+		}
+		if (mAdapter != null)
+			mAdapter.setBusy(mBusy);
+	}
+
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem,
+			int visibleItemCount, int totalItemCount) {
+	}
+	
 	@Override
 	public void onRemoteCallComplete(String json) {
 		contentLv.onLoadMoreComplete();
@@ -144,5 +175,10 @@ public class DictionaryFragment extends Fragment implements
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 			long arg3) {
 		position -= 1;
+		SoundCacher cacher = new SoundCacher(getActivity(), mAdapter.getItem(
+				position).getSound());
+		cacher.play();
 	}
+
+
 }

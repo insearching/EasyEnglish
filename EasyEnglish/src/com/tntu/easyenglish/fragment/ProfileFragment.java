@@ -33,7 +33,7 @@ import com.tntu.easyenglish.utils.RESTClient.JSONCompleteListener;
 
 public class ProfileFragment extends Fragment implements JSONCompleteListener {
 	private View convertView;
-	private TextView nameTv;
+	private TextView greetTv;
 	private ImageView profileIv;
 
 	String url = null;
@@ -131,7 +131,7 @@ public class ProfileFragment extends Fragment implements JSONCompleteListener {
 
 	private void initView(LayoutInflater inflater) {
 		convertView = inflater.inflate(R.layout.profile_fragment, null);
-		nameTv = (TextView) convertView.findViewById(R.id.greetTv);
+		greetTv = (TextView) convertView.findViewById(R.id.greetTv);
 		profileIv = (ImageView) convertView.findViewById(R.id.profileIv);
 		Bitmap bitmap = BitmapFactory.decodeResource(getActivity()
 				.getResources(),
@@ -177,14 +177,12 @@ public class ProfileFragment extends Fragment implements JSONCompleteListener {
 		paint.setColor(getResources().getColor(R.color.yellow));
 		paint.setStrokeWidth(10);
 		Canvas c = new Canvas(circleBitmap);
-		// This draw a circle of Gerycolor which will be the border of image.
 		c.drawCircle(bitmap.getWidth() / 2, bitmap.getHeight() / 2,
 				bitmap.getWidth() / 2, paint);
 		BitmapShader shader = new BitmapShader(bitmap, Shader.TileMode.CLAMP,
 				Shader.TileMode.CLAMP);
 		paint.setAntiAlias(true);
 		paint.setShader(shader);
-		// This will draw the image.
 		c.drawCircle(bitmap.getWidth() / 2, bitmap.getHeight() / 2,
 				bitmap.getWidth() / 2 - 5, paint);
 		return circleBitmap;
@@ -209,7 +207,8 @@ public class ProfileFragment extends Fragment implements JSONCompleteListener {
 			ImageLoader loader = new ImageLoader(getActivity());
 			loader.displayImage(avatar, profileIv, true);
 			
-			nameTv.setText(getString(R.string.hello) + login + "!");
+			greetTv.setText(getString(R.string.hello) +", "+ login + "!");
+			greetTv.setVisibility(View.VISIBLE);
 		}
 		else {
 			Toast.makeText(getActivity(), getString(R.string.failed_to_retrieve_data), Toast.LENGTH_SHORT).show();

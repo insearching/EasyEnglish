@@ -9,8 +9,14 @@
         <item name="android:gravity">center</item>
         <item name="android:clickable">true</item>
     </style>
-    
-        <style name="Widget.TextView" parent="@android:style/Widget.TextView">
+
+    <style name="Widget.BoldTextView" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/default_text_size</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="Widget.TextView" parent="@android:style/Widget.TextView">
         <item name="android:textSize">@dimen/default_text_size</item>
         <item name="android:gravity">center</item>
     </style>

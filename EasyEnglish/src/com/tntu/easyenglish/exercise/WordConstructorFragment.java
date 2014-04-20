@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -85,16 +84,6 @@ public class WordConstructorFragment extends Fragment {
 
 		return convertView;
 
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.menu_finish:
-			listener.onExerciseCompleted(mType);
-			return true;
-		}
-		return true;
 	}
 
 	private void initView(LayoutInflater inflater) {

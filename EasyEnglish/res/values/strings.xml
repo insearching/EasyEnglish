@@ -58,7 +58,7 @@
     <string name="add">Add</string>
     <string name="cancel">Cancel</string>
     <!-- Profile -->
-    <string name="hello">Hello </string>
+    <string name="hello">Hello</string>
     <!-- Exercises -->
     <string name="word_trans">Word-Translation</string>
     <string name="trans_word">Translation-Word</string>

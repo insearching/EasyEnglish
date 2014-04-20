@@ -229,7 +229,7 @@ public class JSONUtils {
 				String word = jsonObject.getString(KeyUtils.WORD_KEY);
 				String[] translations = getArray(jsonObject, KeyUtils.TRANSLATIONS_KEY);
 				String[] contexts = getArray(jsonObject, KeyUtils.CONTEXTS_KEY);
-				String[] images = getArray(jsonObject, KeyUtils.IMAGE_KEY);
+				String[] images = getArray(jsonObject, KeyUtils.IMAGES_KEY);
 				String sound = jsonObject.getString(KeyUtils.SOUND_KEY);
 				String date = transformDate(jsonObject.getString(KeyUtils.DATE_KEY));
 				

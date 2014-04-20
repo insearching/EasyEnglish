@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -13,12 +12,13 @@ import android.widget.TextView;
 
 import com.tntu.easyenglish.R;
 import com.tntu.easyenglish.entity.DictionaryWord;
-import com.tntu.easyenglish.utils.SoundCacher;
+import com.tntu.easyenglish.utils.ImageLoader;
 
 public class DictionaryAdapter extends BaseAdapter {
 
 	private Context context;
 	private ArrayList<DictionaryWord> data;
+	private boolean mBusy = false;
 
 	public DictionaryAdapter(Context context, ArrayList<DictionaryWord> data) {
 		this.data = data;
@@ -43,6 +43,10 @@ public class DictionaryAdapter extends BaseAdapter {
 	public long getItemId(int position) {
 		return data.get(position).getDictionaryId();
 	}
+	
+	public void setBusy(boolean flag){
+		mBusy = flag;
+	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -53,40 +57,40 @@ public class DictionaryAdapter extends BaseAdapter {
 			holder = new ViewHolder();
 			convertView = inflater.inflate(R.layout.dictionary_row, null);
 
-			holder.soundIv = (ImageView) convertView.findViewById(R.id.soundIv);
+			holder.imageIv = (ImageView) convertView.findViewById(R.id.imageIv);
 			holder.wordTv = (TextView) convertView.findViewById(R.id.wordTv);
-			holder.dateTv = (TextView) convertView.findViewById(R.id.dateTv);
-
+			holder.transTv = (TextView) convertView.findViewById(R.id.transTv);
+			holder.dateTv = (TextView) convertView.findViewById(R.id.dateTv);			
+			
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-
-		DictionaryWord dicWord = data.get(position);
 		
+		DictionaryWord dicWord = data.get(position);
+
 		String word = dicWord.getWord();
 		String translation = dicWord.getTranslations()[0];
 		String date = dicWord.getDate();
-		
-		holder.soundIv.setTag(position);
+//		String url = null;
+//		if (dicWord.getImages() != null && !mBusy) {
+//			url = dicWord.getImages()[0];
+//
+//			ImageLoader loader = new ImageLoader(context);
+//			loader.displayImage(url, holder.imageIv, false);
+//		}
 
-		holder.soundIv.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				String soundLink = data.get((Integer) v.getTag()).getSound();
-				SoundCacher cacher = new SoundCacher(context, soundLink);
-				cacher.play();
-			}
-		});
-		holder.wordTv.setText(word + " — " + translation);
+		holder.wordTv.setText(word);
+		holder.transTv.setText(translation);
 		holder.dateTv.setText(date);
-
+		
 		return convertView;
 	}
 
 	class ViewHolder {
 		TextView wordTv;
+		TextView transTv;
 		TextView dateTv;
-		ImageView soundIv;
+		ImageView imageIv;
 	}
 }
