@@ -16,6 +16,4 @@ public class Translation {
 	public String getImageUrl() {
 		return imageUrl;
 	}
-
-
 }

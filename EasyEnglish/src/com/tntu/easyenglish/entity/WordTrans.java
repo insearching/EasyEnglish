@@ -12,8 +12,6 @@ public class WordTrans implements Serializable{
 	private String context;
 	private String voiceLink;
 	private int correctAnswer;
-
-//	private Answer[] answers;
 	
 	private HashMap<String, Integer> answers;
 	

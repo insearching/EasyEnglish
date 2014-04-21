@@ -25,7 +25,7 @@ public class JSONUtils {
 	public static final String SUCCESS_FALSE = "false";
 
 	public static String getResponseStatus(String json) {
-		if (!isDataValid(json)){
+		if (!isDataValid(json)) {
 			return SUCCESS_FALSE;
 		}
 		String success = null;
@@ -38,14 +38,14 @@ public class JSONUtils {
 		}
 		return success;
 	}
-	
-	public static boolean isDataValid(String json){
-	    try {
-	        new JSONObject(json);
-	        return true;
-	    } catch(JSONException ex) { 
-	        return false;
-	    }
+
+	public static boolean isDataValid(String json) {
+		try {
+			new JSONObject(json);
+			return true;
+		} catch (JSONException ex) {
+			return false;
+		}
 	}
 
 	public static String getValue(String json, String key) {
@@ -59,7 +59,7 @@ public class JSONUtils {
 		}
 		return getNullString(value);
 	}
-	
+
 	public static String getValueFromData(String json, String valueName) {
 		String value = null;
 		JSONObject jsonObject = null;
@@ -227,12 +227,14 @@ public class JSONUtils {
 				int dictionaryId = jsonObject.getInt(KeyUtils.DICT_ID_KEY);
 				int wordId = jsonObject.getInt(KeyUtils.WORD_ID_KEY);
 				String word = jsonObject.getString(KeyUtils.WORD_KEY);
-				String[] translations = getArray(jsonObject, KeyUtils.TRANSLATIONS_KEY);
+				String[] translations = getArray(jsonObject,
+						KeyUtils.TRANSLATIONS_KEY);
 				String[] contexts = getArray(jsonObject, KeyUtils.CONTEXTS_KEY);
 				String[] images = getArray(jsonObject, KeyUtils.IMAGES_KEY);
 				String sound = jsonObject.getString(KeyUtils.SOUND_KEY);
-				String date = transformDate(jsonObject.getString(KeyUtils.DATE_KEY));
-				
+				String date = transformDate(jsonObject
+						.getString(KeyUtils.DATE_KEY));
+
 				DictionaryWord tr = new DictionaryWord(dictionaryId, wordId,
 						word, translations, contexts, images, sound, date);
 				words.add(tr);
@@ -242,8 +244,8 @@ public class JSONUtils {
 		}
 		return words;
 	}
-	
-	public static ArrayList<WordTrans> getWordTransExercises(String json){
+
+	public static ArrayList<WordTrans> getWordTransExercises(String json) {
 		JSONArray jsonArray = null;
 		ArrayList<WordTrans> exercises = new ArrayList<WordTrans>();
 		try {
@@ -251,24 +253,29 @@ public class JSONUtils {
 
 			for (int i = 0; i < jsonArray.length(); i++) {
 				JSONObject exerciseJson = jsonArray.getJSONObject(i);
-				JSONObject question = exerciseJson.getJSONObject(KeyUtils.QUESTION_KEY);
-				
+				JSONObject question = exerciseJson
+						.getJSONObject(KeyUtils.QUESTION_KEY);
+
 				int id = question.getInt(KeyUtils.ID_KEY);
 				String phrase = question.getString(KeyUtils.PHRASE_KEY);
-				String pictureLink = question.getString(KeyUtils.PICTURE_LINK_KEY);
+				String pictureLink = question
+						.getString(KeyUtils.PICTURE_LINK_KEY);
 				String context = question.getString(KeyUtils.CONTEXT_KEY);
 				String voiceLink = question.getString(KeyUtils.VOICE_LINK_KEY);
 				int correctAnswerId = question.getInt(KeyUtils.ANSWER_ID_KEY);
-				
-				JSONArray answersArray = exerciseJson.getJSONArray(KeyUtils.ANSWERS_KEY);
+
+				JSONArray answersArray = exerciseJson
+						.getJSONArray(KeyUtils.ANSWERS_KEY);
 				HashMap<String, Integer> answers = new HashMap<String, Integer>();
-				for(int j=0; j<answersArray.length(); j++){
+				for (int j = 0; j < answersArray.length(); j++) {
 					JSONObject answerObject = answersArray.getJSONObject(j);
 					Integer answerId = answerObject.getInt(KeyUtils.ID_KEY);
-					String answerPhrase =  answerObject.getString(KeyUtils.PHRASE_KEY);
+					String answerPhrase = answerObject
+							.getString(KeyUtils.PHRASE_KEY);
 					answers.put(answerPhrase, answerId);
 				}
-				WordTrans exercise = new WordTrans(id, phrase, pictureLink, context, voiceLink, correctAnswerId, answers);
+				WordTrans exercise = new WordTrans(id, phrase, pictureLink,
+						context, voiceLink, correctAnswerId, answers);
 				exercises.add(exercise);
 			}
 		} catch (JSONException ex) {
@@ -276,8 +283,8 @@ public class JSONUtils {
 		}
 		return exercises;
 	}
-	
-	public static ArrayList<WordTrans> getTransWordExercises(String json){
+
+	public static ArrayList<WordTrans> getTransWordExercises(String json) {
 		JSONArray jsonArray = null;
 		ArrayList<WordTrans> exercises = new ArrayList<WordTrans>();
 		try {
@@ -285,24 +292,29 @@ public class JSONUtils {
 
 			for (int i = 0; i < jsonArray.length(); i++) {
 				JSONObject exerciseJson = jsonArray.getJSONObject(i);
-				JSONObject question = exerciseJson.getJSONObject(KeyUtils.QUESTION_KEY);
-				
+				JSONObject question = exerciseJson
+						.getJSONObject(KeyUtils.QUESTION_KEY);
+
 				int id = question.getInt(KeyUtils.ID_KEY);
 				String phrase = question.getString(KeyUtils.PHRASE_KEY);
-				String pictureLink = question.getString(KeyUtils.PICTURE_LINK_KEY);
+				String pictureLink = question
+						.getString(KeyUtils.PICTURE_LINK_KEY);
 				String context = "";
 				String voiceLink = question.getString(KeyUtils.VOICE_LINK_KEY);
 				int correctAnswerId = question.getInt(KeyUtils.ANSWER_ID_KEY);
-				
-				JSONArray answersArray = exerciseJson.getJSONArray(KeyUtils.ANSWERS_KEY);
+
+				JSONArray answersArray = exerciseJson
+						.getJSONArray(KeyUtils.ANSWERS_KEY);
 				HashMap<String, Integer> answers = new HashMap<String, Integer>();
-				for(int j=0; j<answersArray.length(); j++){
+				for (int j = 0; j < answersArray.length(); j++) {
 					JSONObject answerObject = answersArray.getJSONObject(j);
 					Integer answerId = answerObject.getInt(KeyUtils.ID_KEY);
-					String answerPhrase =  answerObject.getString(KeyUtils.PHRASE_KEY);
+					String answerPhrase = answerObject
+							.getString(KeyUtils.PHRASE_KEY);
 					answers.put(answerPhrase, answerId);
 				}
-				WordTrans exercise = new WordTrans(id, phrase, pictureLink, context, voiceLink, correctAnswerId, answers);
+				WordTrans exercise = new WordTrans(id, phrase, pictureLink,
+						context, voiceLink, correctAnswerId, answers);
 				exercises.add(exercise);
 			}
 		} catch (JSONException ex) {
@@ -310,21 +322,25 @@ public class JSONUtils {
 		}
 		return exercises;
 	}
-	
-	public static ArrayList<SoundToWord> getSoundToWordExercises(String json){
+
+	public static ArrayList<SoundToWord> getSoundToWordExercises(String json) {
 		JSONArray jsonArray = null;
 		ArrayList<SoundToWord> exercises = new ArrayList<SoundToWord>();
 		try {
 			jsonArray = new JSONObject(json).getJSONArray(KeyUtils.DATA_KEY);
 
 			for (int i = 0; i < jsonArray.length(); i++) {
-				JSONObject jsonObject = jsonArray.getJSONObject(i).getJSONObject(KeyUtils.QUESTION_KEY);
+				JSONObject jsonObject = jsonArray.getJSONObject(i)
+						.getJSONObject(KeyUtils.QUESTION_KEY);
 				int id = jsonObject.getInt(KeyUtils.ID_KEY);
 				String phrase = jsonObject.getString(KeyUtils.PHRASE_KEY);
-				String pictureLink = jsonObject.getString(KeyUtils.PICTURE_LINK_KEY);
-				String voiceLink = jsonObject.getString(KeyUtils.VOICE_LINK_KEY);
-				
-				SoundToWord exercise = new SoundToWord(id, phrase, pictureLink, voiceLink);
+				String pictureLink = jsonObject
+						.getString(KeyUtils.PICTURE_LINK_KEY);
+				String voiceLink = jsonObject
+						.getString(KeyUtils.VOICE_LINK_KEY);
+
+				SoundToWord exercise = new SoundToWord(id, phrase, pictureLink,
+						voiceLink);
 				exercises.add(exercise);
 			}
 		} catch (JSONException ex) {
@@ -332,8 +348,8 @@ public class JSONUtils {
 		}
 		return exercises;
 	}
-	
-	public static ArrayList<BuildWord> getBuildWordExercises(String json){
+
+	public static ArrayList<BuildWord> getBuildWordExercises(String json) {
 		JSONArray jsonArray = null;
 		ArrayList<BuildWord> exercises = new ArrayList<BuildWord>();
 		try {
@@ -341,20 +357,26 @@ public class JSONUtils {
 
 			for (int i = 0; i < jsonArray.length(); i++) {
 				JSONObject jsonObject = jsonArray.getJSONObject(i);
-				JSONObject qustionObject = jsonObject.getJSONObject(KeyUtils.QUESTION_KEY);
+				JSONObject qustionObject = jsonObject
+						.getJSONObject(KeyUtils.QUESTION_KEY);
 				int id = qustionObject.getInt(KeyUtils.ID_KEY);
 				String phrase = qustionObject.getString(KeyUtils.PHRASE_KEY);
-				String translation = qustionObject.getString(KeyUtils.TRANSLATION_KEY);
-				String pictureLink = qustionObject.getString(KeyUtils.PICTURE_LINK_KEY);
-				String voiceLink = qustionObject.getString(KeyUtils.VOICE_LINK_KEY);
-				
-				JSONArray symbolsJson = jsonObject.getJSONArray(KeyUtils.SYMBOLS_KEY);
+				String translation = qustionObject
+						.getString(KeyUtils.TRANSLATION_KEY);
+				String pictureLink = qustionObject
+						.getString(KeyUtils.PICTURE_LINK_KEY);
+				String voiceLink = qustionObject
+						.getString(KeyUtils.VOICE_LINK_KEY);
+
+				JSONArray symbolsJson = jsonObject
+						.getJSONArray(KeyUtils.SYMBOLS_KEY);
 				char[] symbols = new char[symbolsJson.length()];
-				for(int j=0; j<symbols.length; j++){
+				for (int j = 0; j < symbols.length; j++) {
 					symbols[j] = symbolsJson.get(j).toString().charAt(0);
 				}
-				
-				BuildWord exercise = new BuildWord(id, phrase, translation, pictureLink, voiceLink, symbols);
+
+				BuildWord exercise = new BuildWord(id, phrase, translation,
+						pictureLink, voiceLink, symbols);
 				exercises.add(exercise);
 			}
 		} catch (JSONException ex) {
@@ -362,7 +384,7 @@ public class JSONUtils {
 		}
 		return exercises;
 	}
-	
+
 	private static String[] getArray(JSONObject jsonObj, String key) {
 		String[] arr = null;
 		try {
