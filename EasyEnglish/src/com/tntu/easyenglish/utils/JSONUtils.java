@@ -191,9 +191,6 @@ public class JSONUtils {
 		return newDate;
 	}
 
-	/*
-	 * !!!!Change translation key!!!!!
-	 */
 	public static ArrayList<Translation> getTranslation(String json) {
 		JSONArray jsonArray = null;
 		ArrayList<Translation> translations = new ArrayList<Translation>();

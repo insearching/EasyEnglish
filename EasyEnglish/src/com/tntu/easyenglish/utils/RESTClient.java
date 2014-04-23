@@ -15,6 +15,8 @@ public class RESTClient extends AsyncTask<String, Void, String> {
 	private JSONCompleteListener listener;
 	private JSONCompleteListenerMethod methodListner;
 	private String method = null;
+	
+	private String uui;
 
 	public RESTClient (JSONCompleteListener listener){
 		this.listener = listener;
@@ -23,6 +25,14 @@ public class RESTClient extends AsyncTask<String, Void, String> {
 	public RESTClient (JSONCompleteListenerMethod listener, String method){
 		this.methodListner = listener;
 		this.method = method;
+	}
+	
+	public RESTClient (String str){
+		uui = str;
+	}
+	
+	public String doInBg() {
+		return doInBackground(uui);
 	}
 	
 	@Override

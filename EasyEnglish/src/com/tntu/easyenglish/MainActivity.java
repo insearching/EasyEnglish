@@ -76,16 +76,14 @@ public class MainActivity extends ActionBarActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		extras = getIntent().getExtras();
+		
 		if (savedInstanceState != null) {
 			mApiKey = savedInstanceState.getString(KeyUtils.API_KEY);
-			authType = (KeyUtils.AuthType) extras
+			authType = (KeyUtils.AuthType) savedInstanceState
 					.getSerializable(KeyUtils.AUTH_KEY);
 		}
-
-		if (extras == null && getIntent().getExtras() != null)
-			extras = getIntent().getExtras();
-
-		if (extras != null) {
+		else if (extras != null) {
 			if (extras.containsKey(KeyUtils.AUTH_KEY)) {
 				authType = (KeyUtils.AuthType) extras
 						.getSerializable(KeyUtils.AUTH_KEY);

@@ -19,10 +19,12 @@ public class DictionaryAdapter extends BaseAdapter {
 	private Context context;
 	private ArrayList<DictionaryWord> data;
 	private boolean mBusy = false;
+	ImageLoader loader;
 
 	public DictionaryAdapter(Context context, ArrayList<DictionaryWord> data) {
 		this.data = data;
 		this.context = context;
+		loader = new ImageLoader(context);
 	}
 
 	@Override
@@ -48,6 +50,7 @@ public class DictionaryAdapter extends BaseAdapter {
 		mBusy = flag;
 	}
 
+	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		LayoutInflater inflater = (LayoutInflater) context
@@ -72,13 +75,13 @@ public class DictionaryAdapter extends BaseAdapter {
 		String word = dicWord.getWord();
 		String translation = dicWord.getTranslations()[0];
 		String date = dicWord.getDate();
-//		String url = null;
-//		if (dicWord.getImages() != null && !mBusy) {
-//			url = dicWord.getImages()[0];
-//
-//			ImageLoader loader = new ImageLoader(context);
-//			loader.displayImage(url, holder.imageIv, false);
-//		}
+		String url = null;
+		if (dicWord.getImages() != null && !mBusy) {
+			url = dicWord.getImages()[0];
+
+			
+			loader.displayImage(url, holder.imageIv, false);
+		}
 
 		holder.wordTv.setText(word);
 		holder.transTv.setText(translation);

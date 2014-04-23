@@ -35,7 +35,7 @@
         android:layout_below="@+id/wordTv"
         android:layout_centerVertical="true"
         android:layout_marginLeft="25dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:layout_toRightOf="@+id/imageIv"
         android:text="@string/app_name"
         android:textSize="@dimen/default_text_size" />

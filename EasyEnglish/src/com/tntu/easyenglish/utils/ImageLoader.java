@@ -241,7 +241,7 @@ public class ImageLoader implements Serializable {
 				photoToLoad.imageView.startAnimation(anim);
 
 			} else {
-				// photoToLoad.imageView.setImageResource(stub_id);
+				photoToLoad.imageView.setImageResource(stub_id);
 			}
 		}
 	}
