@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="libs/recorder-extensions-5.1.jar"/>
 	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="lib" path="libs/robotium-solo-5.0.1.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/EasyEnglish"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>

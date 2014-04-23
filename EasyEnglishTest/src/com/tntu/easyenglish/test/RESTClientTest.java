@@ -1,7 +1,5 @@
 package com.tntu.easyenglish.test;
 
-import java.security.Key;
-
 import junit.framework.TestCase;
 
 import org.json.JSONArray;
@@ -30,22 +28,6 @@ public class RESTClientTest extends TestCase {
 			JSONObject success = new JSONObject(result).getJSONObject(SUCCESS);
 			assertNotNull(success);
 			assertEquals(SUCCESS_TRUE, success);
-		} catch (JSONException e) {
-
-		}
-
-		assertNotNull(result);
-	}
-
-	public void testJSONObjectValid() {
-		RESTClient client = new RESTClient(
-				"http://easy-english.yzi.me/api/getUserDictionary?api_key=rakivatake");
-		
-		String result = client.doInBg();
-		assertNotNull(result);
-		try {
-			JSONObject json = new JSONObject(result);
-			assertSame(JSONObject.class, json.getClass());
 		} catch (JSONException e) {
 
 		}
