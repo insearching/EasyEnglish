@@ -15,7 +15,7 @@
         android:inputType="textEmailAddress"
         android:paddingLeft="@dimen/edit_text_padding"
         android:singleLine="true"
-        android:textSize="@dimen/buttons_text_size"/>
+        android:textSize="@dimen/button_text_size"/>
 
     <EditText
         android:id="@+id/passEt"
@@ -30,7 +30,7 @@
         android:hint="@string/password"
         android:inputType="textPassword"
         android:paddingLeft="@dimen/edit_text_padding"
-        android:textSize="@dimen/buttons_text_size"/>
+        android:textSize="@dimen/button_text_size"/>
 
     <TextView
         android:id="@+id/submitTv"
@@ -43,7 +43,7 @@
         android:background="@drawable/button_bg"
         android:gravity="center"
         android:text="@string/submit"
-        android:textSize="@dimen/buttons_text_size"
+        android:textSize="@dimen/button_text_size"
         android:textColor="@color/white"/>
     
     <com.facebook.widget.LoginButton

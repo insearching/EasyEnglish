@@ -4,7 +4,7 @@
     <style name="Widget.Button" parent="android:Widget">
         <item name="android:height">@dimen/button_height</item>
         <item name="android:background">@drawable/button_bg</item>
-        <item name="android:textSize">@dimen/buttons_text_size</item>
+        <item name="android:textSize">@dimen/button_text_size</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:gravity">center</item>
         <item name="android:clickable">true</item>

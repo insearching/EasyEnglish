@@ -10,21 +10,20 @@ import android.text.Spannable;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
 import android.widget.Toast;
 
 import com.tntu.easyenglish.R;
+import com.tntu.easyenglish.adapter.TranslationAdatper;
 import com.tntu.easyenglish.entity.Translation;
-import com.tntu.easyenglish.utils.ImageLoader;
 import com.tntu.easyenglish.utils.JSONUtils;
 import com.tntu.easyenglish.utils.RESTClient;
 import com.tntu.easyenglish.utils.RESTClient.JSONCompleteListenerMethod;
@@ -37,9 +36,10 @@ public class TranslationDialog implements JSONCompleteListenerMethod {
 	private String mWord;
 
 	private TextView origWordTv;
-	private ImageView wordIv;
 	private RelativeLayout contentLayout;
-	private LinearLayout transLayout;
+	private ListView transLv;
+	private CustomProgressBar loadPb;
+	
 
 	private static final String ADD_TO_DICTIONARY = "addWordToDictionary";
 	private static final String TRANSLATE = "translate";
@@ -58,10 +58,11 @@ public class TranslationDialog implements JSONCompleteListenerMethod {
 		dialog.setContentView(R.layout.add_word_dialog);
 
 		origWordTv = (TextView) dialog.findViewById(R.id.origWordTv);
-		wordIv = (ImageView) dialog.findViewById(R.id.wordIv);
 		contentLayout = (RelativeLayout) dialog.findViewById(R.id.contentRl);
 		contentLayout.setVisibility(View.INVISIBLE);
-		transLayout = (LinearLayout) dialog.findViewById(R.id.translationLl);
+		transLv = (ListView) dialog.findViewById(R.id.transLv);
+		loadPb = (CustomProgressBar) dialog.findViewById(R.id.loadPb);
+
 		((TextView) dialog.findViewById(R.id.cancelTv))
 				.setOnClickListener(new OnClickListener() {
 					@Override
@@ -91,12 +92,11 @@ public class TranslationDialog implements JSONCompleteListenerMethod {
 		return new ClickableSpan() {
 			final String sWord;
 			{
-				sWord = word;
+				mWord = sWord = word;
 			}
 
 			@Override
 			public void onClick(View widget) {
-				mWord = sWord;
 				if (dialog.isShowing()) {
 					dialog.dismiss();
 					return;
@@ -106,12 +106,13 @@ public class TranslationDialog implements JSONCompleteListenerMethod {
 						+ context.getString(R.string.select_translation));
 				RESTClient client = new RESTClient(TranslationDialog.this,
 						TRANSLATE);
-				client.execute("http://easy-english.yzi.me/api/translate?api_key="
-						+ apiKey + "&text=" + sWord);
+				String url = "http://easy-english.yzi.me/api/translate?api_key="
+						+ apiKey + "&text=" + sWord;
+
+				client.execute(url);
 				dialog.show();
 				contentLayout.setVisibility(View.INVISIBLE);
-				((ProgressBar) dialog.findViewById(R.id.loadPb))
-						.setVisibility(View.VISIBLE);
+				loadPb.setVisibility(View.VISIBLE);
 			}
 
 			public void updateDrawState(TextPaint ds) {
@@ -133,35 +134,29 @@ public class TranslationDialog implements JSONCompleteListenerMethod {
 						Toast.LENGTH_LONG).show();
 			}
 
-			if (method.equals(TRANSLATE)) {
+			else if (method.equals(TRANSLATE)) {
 				ArrayList<Translation> data = JSONUtils.getTranslation(json);
 
-				wordIv.setImageResource(R.drawable.ic_launcher);
-
-				transLayout.removeAllViews();
-				for (int i = 0; i < data.size(); i++) {
-					Translation tr = data.get(i);
-					final String translation = tr.getText();
-					final String url = tr.getImageUrl();
-					
-					ImageLoader loader = new ImageLoader(context);
-					loader.displayImage(url, wordIv, false);
-
-					TextView transTv = (TextView)LayoutInflater.from(context).inflate(R.layout.word_cell_layout, null);
-					transTv.setText(i + 1 + ". " + translation);
-					transTv.setOnClickListener(new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							addWordToDictionary(mWord, translation);
-						}
-					});
-					transLayout.addView(transTv);
-				}
+				final TranslationAdatper adapter = new TranslationAdatper(
+						context, data);
+				transLv.setAdapter(adapter);
+				transLv.setOnItemClickListener(new OnItemClickListener() {
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view,
+							int position, long id) {
+						addWordToDictionary(mWord, adapter.getItem(position)
+								.getText());
+					}
+				});
 
 				contentLayout.setVisibility(View.VISIBLE);
-				((ProgressBar) dialog.findViewById(R.id.loadPb))
-						.setVisibility(View.INVISIBLE);
+				loadPb.setVisibility(View.INVISIBLE);
 			}
+		} else {
+			Toast.makeText(context,
+					context.getString(R.string.failed_to_retrieve_data),
+					Toast.LENGTH_LONG).show();
+			dialog.dismiss();
 		}
 	}
 
