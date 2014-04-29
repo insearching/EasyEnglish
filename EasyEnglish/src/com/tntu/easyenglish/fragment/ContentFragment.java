@@ -14,17 +14,17 @@ import com.tntu.easyenglish.entity.Content;
 import com.tntu.easyenglish.utils.ContentCacheLoader;
 import com.tntu.easyenglish.utils.JSONUtils;
 import com.tntu.easyenglish.utils.KeyUtils;
-import com.tntu.easyenglish.utils.RESTClient;
-import com.tntu.easyenglish.utils.RESTClient.JSONCompleteListener;
+import com.tntu.easyenglish.utils.GETClient;
+import com.tntu.easyenglish.utils.GETClient.GETListener;
 import com.tntu.easyenglish.view.TranslationDialog;
 
-public class ContentFragment extends Fragment implements JSONCompleteListener {
+public class ContentFragment extends Fragment implements GETListener {
 	private View convertView;
 	private LinearLayout contentLl;
 	private ProgressBar loadPb;
 	private TextView contentTv;
 	
-	private RESTClient client;
+	private GETClient client;
 	private String requestUrl;
 	private ContentCacheLoader loader;
 	private String bufferFileName = "content.txt";
@@ -58,7 +58,7 @@ public class ContentFragment extends Fragment implements JSONCompleteListener {
 			String apiKey = getArguments().getString(KeyUtils.API_KEY);
 			requestUrl = "http://easy-english.yzi.me/api/getContentData?api_key="
 					+ apiKey + "&id=" + id;
-			client = new RESTClient(this);
+			client = new GETClient(this);
 			client.execute(requestUrl);
 			hideView();
 		}
@@ -67,7 +67,7 @@ public class ContentFragment extends Fragment implements JSONCompleteListener {
 
 	@Override
 	public void onRemoteCallComplete(String json) {
-		client = new RESTClient(this);
+		client = new GETClient(this);
 		showData(json);
 		showView();
 		loader.writeToFile(bufferFileName, json);
@@ -91,7 +91,7 @@ public class ContentFragment extends Fragment implements JSONCompleteListener {
 		int id = getArguments().getInt(KeyUtils.ID_KEY);
 		String requestUrl = "http://easy-english.yzi.me/api/getContentData?api_key="
 				+ apiKey + "&id=" + id;
-		client = new RESTClient(this);
+		client = new GETClient(this);
 		client.execute(requestUrl);
 		hideView();
 	}

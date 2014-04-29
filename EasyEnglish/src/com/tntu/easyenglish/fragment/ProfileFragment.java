@@ -27,11 +27,11 @@ import com.tntu.easyenglish.entity.User;
 import com.tntu.easyenglish.utils.ImageLoader;
 import com.tntu.easyenglish.utils.JSONUtils;
 import com.tntu.easyenglish.utils.KeyUtils;
-import com.tntu.easyenglish.utils.RESTClient;
+import com.tntu.easyenglish.utils.GETClient;
 import com.tntu.easyenglish.utils.KeyUtils.AuthType;
-import com.tntu.easyenglish.utils.RESTClient.JSONCompleteListener;
+import com.tntu.easyenglish.utils.GETClient.GETListener;
 
-public class ProfileFragment extends Fragment implements JSONCompleteListener {
+public class ProfileFragment extends Fragment implements GETListener {
 	private View convertView;
 	private TextView greetTv;
 	private ImageView profileIv;
@@ -114,7 +114,7 @@ public class ProfileFragment extends Fragment implements JSONCompleteListener {
 				if (apiKey != null && authType == KeyUtils.AuthType.NATIVE) {
 					String url = "http://easy-english.yzi.me/api/getUserDetails?api_key="
 							+ apiKey;
-					RESTClient client = new RESTClient(this);
+					GETClient client = new GETClient(this);
 					client.execute(url);
 
 				} else if (id != null && authType == KeyUtils.AuthType.FACEBOOK) {

@@ -24,11 +24,11 @@ import com.tntu.easyenglish.entity.Content;
 import com.tntu.easyenglish.utils.ContentCacheLoader;
 import com.tntu.easyenglish.utils.JSONUtils;
 import com.tntu.easyenglish.utils.KeyUtils;
-import com.tntu.easyenglish.utils.RESTClient;
-import com.tntu.easyenglish.utils.RESTClient.JSONCompleteListenerMethod;
+import com.tntu.easyenglish.utils.GETClient;
+import com.tntu.easyenglish.utils.GETClient.GETListenerMethod;
 
 public class ContentListFragment extends Fragment implements
-		JSONCompleteListenerMethod, OnItemClickListener {
+		GETListenerMethod, OnItemClickListener {
 	private View convertView;
 	private PullAndLoadListView contentLv;
 	private ContentListAdapter mAdapter;
@@ -145,13 +145,13 @@ public class ContentListFragment extends Fragment implements
 		loader.deleteFile(bufferFileName);
 		String apiKey = getArguments().getString(KeyUtils.API_KEY);
 		
-		RESTClient client = new RESTClient(this, GET_LIST_METHOD);
+		GETClient client = new GETClient(this, GET_LIST_METHOD);
 		client.execute(getQuery(apiKey, 0));
 		offset = COUNT;
 	}
 
 	public void loadMoreContent() {
-		RESTClient client = new RESTClient(this, GET_LIST_METHOD);
+		GETClient client = new GETClient(this, GET_LIST_METHOD);
 		client.execute(getQuery(getArguments().getString(KeyUtils.API_KEY),
 				offset));
 		offset += COUNT;
@@ -171,7 +171,7 @@ public class ContentListFragment extends Fragment implements
 		String apiKey = getArguments().getString(KeyUtils.API_KEY);
 		String requestUrl = "http://easy-english.yzi.me/api/getContentData?api_key="
 				+ apiKey + "&id=" + sId;
-		RESTClient client = new RESTClient(this, GET_CONTENT_METHOD);
+		GETClient client = new GETClient(this, GET_CONTENT_METHOD);
 		client.execute(requestUrl);
 	}
 }

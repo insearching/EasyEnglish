@@ -15,11 +15,11 @@ import android.widget.Toast;
 import com.tntu.easyenglish.adapter.TranslationAdatper;
 import com.tntu.easyenglish.entity.Translation;
 import com.tntu.easyenglish.utils.JSONUtils;
-import com.tntu.easyenglish.utils.RESTClient;
-import com.tntu.easyenglish.utils.RESTClient.JSONCompleteListener;
+import com.tntu.easyenglish.utils.GETClient;
+import com.tntu.easyenglish.utils.GETClient.GETListener;
 
 public class SearchResultsActivity extends ActionBarActivity implements
-		JSONCompleteListener {
+		GETListener {
 
 	private ListView searchLv;
 	private ProgressBar loadPb;
@@ -67,7 +67,7 @@ public class SearchResultsActivity extends ActionBarActivity implements
 		if (mQuery == null)
 			return;
 		hideView();
-		RESTClient client = new RESTClient(this);
+		GETClient client = new GETClient(this);
 		client.execute("http://easy-english.yzi.me/api/translate?api_key=rakivatake&text="
 				+ mQuery);
 	}

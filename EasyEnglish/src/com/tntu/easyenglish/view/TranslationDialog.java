@@ -25,10 +25,10 @@ import com.tntu.easyenglish.R;
 import com.tntu.easyenglish.adapter.TranslationAdatper;
 import com.tntu.easyenglish.entity.Translation;
 import com.tntu.easyenglish.utils.JSONUtils;
-import com.tntu.easyenglish.utils.RESTClient;
-import com.tntu.easyenglish.utils.RESTClient.JSONCompleteListenerMethod;
+import com.tntu.easyenglish.utils.GETClient;
+import com.tntu.easyenglish.utils.GETClient.GETListenerMethod;
 
-public class TranslationDialog implements JSONCompleteListenerMethod {
+public class TranslationDialog implements GETListenerMethod {
 
 	private Context context;
 	private Dialog dialog;
@@ -104,7 +104,7 @@ public class TranslationDialog implements JSONCompleteListenerMethod {
 
 				origWordTv.setText(sWord + " — "
 						+ context.getString(R.string.select_translation));
-				RESTClient client = new RESTClient(TranslationDialog.this,
+				GETClient client = new GETClient(TranslationDialog.this,
 						TRANSLATE);
 				String url = "http://easy-english.yzi.me/api/translate?api_key="
 						+ apiKey + "&text=" + sWord;
@@ -161,7 +161,7 @@ public class TranslationDialog implements JSONCompleteListenerMethod {
 	}
 
 	private void addWordToDictionary(String word, String translation) {
-		RESTClient client = new RESTClient(this, ADD_TO_DICTIONARY);
+		GETClient client = new GETClient(this, ADD_TO_DICTIONARY);
 		String request = "http://easy-english.yzi.me/api/addToDictionary?api_key="
 				+ apiKey + "&eng_text=" + word + "&translation=" + translation;
 		client.execute(request);

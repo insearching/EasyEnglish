@@ -18,10 +18,10 @@ import com.tntu.easyenglish.MainActivity;
 import com.tntu.easyenglish.R;
 import com.tntu.easyenglish.utils.JSONUtils;
 import com.tntu.easyenglish.utils.KeyUtils;
-import com.tntu.easyenglish.utils.RESTClient;
-import com.tntu.easyenglish.utils.RESTClient.JSONCompleteListener;
+import com.tntu.easyenglish.utils.GETClient;
+import com.tntu.easyenglish.utils.GETClient.GETListener;
 
-public class SignupFragment extends Fragment implements JSONCompleteListener {
+public class SignupFragment extends Fragment implements GETListener {
 
 	private View convertView;
 
@@ -46,7 +46,7 @@ public class SignupFragment extends Fragment implements JSONCompleteListener {
 				if (pass.equals(confPass)) {
 					String result = isCorrectData();
 					if (result == null) {
-						RESTClient client = new RESTClient(SignupFragment.this);
+						GETClient client = new GETClient(SignupFragment.this);
 						client.execute("http://easy-english.yzi.me/api/registerUser?login="
 								+ loginEt.getText().toString()
 								+ "&email="

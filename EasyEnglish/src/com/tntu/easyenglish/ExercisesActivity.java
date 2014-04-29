@@ -2,6 +2,8 @@ package com.tntu.easyenglish;
 
 import java.util.ArrayList;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,13 +33,15 @@ import com.tntu.easyenglish.exercise.ExerciseListener;
 import com.tntu.easyenglish.exercise.SoundToWordFragment;
 import com.tntu.easyenglish.exercise.WordConstructorFragment;
 import com.tntu.easyenglish.exercise.WordTransFragment;
+import com.tntu.easyenglish.utils.GETClient;
+import com.tntu.easyenglish.utils.GETClient.GETListener;
 import com.tntu.easyenglish.utils.JSONUtils;
 import com.tntu.easyenglish.utils.KeyUtils;
-import com.tntu.easyenglish.utils.RESTClient;
-import com.tntu.easyenglish.utils.RESTClient.JSONCompleteListener;
+import com.tntu.easyenglish.utils.POSTClient;
+import com.tntu.easyenglish.utils.POSTClient.POSTListener;
 
 public class ExercisesActivity extends ActionBarActivity implements
-		JSONCompleteListener, ExerciseListener {
+		GETListener, POSTListener, ExerciseListener {
 
 	private String mApiKey = null;
 	private String mType = null;
@@ -46,8 +50,14 @@ public class ExercisesActivity extends ActionBarActivity implements
 	private PagerAdapter mPagerAdapter;
 	private ProgressBar loadPb;
 
-	private int counter = 0;
+	private int trueCounter = 0;
 	private JSONArray results;
+
+	private ArrayList<NameValuePair> params;
+
+	private final static int WORD_TRANS_KEY = 0;
+	private final static int BUILD_WORD_KEY = 1;
+	private final static int SOUND_TO_WORD_KEY = 2;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -59,6 +69,7 @@ public class ExercisesActivity extends ActionBarActivity implements
 		loadPb = (ProgressBar) findViewById(R.id.loadPb);
 
 		results = new JSONArray();
+		params = new ArrayList<NameValuePair>();
 
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
@@ -71,7 +82,7 @@ public class ExercisesActivity extends ActionBarActivity implements
 		}
 
 		hideView();
-		RESTClient client = new RESTClient(this);
+		GETClient client = new GETClient(this);
 		client.execute("http://easy-english.yzi.me/api/getTraining?api_key="
 				+ mApiKey + "&type=" + mType);
 	}
@@ -91,9 +102,9 @@ public class ExercisesActivity extends ActionBarActivity implements
 			return true;
 
 		case R.id.menu_next:
-			mPager.setCurrentItem(mPager.getCurrentItem()+1, true);
+			mPager.setCurrentItem(mPager.getCurrentItem() + 1, true);
 			return true;
-			
+
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -113,8 +124,8 @@ public class ExercisesActivity extends ActionBarActivity implements
 					exercises = JSONUtils.getTransWordExercises(json);
 				}
 
-				mPagerAdapter = new WordTransAdapter(
-						getSupportFragmentManager(), exercises);
+				mPagerAdapter = new ExerciseFragmentAdapter(
+						getSupportFragmentManager(), exercises, WORD_TRANS_KEY);
 				mPager.setAdapter(mPagerAdapter);
 				mPager.setOnTouchListener(new OnSwipeTouchListener() {
 					public void onSwipeRight() {
@@ -153,19 +164,22 @@ public class ExercisesActivity extends ActionBarActivity implements
 		}
 	}
 
+	private int counter = 0;
+
 	@Override
 	public void onTestCompleted(Integer exerciseId, boolean isCorrect,
 			String type) {
-		JSONObject object = new JSONObject();
-		try {
-			object.put(KeyUtils.ID_KEY, exerciseId);
-			object.put(KeyUtils.CORRECT_KEY, isCorrect);
-			results.put(object);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+		
+		params.add(new BasicNameValuePair(KeyUtils.RESULTS_KEY + "["
+				+ counter + "][" + KeyUtils.ID_KEY + "]", String
+				.valueOf(exerciseId)));
+		params.add(new BasicNameValuePair(KeyUtils.RESULTS_KEY + "["
+				+ counter + "][" + KeyUtils.CORRECT_KEY + "]", String
+				.valueOf(isCorrect)));
+		
+		counter++;
 		if (isCorrect)
-			counter++;
+			trueCounter++;
 	}
 
 	@Override
@@ -176,17 +190,15 @@ public class ExercisesActivity extends ActionBarActivity implements
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		Toast.makeText(this, "Your score is " + counter, Toast.LENGTH_SHORT)
+		Toast.makeText(this, "Your score is " + trueCounter, Toast.LENGTH_SHORT)
 				.show();
 
-		RESTClient client = new RESTClient(this);
-		String results = "http://easy-english.yzi.me/api/processResults?api_key="
-				+ mApiKey
-				+ "&type="
-				+ type
-				+ "&results="
-				+ entireObject.toString();
-		client.execute(results);
+		params.add(new BasicNameValuePair(KeyUtils.API_KEY, mApiKey));
+		params.add(new BasicNameValuePair(KeyUtils.TYPE_KEY, type));
+
+		POSTClient client = new POSTClient(this, params);
+		String url = "http://easy-english.yzi.me/api/processResults";
+		client.execute(url);
 		finish();
 	}
 
@@ -198,6 +210,43 @@ public class ExercisesActivity extends ActionBarActivity implements
 	private void showView() {
 		loadPb.setVisibility(View.GONE);
 		mPager.setVisibility(View.VISIBLE);
+	}
+
+	private class ExerciseFragmentAdapter extends FragmentStatePagerAdapter {
+		ArrayList data;
+		int type;
+
+		public ExerciseFragmentAdapter(FragmentManager fm, ArrayList data,
+				int type) {
+			super(fm);
+			this.data = data;
+			this.type = type;
+		}
+
+		@Override
+		public Fragment getItem(int position) {
+			switch (type) {
+			case WORD_TRANS_KEY:
+				return WordTransFragment.newInstance(mApiKey,
+						(WordTrans) data.get(position));
+
+			case BUILD_WORD_KEY:
+				return WordConstructorFragment.newInstance(mApiKey,
+						(BuildWord) data.get(position));
+
+			case SOUND_TO_WORD_KEY:
+				return SoundToWordFragment.newInstance(mApiKey,
+						(SoundToWord) data.get(position));
+			default:
+				return null;
+			}
+
+		}
+
+		@Override
+		public int getCount() {
+			return data.size();
+		}
 	}
 
 	private class WordTransAdapter extends FragmentStatePagerAdapter {
@@ -238,19 +287,19 @@ public class ExercisesActivity extends ActionBarActivity implements
 			return data.size();
 		}
 	}
-	
+
 	private class BuildWordAdapter extends FragmentStatePagerAdapter {
 		ArrayList<BuildWord> data;
 
-		public BuildWordAdapter(FragmentManager fm,
-				ArrayList<BuildWord> data) {
+		public BuildWordAdapter(FragmentManager fm, ArrayList<BuildWord> data) {
 			super(fm);
 			this.data = data;
 		}
 
 		@Override
 		public Fragment getItem(int position) {
-			return WordConstructorFragment.newInstance(mApiKey, data.get(position));
+			return WordConstructorFragment.newInstance(mApiKey,
+					data.get(position));
 		}
 
 		@Override

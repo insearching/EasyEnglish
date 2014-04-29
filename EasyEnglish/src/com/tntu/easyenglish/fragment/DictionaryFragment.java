@@ -21,12 +21,12 @@ import com.tntu.easyenglish.entity.DictionaryWord;
 import com.tntu.easyenglish.utils.ContentCacheLoader;
 import com.tntu.easyenglish.utils.JSONUtils;
 import com.tntu.easyenglish.utils.KeyUtils;
-import com.tntu.easyenglish.utils.RESTClient;
-import com.tntu.easyenglish.utils.RESTClient.JSONCompleteListener;
+import com.tntu.easyenglish.utils.GETClient;
+import com.tntu.easyenglish.utils.GETClient.GETListener;
 import com.tntu.easyenglish.utils.SoundCacher;
 
 public class DictionaryFragment extends Fragment implements
-		JSONCompleteListener, OnItemClickListener, OnScrollListener {
+		GETListener, OnItemClickListener, OnScrollListener {
 	private View convertView;
 	private PullAndLoadListView contentLv;
 	private DictionaryAdapter mAdapter;
@@ -90,7 +90,7 @@ public class DictionaryFragment extends Fragment implements
 			return;
 		loader.deleteFile(bufferFileName);
 
-		RESTClient client = new RESTClient(this);
+		GETClient client = new GETClient(this);
 		client.execute(getQuery(getArguments().getString(KeyUtils.API_KEY), 0));
 
 		mAdapter = null;
@@ -98,7 +98,7 @@ public class DictionaryFragment extends Fragment implements
 	}
 
 	public void loadMoreContent() {
-		RESTClient client = new RESTClient(this);
+		GETClient client = new GETClient(this);
 		client.execute(getQuery(getArguments().getString(KeyUtils.API_KEY),
 				offset));
 		offset += COUNT;

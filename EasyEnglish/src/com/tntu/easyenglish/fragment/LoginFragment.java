@@ -21,10 +21,10 @@ import com.tntu.easyenglish.MainActivity;
 import com.tntu.easyenglish.R;
 import com.tntu.easyenglish.utils.JSONUtils;
 import com.tntu.easyenglish.utils.KeyUtils;
-import com.tntu.easyenglish.utils.RESTClient;
-import com.tntu.easyenglish.utils.RESTClient.JSONCompleteListener;
+import com.tntu.easyenglish.utils.GETClient;
+import com.tntu.easyenglish.utils.GETClient.GETListener;
 
-public class LoginFragment extends Fragment implements JSONCompleteListener {
+public class LoginFragment extends Fragment implements GETListener {
 
 	private View convertView;
 
@@ -65,7 +65,7 @@ public class LoginFragment extends Fragment implements JSONCompleteListener {
 				if (username.length() != 0 && password.length() != 0) {
 					String requestUrl = "http://easy-english.yzi.me/api/getApiKey?login="
 							+ username + "&password=" + password;
-					RESTClient client = new RESTClient(LoginFragment.this);
+					GETClient client = new GETClient(LoginFragment.this);
 					client.execute(requestUrl);
 					
 					((LoginActivity)getActivity()).onLoginStarted();

@@ -7,7 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.tntu.easyenglish.utils.KeyUtils;
-import com.tntu.easyenglish.utils.RESTClient;
+import com.tntu.easyenglish.utils.GETClient;
 
 public class RESTClientTest extends TestCase {
 
@@ -19,7 +19,7 @@ public class RESTClientTest extends TestCase {
 	}
 	
 	public void testSuccesStatus() {
-		RESTClient client = new RESTClient(
+		GETClient client = new GETClient(
 				"http://easy-english.yzi.me/api/getUserDetails?api_key=rakivatake");
 		
 		String result = client.doInBg();
@@ -36,7 +36,7 @@ public class RESTClientTest extends TestCase {
 	}
 
 	public void testDictionaryFields() {
-		RESTClient client = new RESTClient(
+		GETClient client = new GETClient(
 				"http://easy-english.yzi.me/api/getUserDictionary?api_key=rakivatake");
 		String result = client.doInBg();
 		assertNotNull(result);
@@ -70,7 +70,7 @@ public class RESTClientTest extends TestCase {
 	}
 	
 	public void testUserFields() {
-		RESTClient client = new RESTClient(
+		GETClient client = new GETClient(
 				"http://easy-english.yzi.me/api/getUserDetails?api_key=rakivatake");
 		String result = client.doInBg();
 		assertNotNull(result);
