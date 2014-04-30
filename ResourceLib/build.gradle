@@ -2,10 +2,11 @@ apply plugin: 'android-library'
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
+    compile project(':android-support-v7-appcompat')
 }
 
 android {
-    compileSdkVersion 16
+    compileSdkVersion 19
     buildToolsVersion "19.0.3"
 
     sourceSets {

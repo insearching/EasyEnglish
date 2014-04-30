@@ -1,11 +1,16 @@
-apply plugin: 'android-library'
+apply plugin: 'android'
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
+    compile project(':android-support-v7-appcompat')
+    compile project(':google-play-services_lib')
+    compile project(':FacebookSDK')
+    compile project(':ResourceLib')
+    compile project(':LoadMoreListView')
 }
 
 android {
-    compileSdkVersion 16
+    compileSdkVersion 19
     buildToolsVersion "19.0.3"
 
     sourceSets {
