@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <EditText
+        android:id="@+id/loginEt"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="@dimen/side_margin"
+        android:layout_marginRight="@dimen/side_margin"
+        android:ems="10"
+        android:hint="@string/username_or_email"
+        android:inputType="textEmailAddress"
+        android:paddingLeft="@dimen/edit_text_padding"
+        android:singleLine="true"
+        android:textSize="@dimen/button_text_size"/>
+
+    <EditText
+        android:id="@+id/passEt"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height"
+        android:layout_below="@+id/loginEt"
+        android:layout_marginLeft="@dimen/side_margin"
+        android:layout_marginRight="@dimen/side_margin"
+        android:layout_marginTop="@dimen/login_margin_top"
+        android:singleLine="true"
+        android:ems="10"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        android:paddingLeft="@dimen/edit_text_padding"
+        android:textSize="@dimen/button_text_size"/>
+
+    <TextView
+        android:id="@+id/submitTv"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height"
+        android:layout_below="@+id/passEt"
+        android:layout_marginLeft="@dimen/side_margin"
+        android:layout_marginRight="@dimen/side_margin"
+        android:layout_marginTop="@dimen/login_margin_top"
+        android:background="@drawable/button_bg"
+        android:gravity="center"
+        android:text="@string/submit"
+        android:textSize="@dimen/button_text_size"
+        android:textColor="@color/white"/>
+
+</RelativeLayout>
