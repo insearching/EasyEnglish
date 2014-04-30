@@ -1,8 +1,5 @@
 package com.tntu.easyenglish.fragment;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,10 +13,13 @@ import android.widget.Toast;
 
 import com.tntu.easyenglish.MainActivity;
 import com.tntu.easyenglish.R;
-import com.tntu.easyenglish.utils.JSONUtils;
-import com.tntu.easyenglish.utils.KeyUtils;
 import com.tntu.easyenglish.utils.GETClient;
 import com.tntu.easyenglish.utils.GETClient.GETListener;
+import com.tntu.easyenglish.utils.JSONUtils;
+import com.tntu.easyenglish.utils.KeyUtils;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SignupFragment extends Fragment implements GETListener {
 
@@ -34,6 +34,7 @@ public class SignupFragment extends Fragment implements GETListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+
 		convertView = inflater.inflate(R.layout.sign_up_fragment, null);
 		initViews();
 

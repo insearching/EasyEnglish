@@ -45,7 +45,6 @@ public class ContentActivity extends ActionBarActivity {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
-			return true;
 		}
 		return true;
 	}

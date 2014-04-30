@@ -6,11 +6,10 @@
     <string name="failed_to_retrieve_data">Failed to retrieve data. Please try again later.</string>
     <string name="failed_to_load_sound">Failed to load sound. Please try again later.</string>
     <string name="no_internet">No internet connection. Please check your network state and try again.</string>
-    <string name="about">This app was created by Serhii Hrabas for educational reasons. API side was provided from service 
-        <u>http://easy-english.yzi.me</u> developed by Igor Kordiak.</string>
-    
+    <string name="about">This app was created by Serhii Hrabas for educational reasons. API side was provided from service  <u>http://easy-english.yzi.me</u> developed by Igor Kordiak.</string>
+
     <!-- Menu -->
-     <string name="menu_finish">Finish</string>
+    <string name="menu_finish">Finish</string>
     <!-- Facebook login -->
     <string name="get_started">To get started, log in using Facebook</string>
     <!-- Login -->
@@ -34,14 +33,15 @@
     <string name="wrong_credentials">Wrong username or password. Please try again.</string>
     <string name="preference_file_key">com.tntu.easyenglish.auth_key</string>
     <string name="auth_failed">Sorry, authorization failed. Please try again later.</string>
-    
+
     <!-- Signup -->
     <string name="passwords_not_same">Passwords are not the same! Please retype it.</string>
-    
+
     <!-- Navigation Drawer -->
     <string name="menu_search_title">Search</string>
     <string name="menu_search_hint">Add word</string>
     <string name="menu_refresh">Refresh</string>
+
     <string-array name="main_menu_loged">
         <item>Profile</item>
         <item>Exercises</item>
@@ -51,7 +51,7 @@
         <item>About</item>
         <item>Sign out</item>
     </string-array>
-    
+
     <!-- Content -->
     <string name="select_translation">select a translation</string>
     <string name="added_to_dictionary">added to your dictionary</string>
@@ -68,5 +68,8 @@
     <string name="finish">Finish</string>
     <string name="next">Next</string>
     <string name="done">Done</string>
+    <string name="title_activity_signup">Sign up</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
 
 </resources>

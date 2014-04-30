@@ -5,8 +5,9 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,7 +31,7 @@ import com.tntu.easyenglish.fragment.LoginFragment;
 import com.tntu.easyenglish.fragment.SignupFragment;
 import com.tntu.easyenglish.utils.KeyUtils;
 
-public class LoginActivity extends FragmentActivity implements
+public class LoginActivity extends ActionBarActivity implements
 		ConnectionCallbacks, OnConnectionFailedListener {
 
 	public static final String TAG = "EasyEnglish";
@@ -52,6 +53,7 @@ public class LoginActivity extends FragmentActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login_activity);
+        setTitle(getString(R.string.login));
 
 		mFragment = new LoginFragment();
 		
@@ -119,6 +121,17 @@ public class LoginActivity extends FragmentActivity implements
 		mPlusClient.disconnect();
 	}
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                getSupportFragmentManager().popBackStackImmediate();
+                setTitle(getString(R.string.login));
+        }
+        return true;
+    }
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -184,6 +197,9 @@ public class LoginActivity extends FragmentActivity implements
 						R.anim.float_right_to_left_out_anim)
 				.replace(R.id.fragmentContainer, new SignupFragment())
 				.addToBackStack(backStackTag).commit();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setTitle(getString(R.string.sign_up));
 	}
 
 	// Google+ authorization

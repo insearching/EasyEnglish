@@ -7,7 +7,7 @@
         android:id="@+id/loginEt"
         android:layout_width="match_parent"
         android:layout_height="@dimen/button_height"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:layout_marginLeft="@dimen/side_margin"
         android:layout_marginRight="@dimen/side_margin"
         android:ems="10"
@@ -39,7 +39,7 @@
         android:layout_below="@+id/passEt"
         android:layout_marginLeft="@dimen/side_margin"
         android:layout_marginRight="@dimen/side_margin"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="@dimen/login_margin_top"
         android:background="@drawable/button_bg"
         android:gravity="center"
         android:text="@string/submit"
@@ -57,7 +57,8 @@
         android:layout_marginRight="@dimen/side_margin"
         android:layout_marginTop="@dimen/login_margin_top"
         facebook:confirm_logout="false"
-        facebook:fetch_user_info="true"/>
+        facebook:fetch_user_info="true"
+        android:enabled="false"/>
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/googleButt"

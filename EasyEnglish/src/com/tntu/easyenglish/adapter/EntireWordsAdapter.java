@@ -1,7 +1,5 @@
 package com.tntu.easyenglish.adapter;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +10,8 @@ import android.widget.TextView;
 
 import com.tntu.easyenglish.R;
 import com.tntu.easyenglish.entity.Word;
+
+import java.util.ArrayList;
 
 public class EntireWordsAdapter extends BaseAdapter {
 
@@ -53,7 +53,7 @@ public class EntireWordsAdapter extends BaseAdapter {
 		}
 		
 		holder.statusIv.setImageResource(R.drawable.status_null);
-		holder.wordTv.setText(data.get(position).getWord() + " — " +  data.get(position).getTranslation());
+		holder.wordTv.setText(data.get(position).getWord() + " ï¿½ " +  data.get(position).getTranslation());
 		return convertView;
 	}
 	

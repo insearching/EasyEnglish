@@ -124,7 +124,7 @@ public class LoginFragment extends Fragment implements GETListener {
 	public void onRemoteCallComplete(String json) {
 		String apiKey = null;
 		if(json.equals("null")){
-			Toast.makeText(getActivity(), getActivity().getString(R.string.no_internet), Toast.LENGTH_LONG).show();
+			Toast.makeText(getActivity(), getString(R.string.no_internet), Toast.LENGTH_LONG).show();
 			((LoginActivity)getActivity()).onLoginCompleted();
 			return;
 		}

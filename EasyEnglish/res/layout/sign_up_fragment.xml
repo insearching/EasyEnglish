@@ -3,24 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <ImageView
-        android:id="@+id/logoIv"
-        android:layout_width="wrap_content"
-        android:layout_height="100dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/login_top_margin"
-        android:contentDescription="@string/app_name"
-        android:src="@drawable/logo" />
-
     <EditText
         android:id="@+id/logEt"
         android:layout_width="match_parent"
         android:layout_height="@dimen/button_height"
-        android:layout_below="@+id/logoIv"
         android:layout_marginLeft="@dimen/side_margin"
         android:layout_marginRight="@dimen/side_margin"
         android:layout_marginTop="@dimen/login_margin_top"
-        android:background="@drawable/edit_text_bg"
         android:ems="10"
         android:hint="@string/username"
         android:inputType="textEmailAddress"
@@ -36,7 +25,6 @@
         android:layout_marginLeft="@dimen/side_margin"
         android:layout_marginRight="@dimen/side_margin"
         android:layout_marginTop="@dimen/login_margin_top"
-        android:background="@drawable/edit_text_bg"
         android:ems="10"
         android:hint="@string/email"
         android:inputType="textEmailAddress"
@@ -52,7 +40,6 @@
         android:layout_marginLeft="@dimen/side_margin"
         android:layout_marginRight="@dimen/side_margin"
         android:layout_marginTop="@dimen/login_margin_top"
-        android:background="@drawable/edit_text_bg"
         android:ems="10"
         android:hint="@string/password"
         android:inputType="textPassword"
@@ -68,7 +55,6 @@
         android:layout_marginLeft="@dimen/side_margin"
         android:layout_marginRight="@dimen/side_margin"
         android:layout_marginTop="@dimen/login_margin_top"
-        android:background="@drawable/edit_text_bg"
         android:ems="10"
         android:hint="@string/confirm_password"
         android:inputType="textPassword"
@@ -83,7 +69,7 @@
         android:layout_below="@+id/confirmPassEt"
         android:layout_marginLeft="@dimen/side_margin"
         android:layout_marginRight="@dimen/side_margin"
-        android:layout_marginTop="@dimen/login_margin_top"
+        android:layout_marginTop="50dp"
         android:background="@drawable/button_bg"
         android:clickable="true"
         android:gravity="center"
